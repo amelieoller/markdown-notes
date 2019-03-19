@@ -3,9 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4",
+    "firebase": "^5.9.0",
+    "prop-types": "^15.7.2",
     "react": "^16.8.4",
+    "react-codemirror": "^1.0.0",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.8"
+    "react-markdown": "^4.0.6",
+    "react-scripts": "2.1.8",
+    "react-syntax-highlighter": "^10.2.0"
   },
   "scripts": {
     "start": "react-scripts start",
