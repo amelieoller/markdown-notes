@@ -1,8 +1,7 @@
 import React from 'react';
-import Markdown from 'markdown-to-jsx';
 import PropTypes from 'prop-types';
-import CodeBlock from './CodeBlock';
 import ResizableTextarea from './ResizableTextarea';
+import MarkdownField from './MarkdownField';
 
 const CreateNote = ({
   tags,
@@ -41,23 +40,7 @@ const CreateNote = ({
 
     {content !== '' && (
       <div className="note-result">
-        <Markdown
-          options={{
-            forceBlock: true,
-            overrides: {
-              em: {
-                props: {
-                  className: 'italic',
-                },
-              },
-              code: {
-                component: CodeBlock,
-              },
-            },
-          }}
-        >
-          {content}
-        </Markdown>
+        <MarkdownField content={content} />
       </div>
     )}
   </div>

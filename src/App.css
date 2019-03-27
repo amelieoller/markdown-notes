@@ -55,6 +55,7 @@ textarea {
     padding: .3em;
     border-top: 1px solid #f7f6f7;
     border-bottom: 1px solid #f7f6f7;
+    white-space: pre-wrap;
 }
 
 .new-note-footer {
@@ -75,6 +76,7 @@ textarea {
 
 .note > *:first-child {
     margin: .5em;
+    white-space: pre-wrap;
 }
 
 .note .footer {

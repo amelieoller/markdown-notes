@@ -1,28 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Markdown from 'markdown-to-jsx';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import CodeBlock from './CodeBlock';
 import { deleteNote } from '../actions/noteActions';
+import MarkdownField from './MarkdownField';
 
 const Note = ({
   note, deleteNote, setEditNote, tags,
 }) => (
   <div className="note">
-    <Markdown
-      options={{
-        forceBlock: true,
-        overrides: {
-          code: {
-            component: CodeBlock,
-          },
-        },
-      }}
-    >
-      {note.content}
-    </Markdown>
+    <MarkdownField content={note.content} />
     <div className="footer">
       <div className="left">
         <button
@@ -30,7 +18,7 @@ const Note = ({
           onClick={() => {
             setEditNote(note);
           }}
-          className="edit-button"
+          className="edit-button main-button"
         >
           Edit
         </button>
