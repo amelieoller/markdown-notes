@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { connect } from 'react-redux';
 import { createTag } from '../actions/tagActions';
 
@@ -9,6 +9,7 @@ class CreateTag extends Component {
 
     this.state = {
       tagContent: '',
+      formIsOpen: false,
     };
   }
 
@@ -27,21 +28,37 @@ class CreateTag extends Component {
 
     this.setState({
       tagContent: '',
+      formIsOpen: false,
     });
   }
 
   render() {
-    const { tagContent } = this.state;
+    const { tagContent, formIsOpen } = this.state;
 
     return (
-      <form action="" onSubmit={e => this.handleSubmit(e)}>
-        <input
-          type="text"
-          placeholder="New Tag"
-          value={tagContent}
-          onChange={e => this.setState({ tagContent: e.target.value })}
-        />
-      </form>
+      <>
+        {!formIsOpen ? (
+          <span
+            onClick={() => this.setState({
+              formIsOpen: true,
+            })
+            }
+            className="tag-form-plus"
+          >
+            +
+          </span>
+        ) : (
+          <form action="" onSubmit={e => this.handleSubmit(e)}>
+            <input
+              type="text"
+              placeholder="New Tag"
+              value={tagContent}
+              onChange={e => this.setState({ tagContent: e.target.value })}
+              className="new-tag"
+            />
+          </form>
+        )}
+      </>
     );
   }
 }
