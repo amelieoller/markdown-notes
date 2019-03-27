@@ -22,7 +22,7 @@ const Tags = ({
             }}
           >
             {' '}
-            | x
+            x
           </span>
         </div>
       ))}

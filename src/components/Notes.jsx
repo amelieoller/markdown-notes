@@ -5,10 +5,14 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import Note from './Note';
 
-const Notes = ({ notes, setEditNote, tagFilter }) => (
+const filterBy = (notes, filterArr) => (filterArr.length !== 0 ? notes.filter(note => filterArr.includes(note.id)) : notes);
+
+const Notes = ({
+  notes, setEditNote, tagFilter, searchFilter,
+}) => (
   <div className="notes">
     {notes
-      && notes
+      && filterBy(notes, searchFilter)
         .filter(note => tagFilter.every(tagId => note.tagIds.includes(tagId)))
         .sort(
           (a, b) => (b.updated ? b.updated.toDate() : new Date())
@@ -22,6 +26,7 @@ Notes.propTypes = {
   notes: PropTypes.arrayOf(PropTypes.object),
   setEditNote: PropTypes.func.isRequired,
   tagFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
+  searchFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const mapStateToProps = state => ({

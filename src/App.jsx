@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
@@ -20,6 +20,7 @@ class App extends Component {
       tagIds: [],
       edit: false,
       tagFilter: [],
+      searchFilter: [],
     };
   }
 
@@ -33,6 +34,19 @@ class App extends Component {
     } else {
       this.setState({
         tagFilter: [...tagFilter, tagId],
+      });
+    }
+  };
+
+  setSearchFilter = (noteIds) => {
+    if (noteIds.length === 0) {
+      console.log('nothing was found');
+      this.setState({
+        searchFilter: noteIds,
+      });
+    } else {
+      this.setState({
+        searchFilter: noteIds,
       });
     }
   };
@@ -94,13 +108,15 @@ class App extends Component {
   };
 
   render() {
-    const { tagFilter } = this.state;
+    const { tagFilter, searchFilter } = this.state;
     const { tags } = this.props;
 
     return (
       <div className="app-wrapper">
-        <Search />
-        <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
+        <div className="filters">
+          <Search setSearchFilter={this.setSearchFilter} />
+          <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
+        </div>
         <CreateNote
           editNote={this.state}
           addTag={this.addTag}
@@ -109,7 +125,7 @@ class App extends Component {
           handleNoteClear={this.handleNoteClear}
           tags={tags}
         />
-        <Notes setEditNote={this.setEditNote} tagFilter={tagFilter} />
+        <Notes setEditNote={this.setEditNote} tagFilter={tagFilter} searchFilter={searchFilter} />
       </div>
     );
   }
