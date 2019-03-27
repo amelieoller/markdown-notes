@@ -4,8 +4,8 @@ textarea {
     border: none;
     outline: none;
     background: #f7f6f7;
-    padding: 8px 10px;
-    font-size: 16px;
+    padding: .5em .8em;
+    font-size: 1.1em;
 }
 
 /* Search Bar */
@@ -16,28 +16,32 @@ textarea {
 /* Tags */
 .tags {
     display: flex;
-    margin: 5px;
+    margin: .3em;
 }
 
 .tag {
-    padding: 3px 6px;
-    margin: 5px;
-    background: #FD6565;
-    color: white;
-    font-size: 13px;
+    /* padding: .4em .5em; */
+    margin: .3em;
+
+    /* background: #FD6565; */
+    /* color: white; */
+    font-size: .9em;
     font-weight: 300;
-    border-radius: .25rem;
+
+    /* border-radius: .25em; */
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .greyTag {
-    padding: 3px 6px;
-    margin: 5px;
-    background: #9f9f9f;
-    color: white;
-    font-size: 13px;
+    /* padding: .4em .5em; */
+    margin: .3em;
+
+    /* background: #9f9f9f; */
+    /* color: white; */
+    font-size: .9em;
     font-weight: 300;
-    border-radius: .25rem;
+    border-radius: .25em;
     cursor: pointer;
 }
 
@@ -47,8 +51,8 @@ textarea {
 }
 
 .note-result {
-    margin: 5px 0;
-    padding: 5px;
+    margin: .3em 0;
+    padding: .3em;
     border-top: 1px solid #f7f6f7;
     border-bottom: 1px solid #f7f6f7;
 }
@@ -60,17 +64,17 @@ textarea {
 
 /* Notes */
 .notes {
-    margin: 30px 0;
+    margin: 2em 0;
 }
 
 .note {
-    margin: 8px;
+    margin: .5em;
     border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: .25rem;
+    border-radius: .25em;
 }
 
-.note>*:first-child {
-    margin: 8px;
+.note > *:first-child {
+    margin: .5em;
 }
 
 .note .footer {
@@ -79,17 +83,21 @@ textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 8px;
+    padding: 0 .5em;
 }
 
 .note .footer .left button {
-    margin-right: 4px;
+    margin-right: .25em;
 }
 
 /* Markdown */
 .code-block {
-    margin: 0 -8px;
-    font-size: 14px;
+    margin: 0 -.5em;
+    font-size: 1em;
+}
+
+.italic {
+    color: #FD6565;
 }
 
 /* Textarea */
@@ -99,16 +107,39 @@ textarea {
 
 /* Buttons */
 button {
-    border-radius: .25rem;
-    box-shadow: 0px 4px 0px #757575;
+    border-radius: .25em;
+    box-shadow: 0 .25em 0 #757575;
     background-color: #9f9f9f;
-    padding: 4px 12px;
-    font-size: 12px;
+    padding: .25em .75em;
+    font-size: .9em;
+    font-weight: 300;
     text-decoration: none;
     position: relative;
     border: 0;
     display: inline-block;
     text-align: center;
     color: white;
-    margin: 9px;
+    margin: .45em .8em;
+}
+
+.main-button {
+    background: #FD6565;
+    padding: .3em .9em;
+    font-size: 1em;
+}
+
+.new-tag {
+    font-size: .9em;
+    padding: .4em .8em;
+}
+
+.tag-form-plus {
+    padding: .1em .8em;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.filters {
+    display: flex;
+    justify-content: space-between;
 }

@@ -17,7 +17,7 @@ const CreateNote = ({
       <ResizableTextarea value={content} mdChange={handleNoteChange} />
       <div className="new-note-footer">
         <div className="left">
-          <button type="submit" onClick={() => handleNoteSubmit()}>
+          <button className="main-button" type="submit" onClick={() => handleNoteSubmit()}>
             Save Note
           </button>
           <button type="submit" onClick={() => handleNoteClear()}>
@@ -45,9 +45,9 @@ const CreateNote = ({
           options={{
             forceBlock: true,
             overrides: {
-              h1: {
+              em: {
                 props: {
-                  className: 'md-h1',
+                  className: 'italic',
                 },
               },
               code: {
