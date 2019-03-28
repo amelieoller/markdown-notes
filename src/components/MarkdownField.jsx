@@ -13,8 +13,10 @@ const MarkdownField = ({ content }) => (
             className: 'italic',
           },
         },
-        code: {
-          component: CodeBlock,
+        img: {
+          props: {
+            className: 'max-image-width',
+          },
         },
       },
     }}
