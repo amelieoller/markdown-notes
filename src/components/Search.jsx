@@ -7,7 +7,7 @@ import { ICONS } from '../constants';
 const StyledSearch = styled.div`
   .search-input {
     border: 1px solid rgb(45, 45, 45);
-    border-radius: 5px 0 0 5px;
+    border-radius: .25em 0 0 .25em;
     display: block;
     float: left;
     height: 30px;
@@ -30,8 +30,7 @@ const StyledSearch = styled.div`
     box-sizing: border-box;
     border: 1px solid #444;
     border-left-color: rgb(45, 45, 45);
-    border-radius: 0 5px 5px 0;
-    box-shadow: 0 2px 0 rgb(45, 45, 45);
+    border-radius: 0 .25em .25em 0;
     display: block;
     float: left;
     height: 30px;
