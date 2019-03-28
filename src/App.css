@@ -16,11 +16,11 @@ textarea {
 /* Tags */
 .tags {
     display: flex;
-    margin: .3em;
+    flex-wrap: wrap;
 }
 
 .tag {
-    margin: .3em;
+    margin: .2em .3em;
     font-size: .9em;
     font-weight: 300;
     cursor: pointer;
@@ -28,34 +28,15 @@ textarea {
 }
 
 .greyTag {
-    margin: .3em;
+    margin: .2em .3em;
     font-size: .9em;
     font-weight: 300;
-    border-radius: .25em;
     cursor: pointer;
-}
-
-/* New Note */
-.note-input .CodeMirror {
-    background: #f7f6f7;
-}
-
-.note-result {
-    margin: .3em 0;
-    padding: .3em;
-    border-top: 1px solid #f7f6f7;
-    border-bottom: 1px solid #f7f6f7;
-    white-space: pre-wrap;
-}
-
-.new-note-footer {
-    display: flex;
-    justify-content: space-between;
 }
 
 /* Notes */
 .notes {
-    margin: 2em 0;
+    margin: .5em 0;
 }
 
 .note {
@@ -64,9 +45,9 @@ textarea {
     border-radius: .25em;
 }
 
-.note > *:first-child {
+.note>*:first-child {
     margin: .5em;
-    white-space: pre-wrap;
+    white-space: pre-line;
 }
 
 .note .footer {
@@ -75,7 +56,7 @@ textarea {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 .5em;
+    padding: .5em;
 }
 
 .note .footer .left button {
@@ -111,7 +92,6 @@ textarea {
     display: inline-block;
     text-align: center;
     color: white;
-    margin: .45em .8em;
 }
 
 .main-button {
@@ -135,4 +115,12 @@ textarea {
     display: flex;
     justify-content: space-between;
     padding: .5em;
+    flex-wrap: wrap;
+    margin-top: 1em;
+    align-items: flex-end;
+}
+
+/* Images */
+.max-image-width {
+    max-width: 100%;
 }
