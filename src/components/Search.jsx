@@ -1,5 +1,49 @@
 import React, { Component } from 'react';
 import algoliasearch from 'algoliasearch';
+import styled from 'styled-components';
+import Icon from './Icon';
+import { ICONS } from '../constants';
+
+const StyledSearch = styled.div`
+  .search-input {
+    border: 1px solid rgb(45, 45, 45);
+    border-radius: 5px 0 0 5px;
+    display: block;
+    float: left;
+    height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    width: 200px;
+  }
+
+  .input-group-btn {
+    position: relative;
+    font-size: 0;
+    white-space: nowrap;
+    width: 1%;
+    vertical-align: middle;
+    display: table-cell;
+  }
+
+  .search-button {
+    background: linear-gradient(#333, rgb(45, 45, 45));
+    box-sizing: border-box;
+    border: 1px solid #444;
+    border-left-color: rgb(45, 45, 45);
+    border-radius: 0 5px 5px 0;
+    box-shadow: 0 2px 0 rgb(45, 45, 45);
+    display: block;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    width: 50px;
+    cursor: pointer;
+    outline: none;
+  }
+`;
 
 class Search extends Component {
   constructor() {
@@ -7,6 +51,7 @@ class Search extends Component {
 
     this.state = {
       query: '',
+      searched: false,
     };
   }
 
@@ -26,23 +71,45 @@ class Search extends Component {
       .then((responses) => {
         const noteTags = responses.hits.map(note => note.objectID);
         this.props.setSearchFilter(noteTags);
+        this.setState({
+          searched: true,
+        });
       });
   };
 
+  onClearSearch = (e) => {
+    e.preventDefault();
+
+    this.props.setSearchFilter([]);
+    this.setState({
+      query: '',
+      searched: false,
+    });
+  };
+
   render() {
-    const { query } = this.state;
+    const { query, searched } = this.state;
+
     return (
-      <>
-        <form className="search" onSubmit={this.handleSearch}>
-          <input
-            type="text"
-            placeholder="Search"
-            onChange={e => this.setState({ query: e.target.value })}
-            value={query}
-          />
-        </form>
-        <span onClick={() => this.props.setSearchFilter([])}>Clear Search</span>
-      </>
+      <StyledSearch>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search Notes"
+          onChange={e => this.setState({ query: e.target.value })}
+          value={query}
+          onKeyPress={e => e.key === 'Enter' && this.handleSearch(e)}
+        />
+        {searched ? (
+          <button type="submit" className="search-button" onClick={e => this.onClearSearch(e)}>
+            <Icon icon={ICONS.CLEAR} color="white" />
+          </button>
+        ) : (
+          <button type="submit" className="search-button" onClick={e => this.handleSearch(e)}>
+            <Icon icon={ICONS.SEARCH} color="white" />
+          </button>
+        )}
+      </StyledSearch>
     );
   }
 }
