@@ -20,25 +20,15 @@ textarea {
 }
 
 .tag {
-    /* padding: .4em .5em; */
     margin: .3em;
-
-    /* background: #FD6565; */
-    /* color: white; */
     font-size: .9em;
     font-weight: 300;
-
-    /* border-radius: .25em; */
     cursor: pointer;
     text-decoration: underline;
 }
 
 .greyTag {
-    /* padding: .4em .5em; */
     margin: .3em;
-
-    /* background: #9f9f9f; */
-    /* color: white; */
     font-size: .9em;
     font-weight: 300;
     border-radius: .25em;
@@ -108,7 +98,7 @@ textarea {
 }
 
 /* Buttons */
-button {
+.btn {
     border-radius: .25em;
     box-shadow: 0 .25em 0 #757575;
     background-color: #9f9f9f;
@@ -144,4 +134,5 @@ button {
 .filters {
     display: flex;
     justify-content: space-between;
+    padding: .5em;
 }

@@ -18,7 +18,7 @@ const Note = ({
           onClick={() => {
             setEditNote(note);
           }}
-          className="edit-button main-button"
+          className="edit-button main-button btn"
         >
           Edit
         </button>
@@ -28,7 +28,7 @@ const Note = ({
             const result = window.confirm('Want to delete?');
             result && deleteNote(note.id);
           }}
-          className="delete-button"
+          className="delete-button btn"
         >
           Delete
         </button>

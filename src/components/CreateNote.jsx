@@ -16,10 +16,10 @@ const CreateNote = ({
       <ResizableTextarea value={content} mdChange={handleNoteChange} />
       <div className="new-note-footer">
         <div className="left">
-          <button className="main-button" type="submit" onClick={() => handleNoteSubmit()}>
+          <button className="main-button btn" type="submit" onClick={() => handleNoteSubmit()}>
             Save Note
           </button>
-          <button type="submit" onClick={() => handleNoteClear()}>
+          <button className="btn" type="submit" onClick={() => handleNoteClear()}>
             Clear
           </button>
         </div>
