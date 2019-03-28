@@ -113,10 +113,6 @@ class App extends Component {
 
     return (
       <div className="app-wrapper">
-        <div className="filters">
-          <Search setSearchFilter={this.setSearchFilter} />
-          <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
-        </div>
         <CreateNote
           editNote={this.state}
           addTag={this.addTag}
@@ -125,6 +121,10 @@ class App extends Component {
           handleNoteClear={this.handleNoteClear}
           tags={tags}
         />
+        <div className="filters">
+          <Search setSearchFilter={this.setSearchFilter} />
+          <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
+        </div>
         <Notes setEditNote={this.setEditNote} tagFilter={tagFilter} searchFilter={searchFilter} />
       </div>
     );
