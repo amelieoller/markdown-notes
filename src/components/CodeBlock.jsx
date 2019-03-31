@@ -1,21 +1,49 @@
 import React from 'react';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { tomorrowNightEighties } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
 
-const CodeBlock = ({ children }) => (
-  <SyntaxHighlighter
-    className="code-block"
-    language="javascript"
-    style={tomorrowNightEighties}
-    showLineNumbers
-  >
-    {children}
-  </SyntaxHighlighter>
-);
+const hljs = window.hljs;
+
+class CodeBlock extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.setRef = this.setRef.bind(this);
+  }
+
+  componentDidMount() {
+    this.highlightCode();
+  }
+
+  componentDidUpdate() {
+    this.highlightCode();
+  }
+
+  setRef(el) {
+    this.codeEl = el;
+  }
+
+  highlightCode() {
+    hljs.highlightBlock(this.codeEl);
+  }
+
+  render() {
+    const { language, value } = this.props;
+    return (
+      <pre>
+        <code ref={this.setRef} className={`language-${language}`}>
+          {value}
+        </code>
+      </pre>
+    );
+  }
+}
+
+CodeBlock.defaultProps = {
+  language: '',
+};
 
 CodeBlock.propTypes = {
-  children: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  language: PropTypes.string,
 };
 
 export default CodeBlock;
