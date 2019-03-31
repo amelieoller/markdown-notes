@@ -5,6 +5,12 @@ import { Controlled as CodeMirror } from 'react-codemirror2';
 import MarkdownField from './MarkdownField';
 
 require('codemirror/mode/markdown/markdown');
+require('codemirror/addon/edit/closetag');
+require('codemirror/addon/edit/continuelist');
+require('codemirror/addon/edit/closebrackets');
+require('codemirror/mode/xml/xml');
+require('codemirror/mode/javascript/javascript');
+require('codemirror/theme/material.css');
 
 const slideInKeyframes = keyframes`
   0% {
@@ -123,8 +129,16 @@ class CreateNote extends Component {
             options={{
               mode: 'markdown',
               theme: 'material',
+              viewportMargin: Infinity,
               lineNumbers: true,
               autoScroll: true,
+              autoCursor: true,
+              lineWrapping: true,
+              autoCloseTags: true,
+              tabSize: 2,
+              autofocus: true,
+              autoCloseBrackets: true,
+              extraKeys: { Enter: 'newlineAndIndentContinueMarkdownList' },
             }}
             onBeforeChange={(editor, data, value) => {
               handleNoteChange(value);
