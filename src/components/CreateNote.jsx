@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
-import ResizableTextarea from './ResizableTextarea';
+import { Controlled as CodeMirror } from 'react-codemirror2';
 import MarkdownField from './MarkdownField';
+
+require('codemirror/mode/markdown/markdown');
 
 const slideInKeyframes = keyframes`
   0% {
     height: 0px;
   }
   99.9% {
-    height: 48.78px;
+    height: 62px;
   }
   100% {
     height: 100%;
@@ -17,35 +19,26 @@ const slideInKeyframes = keyframes`
 `;
 
 const StyledCreateNote = styled.div`
-  background: rgb(45, 45, 45);
-  padding: 0.5em;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.3);
 
-  .note-input {
-    background: #f7f6f7;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
+  .editor-pane {
+    position: relative;
+    overflow: auto;
+    min-height: 30px;
     @media (max-width: 700px) {
       grid-column: span 2;
     }
   }
 
-  .note-input textarea {
-    resize: none;
-  }
+  .result-pane > div {
+    position: relative;
+    background: white;
+    overflow: auto;
+    padding: 10px;
+    padding-left: 20px;
 
-  .note-result {
-    padding: 0.3em;
-    white-space: pre-line;
-    background: #f7f6f7;
-    
-    @media (max-width: 700px) {
-      grid-column: span 2;
-    }
-    
     display: inline-block;
     animation-name: ${slideInKeyframes};
     animation-duration: 1s;
@@ -55,14 +48,20 @@ const StyledCreateNote = styled.div`
     animation-direction: normal;
     animation-fill-mode: forwards;
     animation-play-state: running;
-    
     @media (max-width: 700px) {
-      border-top: 1px solid rgba(0, 0, 0, 0.125);
+      grid-column: span 2;
     }
+    font-family: AtlasGrotesk-editor-rtl, AtlasGrotesk-editor-heading, -apple-system,
+      BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+      'Helvetica Neue', sans-serif;
+  }
 
-    @media (min-width: 700px) {
-      border-left: 1px solid rgba(0, 0, 0, 0.125);
-    }
+  .editor textarea {
+    padding: 20px;
+  }
+
+  .editor-pane textarea {
+    min-height: 500px;
   }
 
   .new-note-footer {
@@ -71,60 +70,90 @@ const StyledCreateNote = styled.div`
     justify-content: space-between;
     flex-wrap: wrap;
     align-items: flex-end;
-    padding: 1em 0 0.5em 0;
-  }
+    padding: 0.3em;
 
-  .left button {
-    margin-right: 1em;
-  }
+    .left button {
+      margin-right: 1em;
+    }
 
-  .tags.right {
-    display: flex;
-    color: white;
+    .tags.right {
+      display: flex;
+    }
   }
 `;
 
-const CreateNote = ({
-  tags,
-  addTag,
-  handleNoteChange,
-  handleNoteSubmit,
-  handleNoteClear,
-  editNote: { content, tagIds },
-}) => (
-  <StyledCreateNote>
-    <div className="note-input">
-      <ResizableTextarea value={content} mdChange={handleNoteChange} />
-    </div>
-    {content !== '' && (
-      <div className="note-result">
-        <MarkdownField content={content} />
-      </div>
-    )}
-    <div className="new-note-footer">
-      <div className="left">
-        <button className="main-button btn" type="submit" onClick={() => handleNoteSubmit()}>
-          Save Note
-        </button>
-        <button className="btn" type="submit" onClick={() => handleNoteClear()}>
-          Clear
-        </button>
-      </div>
-      <div className="right tags">
-        {tags
-          && tags.map(tag => (
-            <span
-              key={tag.id}
-              className={tagIds.includes(tag.id) ? 'tag' : 'greyTag'}
-              onClick={() => addTag(tag.id)}
-            >
-              {tag.name}
-            </span>
-          ))}
-      </div>
-    </div>
-  </StyledCreateNote>
-);
+class CreateNote extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      htmlMode: 'raw',
+    };
+  }
+
+  handleControlsChange = (mode) => {
+    this.setState({ htmlMode: mode });
+  };
+
+  render() {
+    const { htmlMode } = this.state;
+    const {
+      tags,
+      addTag,
+      handleNoteChange,
+      handleNoteSubmit,
+      handleNoteClear,
+      editNote: { content, tagIds },
+    } = this.props;
+
+    return (
+      <StyledCreateNote>
+        <div className="editor-pane">
+          <CodeMirror
+            value={content}
+            options={{
+              mode: 'markdown',
+              theme: 'material',
+              lineNumbers: true,
+              autoScroll: true,
+            }}
+            onBeforeChange={(editor, data, value) => {
+              handleNoteChange(value);
+            }}
+          />
+        </div>
+
+        {content !== '' && (
+          <div className="result-pane">
+            <MarkdownField content={content} htmlMode={htmlMode} />
+          </div>
+        )}
+        <div className="new-note-footer">
+          <div className="left">
+            <button className="main-button btn" type="submit" onClick={() => handleNoteSubmit()}>
+              Save Note
+            </button>
+            <button className="btn" type="submit" onClick={() => handleNoteClear()}>
+              Clear
+            </button>
+          </div>
+          <div className="right tags">
+            {tags
+              && tags.map(tag => (
+                <span
+                  key={tag.id}
+                  className={tagIds.includes(tag.id) ? 'tag' : 'greyTag'}
+                  onClick={() => addTag(tag.id)}
+                >
+                  {tag.name}
+                </span>
+              ))}
+          </div>
+        </div>
+      </StyledCreateNote>
+    );
+  }
+}
 
 CreateNote.propTypes = {
   addTag: PropTypes.func.isRequired,
