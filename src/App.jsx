@@ -61,8 +61,8 @@ class App extends Component {
     });
   };
 
-  handleNoteChange = (e) => {
-    this.setState({ content: e.target.value });
+  handleNoteChange = (value) => {
+    this.setState({ content: value });
   };
 
   addTag = (id) => {
