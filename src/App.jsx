@@ -4,12 +4,28 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
-import './App.css';
+import './App.scss';
+import styled, { ThemeProvider } from 'styled-components';
 import Search from './components/Search';
 import CreateNote from './components/CreateNote';
 import Tags from './components/Tags';
 import Notes from './components/Notes';
 import { createNote, updateNote } from './actions/noteActions';
+
+const lightTheme = {
+  primaryColor: '#2d2d2d',
+  primaryHighlight: '#FD6565',
+};
+
+const darkTheme = {
+  primaryColor: '#2d2d2d',
+  primaryHighlight: 'blue',
+};
+
+const StyledApp = styled.div`
+  background: #263238;
+  height: 100%;
+`;
 
 class App extends Component {
   constructor(props) {
@@ -21,6 +37,8 @@ class App extends Component {
       edit: false,
       tagFilter: [],
       searchFilter: [],
+      isLight: true,
+      theme: lightTheme,
     };
   }
 
@@ -107,26 +125,41 @@ class App extends Component {
     this.handleNoteClear();
   };
 
+  handleThemeChange = () => {
+    const isLight = !this.state.isLight;
+
+    this.setState({
+      isLight,
+      theme: isLight ? lightTheme : darkTheme,
+    });
+  };
+
   render() {
-    const { tagFilter, searchFilter } = this.state;
+    const {
+      tagFilter, searchFilter, theme, isLight,
+    } = this.state;
     const { tags } = this.props;
 
     return (
-      <div className="app-wrapper">
-        <CreateNote
-          editNote={this.state}
-          addTag={this.addTag}
-          handleNoteChange={this.handleNoteChange}
-          handleNoteSubmit={this.handleNoteSubmit}
-          handleNoteClear={this.handleNoteClear}
-          tags={tags}
-        />
-        <div className="filters">
-          <Search setSearchFilter={this.setSearchFilter} />
-          <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
-        </div>
-        <Notes setEditNote={this.setEditNote} tagFilter={tagFilter} searchFilter={searchFilter} />
-      </div>
+      <ThemeProvider theme={theme}>
+        <StyledApp>
+          <CreateNote
+            editNote={this.state}
+            addTag={this.addTag}
+            handleNoteChange={this.handleNoteChange}
+            handleNoteSubmit={this.handleNoteSubmit}
+            handleNoteClear={this.handleNoteClear}
+            tags={tags}
+            handleThemeChange={this.handleThemeChange}
+            theme={isLight ? 'light' : 'dark'}
+          />
+          <div className="filters">
+            <Search setSearchFilter={this.setSearchFilter} />
+            <Tags setTagFilter={this.setTagFilter} filteredTags={tagFilter} />
+          </div>
+          <Notes setEditNote={this.setEditNote} tagFilter={tagFilter} searchFilter={searchFilter} />
+        </StyledApp>
+      </ThemeProvider>
     );
   }
 }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled, { keyframes } from 'styled-components';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import MarkdownField from './MarkdownField';
+import Button from './Button';
 
 require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/closetag');
@@ -28,6 +29,11 @@ const StyledCreateNote = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.3);
+  
+  .CodeMirror {
+    height: auto;
+    font-size: 16px;
+  }
 
   .editor-pane {
     position: relative;
@@ -119,6 +125,8 @@ class CreateNote extends Component {
       handleNoteSubmit,
       handleNoteClear,
       editNote: { content, tagIds },
+      handleThemeChange,
+      theme,
     } = this.props;
 
     return (
@@ -151,12 +159,9 @@ class CreateNote extends Component {
         </div>
         <div className="new-note-footer">
           <div className="left">
-            <button className="main-button btn" type="submit" onClick={() => handleNoteSubmit()}>
-              Save Note
-            </button>
-            <button className="btn" type="submit" onClick={() => handleNoteClear()}>
-              Clear
-            </button>
+            <Button onClick={handleNoteSubmit} text="Save Note" />
+            <Button onClick={handleNoteClear} text="Clear" />
+            <Button onClick={handleThemeChange} text={theme} />
           </div>
           <div className="right tags">
             {tags
