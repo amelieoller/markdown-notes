@@ -13,7 +13,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-autosize-textarea": "^6.0.0",
-    "react-codemirror": "^1.0.0",
+    "react-codemirror2": "^5.1.0",
     "react-dom": "^16.8.4",
     "react-markdown": "^4.0.6",
     "react-redux": "^5.0.0",
