@@ -35,40 +35,6 @@ textarea {
     cursor: pointer;
 }
 
-/* Notes */
-.notes {
-    column-width: 30em;
-    column-gap: 1em;
-    margin: 1em auto;
-    max-width: 120em;
-    width: 95%;
-}
-
-.note {
-    display: inline-block;
-    width: 100%;
-    background: #fff;
-    margin-bottom: 1em;
-}
-
-.note>*:first-child {
-    padding: .73em 1.5em;
-    white-space: pre-line;
-}
-
-.note .footer {
-    border-top: 1px solid rgba(0, 0, 0, 0.125);
-    background-color: rgba(0, 0, 0, 0.03);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: .5em;
-}
-
-.note .footer .left button {
-    margin-right: .25em;
-}
-
 /* Markdown */
 .code-block {
     margin: 0 -.5em;

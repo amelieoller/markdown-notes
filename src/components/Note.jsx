@@ -3,13 +3,39 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import styled from 'styled-components';
 import { deleteNote } from '../actions/noteActions';
 import MarkdownField from './MarkdownField';
+
+const StyledNote = styled.div`
+  display: inline-block;
+  width: 100%;
+  background: #fff;
+  margin-bottom: 1em;
+
+  > *:first-child {
+    padding: 0.73em 1.5em;
+    white-space: pre-line;
+  }
+
+  .footer {
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5em;
+  }
+
+  .footer .left button {
+    margin-right: 0.25em;
+  }
+`;
 
 const Note = ({
   note, deleteNote, setEditNote, tags,
 }) => (
-  <div className="note">
+  <StyledNote>
     <MarkdownField content={note.content} />
     <div className="footer">
       <div className="left">
@@ -44,7 +70,7 @@ const Note = ({
             ))}
       </div>
     </div>
-  </div>
+  </StyledNote>
 );
 
 Note.propTypes = {
