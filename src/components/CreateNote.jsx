@@ -32,6 +32,13 @@ const StyledCreateNote = styled.div`
     }
   }
 
+  .result-pane {
+    background: white;
+    @media (max-width: 700px) {
+      grid-column: span 2;
+    }
+  }
+
   .result-pane > div {
     position: relative;
     background: white;
@@ -51,9 +58,6 @@ const StyledCreateNote = styled.div`
     @media (max-width: 700px) {
       grid-column: span 2;
     }
-    font-family: AtlasGrotesk-editor-rtl, AtlasGrotesk-editor-heading, -apple-system,
-      BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-      'Helvetica Neue', sans-serif;
   }
 
   .editor textarea {
@@ -71,9 +75,14 @@ const StyledCreateNote = styled.div`
     flex-wrap: wrap;
     align-items: flex-end;
     padding: 0.3em;
+    background: white;
 
     .left button {
       margin-right: 1em;
+    }
+
+    .tags {
+      color: #263238;
     }
 
     .tags.right {
@@ -123,11 +132,9 @@ class CreateNote extends Component {
           />
         </div>
 
-        {content !== '' && (
-          <div className="result-pane">
-            <MarkdownField content={content} htmlMode={htmlMode} />
-          </div>
-        )}
+        <div className="result-pane">
+          {content !== '' && <MarkdownField content={content} htmlMode={htmlMode} />}
+        </div>
         <div className="new-note-footer">
           <div className="left">
             <button className="main-button btn" type="submit" onClick={() => handleNoteSubmit()}>

@@ -17,6 +17,7 @@ textarea {
 .tags {
     display: flex;
     flex-wrap: wrap;
+    color: white;
 }
 
 .tag {
@@ -36,17 +37,22 @@ textarea {
 
 /* Notes */
 .notes {
-    margin: .5em 0;
+    column-width: 30em;
+    column-gap: 1em;
+    margin: 1em auto;
+    max-width: 120em;
+    width: 95%;
 }
 
 .note {
-    margin: .5em;
-    border: 1px solid rgba(0, 0, 0, 0.125);
-    border-radius: .25em;
+    display: inline-block;
+    width: 100%;
+    background: #fff;
+    margin-bottom: 1em;
 }
 
 .note>*:first-child {
-    margin: .5em;
+    padding: .73em 1.5em;
     white-space: pre-line;
 }
 
@@ -106,17 +112,17 @@ textarea {
 
 .tag-form-plus {
     padding: .1em .8em;
-    font-size: 1.1em;
     cursor: pointer;
 }
 
 .filters {
     display: flex;
     justify-content: space-between;
-    padding: .5em;
     flex-wrap: wrap;
-    margin-top: 1em;
     align-items: flex-end;
+    width: 95%;
+    margin: 1em auto;
+    max-width: 120em;
 }
 
 /* Images */
