@@ -1,32 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Markdown from 'markdown-to-jsx';
+import Markdown from 'react-markdown';
 import CodeBlock from './CodeBlock';
 
-const MarkdownField = ({ content }) => (
+const MarkdownField = ({ content, htmlMode }) => (
   <Markdown
-    options={{
-      forceBlock: true,
-      overrides: {
-        em: {
-          props: {
-            className: 'italic',
-          },
-        },
-        img: {
-          props: {
-            className: 'max-image-width',
-          },
-        },
-      },
-    }}
-  >
-    {content}
-  </Markdown>
+    className="result"
+    source={content}
+    skipHtml={htmlMode === 'skip'}
+    escapeHtml={htmlMode === 'escape'}
+    renderers={{ code: CodeBlock }}
+  />
 );
 
 MarkdownField.propTypes = {
   content: PropTypes.string.isRequired,
+  htmlMode: PropTypes.string,
+};
+
+MarkdownField.defaultProps = {
+  htmlMode: 'skip',
 };
 
 export default MarkdownField;
