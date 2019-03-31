@@ -27,7 +27,7 @@ Icon.propTypes = {
 
 Icon.defaultProps = {
   size: 16,
-  color: 'rgb(45, 45, 45)',
+  color: '#2d2d2d',
 };
 
 export default Icon;

@@ -11,6 +11,7 @@
     "eslint-plugin-react": "^7.12.4",
     "firebase": "^5.9.0",
     "markdown-to-jsx": "^6.9.3",
+    "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-autosize-textarea": "^6.0.0",
@@ -25,6 +26,7 @@
     "redux-firebase": "^0.3.3",
     "redux-firestore": "^0.7.2",
     "redux-thunk": "^2.3.0",
+    "reset-css": "^4.0.1",
     "styled-components": "^4.2.0"
   },
   "scripts": {

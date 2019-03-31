@@ -29,7 +29,7 @@ const StyledCreateNote = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.3);
-  
+
   .CodeMirror {
     height: auto;
     font-size: 16px;

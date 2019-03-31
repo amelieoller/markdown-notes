@@ -2,7 +2,6 @@
 input,
 textarea {
     border: none;
-    outline: none;
     background: #f7f6f7;
     padding: .5em .8em;
     font-size: 1.1em;
@@ -41,12 +40,6 @@ textarea {
     display: inline-block;
     text-align: center;
     color: white;
-}
-
-.main-button {
-    background: #FD6565;
-    padding: .3em .9em;
-    font-size: 1em;
 }
 
 .new-tag {
