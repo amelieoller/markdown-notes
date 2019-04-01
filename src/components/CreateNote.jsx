@@ -9,6 +9,7 @@ require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/closetag');
 require('codemirror/addon/edit/continuelist');
 require('codemirror/addon/edit/closebrackets');
+require('codemirror/addon/comment/comment');
 require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/theme/material.css');
@@ -72,6 +73,10 @@ const StyledCreateNote = styled.div`
     }
   }
 
+  .result {
+    width: 100%;
+  }
+
   .editor textarea {
     padding: 20px;
   }
@@ -94,7 +99,7 @@ const StyledCreateNote = styled.div`
     }
 
     .tags {
-      color: #263238;
+      color: #2D2D2D;
     }
 
     .tags.right {
@@ -146,7 +151,11 @@ class CreateNote extends Component {
               tabSize: 2,
               autofocus: true,
               autoCloseBrackets: true,
-              extraKeys: { Enter: 'newlineAndIndentContinueMarkdownList' },
+              toggleComment: true,
+              extraKeys: {
+                Enter: 'newlineAndIndentContinueMarkdownList',
+                'Cmd-/': 'toggleComment',
+              },
             }}
             onBeforeChange={(editor, data, value) => {
               handleNoteChange(value);
