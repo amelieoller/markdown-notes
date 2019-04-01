@@ -23,7 +23,7 @@ const darkTheme = {
 };
 
 const StyledApp = styled.div`
-  background: #263238;
+  background: #2D2D2D;
   height: 100%;
 `;
 
@@ -71,6 +71,7 @@ class App extends Component {
 
   setEditNote = (note) => {
     const { content, tagIds, id } = note;
+    window.scrollTo(0, 0);
     this.setState({
       content,
       tagIds,

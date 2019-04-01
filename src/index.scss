@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Lato:400,400i,700,900");
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400");
+@import url('https://fonts.googleapis.com/css?family=Lato:400,400i,700,900');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400');
 @import '/path/to/reset-css/reset.css';
 
 // $primary-font: -apple-system,
@@ -10,9 +10,21 @@
 // 'Helvetica Neue',
 // sans-serif;
 
+// Fonts
+@font-face {
+  font-family: DankMono;
+  src: url(./fonts/DankMono-Regular.otf);
+}
+
+@font-face {
+  font-family: DankMono;
+  font-style: italic;
+  src: url(./fonts/DankMono-Italic.otf);
+}
+
 // Colors
 $white: #fff;
-$color_fuscous_gray: #555;
+$color_fuscous_gray: #2D2D2D;
 $color_mine_shaft: #333;
 $color_bittersweet: #fd6565;
 $color_woodsmoke: #101010;
@@ -22,12 +34,12 @@ $color_concrete: #f3f3f3;
 
 // Fonts
 $font_0: 'Lato';
-$font_1: 'Operator mono';
+$font_1: 'DankMono';
+// $font_1: 'Operator mono';
 $font_2: 'monospace';
 
 // @extend-elements
 %extend_1 {
-  background: none;
   font-family: $font_1, $font_2;
   text-align: left;
   white-space: pre;
@@ -39,7 +51,6 @@ $font_2: 'monospace';
   tab-size: 4;
   hyphens: none;
 }
-
 
 html {
   font-size: 10px;
@@ -66,11 +77,11 @@ body {
   outline: none;
 }
 
-code[class*=language-] {
+code[class*='language-'] {
   @extend %extend_1;
 }
 
-pre[class*=language-] {
+pre[class*='language-'] {
   @extend %extend_1;
   overflow: auto;
   background: $color_concrete;
@@ -84,10 +95,12 @@ pre[class*=language-] {
 a {
   color: $color_bittersweet;
   text-decoration: none;
-  background-image: linear-gradient(180deg, transparent 50%, $color_bittersweet 0);
+  background-image: linear-gradient(180deg,
+    transparent 50%,
+    $color_bittersweet 0);
   background-position: 0 93%;
   background-repeat: repeat-x;
-  background-size: 100% .15rem;
+  background-size: 100% 0.15rem;
 }
 
 h1 {
@@ -123,7 +136,7 @@ h2 {
   }
 
   &:before {
-    content: "";
+    content: '';
     background: $color_iron;
     height: 1px;
     position: absolute;
@@ -164,7 +177,7 @@ h4 {
   color: $color_woodsmoke;
   font-weight: 700;
   font-size: 1.8rem;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 
   a {
     color: $color_woodsmoke;
@@ -176,7 +189,7 @@ h5 {
   color: $color_woodsmoke;
   font-weight: 700;
   font-size: 1.6rem;
-  margin-bottom: .4rem;
+  margin-bottom: 0.4rem;
 
   a {
     color: $color_woodsmoke;
@@ -222,7 +235,7 @@ ol {
 
   >li {
     &:before {
-      content: counters(b, ".") " ";
+      content: counters(b, '.') ' ';
       counter-increment: b;
       left: -8px;
       color: $color_mountain_mist;
@@ -264,7 +277,7 @@ ul {
   }
 
   >li:before {
-    content: "";
+    content: '';
     background-color: $color_mountain_mist;
     border-radius: 9999px;
     width: 6px;
@@ -282,15 +295,10 @@ code {
   font-weight: 300;
 }
 
-pre {
-  padding: 30px;
-
-  code {
-    white-space: normal;
-    background: transparent;
-    font-size: 1.4rem;
-    padding: 0;
-  }
+pre code {
+  background: transparent;
+  font-size: 1.4rem;
+  padding: 0;
 }
 
 blockquote {
@@ -333,8 +341,8 @@ table {
   }
 }
 
-:not(pre)>code[class*=language-] {
-  padding: .1em;
-  border-radius: .3em;
+:not(pre)>code[class*='language-'] {
+  padding: 0.1em;
+  border-radius: 0.3em;
   white-space: normal;
 }
