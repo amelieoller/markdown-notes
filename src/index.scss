@@ -203,7 +203,7 @@ h5 {
 
 p {
   font-size: 1.6rem;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.2rem;
 
   +p {
     margin-top: -1.2rem;
@@ -213,7 +213,7 @@ p {
 ol {
   list-style: none;
   counter-reset: b;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.2rem;
 
   li {
     padding-left: 27px;
@@ -256,12 +256,12 @@ ol {
 
 ul {
   list-style: none;
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.2rem;
 
   li {
     padding-left: 27px;
     position: relative;
-    margin-bottom: 10px;
+    margin-bottom: 2px;
 
     >* {
       margin-bottom: 10px;
@@ -287,7 +287,7 @@ ul {
     width: 6px;
     height: 6px;
     left: 12px;
-    top: 11px;
+    top: 10px;
     position: absolute;
   }
 }
@@ -315,12 +315,12 @@ blockquote {
 }
 
 img {
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.2rem;
   max-width: 100%;
 }
 
 table {
-  margin-bottom: 3.2rem;
+  margin-bottom: 2.2rem;
   font-size: 1.6rem;
   border-collapse: collapse;
   width: 100%;
