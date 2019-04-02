@@ -30,6 +30,10 @@ const StyledNote = styled.div`
   .footer .left button {
     margin-right: 0.25em;
   }
+
+  .tags.right {
+    display: flex;
+  }
 `;
 
 const Note = ({

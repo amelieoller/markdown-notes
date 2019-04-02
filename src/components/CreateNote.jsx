@@ -99,11 +99,22 @@ const StyledCreateNote = styled.div`
     }
 
     .tags {
-      color: #2D2D2D;
-    }
+      color: #263238;
 
-    .tags.right {
-      display: flex;
+      .tag {
+        margin: 0.2em 0.3em;
+        font-size: 0.9em;
+        font-weight: 300;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+
+      .greyTag {
+        margin: 0.2em 0.3em;
+        font-size: 0.9em;
+        font-weight: 300;
+        cursor: pointer;
+      }
     }
   }
 `;
