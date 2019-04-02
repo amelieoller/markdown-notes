@@ -9,6 +9,7 @@ const StyledButton = styled.button`
   padding: 0.25em 1em;
   border: 2px solid ${props => props.theme.primaryHighlight};
   border-radius: 3px;
+  cursor: pointer;
 
   &:hover,
   &:active {
@@ -18,7 +19,9 @@ const StyledButton = styled.button`
 `;
 
 const Button = ({ text, onClick, primary }) => (
-  <StyledButton onClick={() => onClick()}>{text}</StyledButton>
+  <StyledButton type="submit" onClick={() => onClick()}>
+    {text}
+  </StyledButton>
 );
 
 export default Button;
