@@ -6,8 +6,8 @@ import { ICONS } from '../constants';
 
 const StyledSearch = styled.div`
   .search-input {
-    border: 1px solid #2d2d2d;
-    border-radius: 0.25em 0 0 0.25em;
+    /* border: 1px solid #b64545; */
+    /* border-radius: 0.2em 0 0 0.2em; */
     display: block;
     float: left;
     height: 30px;
@@ -26,10 +26,9 @@ const StyledSearch = styled.div`
   }
 
   .search-button {
-    background: linear-gradient(#333, #2d2d2d);
+    background: linear-gradient(#b64545, #FD6565);
     box-sizing: border-box;
-    border: 1px solid #444;
-    border-left-color: #2d2d2d;
+    /* border: 1px solid #b64545; */
     border-radius: 0 0.25em 0.25em 0;
     display: block;
     float: left;

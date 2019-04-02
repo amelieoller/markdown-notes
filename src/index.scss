@@ -24,7 +24,7 @@
 
 // Colors
 $white: #fff;
-$color_fuscous_gray: #2D2D2D;
+$color_fuscous_gray: #263238;
 $color_mine_shaft: #333;
 $color_bittersweet: #fd6565;
 $color_woodsmoke: #101010;
@@ -79,6 +79,10 @@ body {
 
 code[class*='language-'] {
   @extend %extend_1;
+}
+
+pre {
+  background-color: #263238 !important;
 }
 
 pre[class*='language-'] {

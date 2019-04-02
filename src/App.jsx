@@ -13,17 +13,17 @@ import Notes from './components/Notes';
 import { createNote, updateNote } from './actions/noteActions';
 
 const lightTheme = {
-  primaryColor: '#2d2d2d',
+  primaryColor: '#263238',
   primaryHighlight: '#FD6565',
 };
 
 const darkTheme = {
-  primaryColor: '#2d2d2d',
+  primaryColor: '#263238',
   primaryHighlight: 'blue',
 };
 
 const StyledApp = styled.div`
-  background: #2D2D2D;
+  background: #263238;
   height: 100%;
 `;
 
