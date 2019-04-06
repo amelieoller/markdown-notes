@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import styled from 'styled-components';
 import { deleteNote } from '../actions/noteActions';
 import MarkdownField from './MarkdownField';
+import Button from './Button';
 
 const StyledNote = styled.div`
   display: inline-block;
@@ -33,6 +34,11 @@ const StyledNote = styled.div`
 
   .tags.right {
     display: flex;
+    font-weight: 300;
+
+    .tag {
+      margin-left: 7px;
+    }
   }
 `;
 
@@ -43,25 +49,20 @@ const Note = ({
     <MarkdownField content={note.content} />
     <div className="footer">
       <div className="left">
-        <button
-          type="submit"
+        <Button
+          text="Edit"
           onClick={() => {
             setEditNote(note);
           }}
-          className="edit-button main-button btn"
-        >
-          Edit
-        </button>
-        <button
-          type="submit"
+        />
+        <Button
+          text="Delete"
           onClick={() => {
             const result = window.confirm('Want to delete?');
             result && deleteNote(note.id);
           }}
-          className="delete-button btn"
-        >
-          Delete
-        </button>
+          small
+        />
       </div>
       <div className="right tags">
         {note.tagIds
