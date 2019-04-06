@@ -101,19 +101,38 @@ const StyledCreateNote = styled.div`
     .tags {
       color: #263238;
 
-      .tag {
+      button {
+        position: relative;
+        color: #263238;
+        text-decoration: none;
+        border: none;
         margin: 0.2em 0.3em;
         font-size: 0.9em;
         font-weight: 300;
         cursor: pointer;
-        text-decoration: underline;
       }
 
-      .greyTag {
-        margin: 0.2em 0.3em;
-        font-size: 0.9em;
-        font-weight: 300;
-        cursor: pointer;
+      button:hover {
+        color: #263238;
+      }
+
+      button:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        bottom: 0;
+        left: 0;
+        background-color: #263238;
+        visibility: hidden;
+        transform: scaleX(0);
+        transition: all 0.3s ease-in-out 0s;
+      }
+
+      button:hover:before,
+      button.highlighted:before {
+        visibility: visible;
+        transform: scaleX(1);
       }
     }
   }
@@ -141,8 +160,6 @@ class CreateNote extends Component {
       handleNoteSubmit,
       handleNoteClear,
       editNote: { content, tagIds },
-      handleThemeChange,
-      theme,
     } = this.props;
 
     return (
@@ -180,19 +197,19 @@ class CreateNote extends Component {
         <div className="new-note-footer">
           <div className="left">
             <Button onClick={handleNoteSubmit} text="Save Note" />
-            <Button onClick={handleNoteClear} text="Clear" />
-            <Button onClick={handleThemeChange} text={theme} />
+            <Button onClick={handleNoteClear} text="Clear" small />
           </div>
           <div className="right tags">
             {tags
               && tags.map(tag => (
-                <span
+                <button
                   key={tag.id}
-                  className={tagIds.includes(tag.id) ? 'tag' : 'greyTag'}
+                  className={tagIds.includes(tag.id) ? 'tag highlighted' : 'tag'}
                   onClick={() => addTag(tag.id)}
+                  type="button"
                 >
                   {tag.name}
-                </span>
+                </button>
               ))}
           </div>
         </div>
