@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import Icon from './Icon';
-import { ICONS } from '../constants';
 
 const StyledInput = styled.div`
   position: relative;
   display: flex;
   align-items: flex-end;
-  padding-bottom: 0.9rem;
   padding-right: 1.5rem;
   font-weight: 300;
+  margin-top: -10px;
 
   label {
     position: absolute;
@@ -65,50 +63,28 @@ class FLoatingLabelInput extends Component {
 
   render() {
     const {
-      placeholderLabel,
-      value,
-      onChange,
-      type,
-      onKeyPress,
-      entered,
-      clearSearch,
-      handleSearch,
+      placeholderLabel, value, onChange, type, onSubmit, id, children,
     } = this.props;
 
     return (
       <StyledInput {...this.props} {...this.state}>
         <input
-          id="floating-label-input"
+          id={id}
           className={value ? 'filled' : ''}
           type={type}
           value={value}
           onChange={onChange}
           onFocus={() => this.setState({ focused: true })}
           onBlur={() => this.setState({ focused: false })}
-          onKeyPress={onKeyPress}
+          onKeyPress={e => e.key === 'Enter' && onSubmit(e)}
+          ref={(input) => {
+            this.textInput = input;
+          }}
         />
-        <label htmlFor="floating-label-input">{placeholderLabel}</label>
-        {entered ? (
-          <span
-            className="search-icon"
-            onClick={clearSearch}
-            role="button"
-            onKeyPress={clearSearch}
-            tabIndex="0"
-          >
-            <Icon icon={ICONS.CLEAR} color="white" size={14} />
-          </span>
-        ) : (
-          <span
-            className="search-icon"
-            onClick={handleSearch}
-            role="button"
-            onKeyPress={handleSearch}
-            tabIndex="0"
-          >
-            <Icon icon={ICONS.SEARCH} color="white" size={14} />
-          </span>
-        )}
+        <label htmlFor={id} onClick={() => this.textInput.focus()}>
+          {placeholderLabel}
+        </label>
+        {children}
       </StyledInput>
     );
   }
@@ -119,10 +95,9 @@ FLoatingLabelInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   type: PropTypes.string,
-  onKeyPress: PropTypes.func,
-  entered: PropTypes.bool,
-  clearSearch: PropTypes.func,
-  handleSearch: PropTypes.func,
+  onSubmit: PropTypes.func,
+  id: PropTypes.string.isRequired,
+  children: PropTypes.shape({}).isRequired,
 };
 
 FLoatingLabelInput.defaultProps = {
