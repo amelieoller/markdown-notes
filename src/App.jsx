@@ -15,6 +15,7 @@ import { createNote, updateNote } from './actions/noteActions';
 const lightTheme = {
   primaryColor: '#263238',
   primaryHighlight: '#FD6565',
+  lightPrimaryHighlight: '#fd65658a',
 };
 
 const darkTheme = {
