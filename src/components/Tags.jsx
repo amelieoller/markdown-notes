@@ -19,9 +19,8 @@ const StyledTag = styled.span`
   border-color: ${props => props.theme.lightPrimaryHighlight};
   background: ${props => (props.isHighlighted ? props.theme.lightPrimaryHighlight : 'transparent')};
 
-  &:hover {
+  &:hover, &:active {
     transition: background-color 0.2s ease;
-    background-color: ${props => props.theme.lightPrimaryHighlight};
   }
 
   .delete {
@@ -83,7 +82,7 @@ const mapDispatchToProps = dispatch => ({
 Tags.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.object),
   setTagFilter: PropTypes.func.isRequired,
-  filteredTags: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filteredTags: PropTypes.arrayOf(PropTypes.string).isRequired,
   deleteTag: PropTypes.func.isRequired,
 };
 

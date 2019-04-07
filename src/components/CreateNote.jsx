@@ -146,9 +146,17 @@ const StyledCreateNote = styled.div`
       }
 
       button:hover:before,
+      button:active:before,
       button.highlighted:before {
         visibility: visible;
         transform: scaleX(1);
+      }
+
+      @media (pointer: coarse) {
+        button.not-highlighted:before {
+          visibility: hidden;
+          transform: scaleX(0);
+        }
       }
     }
   }
@@ -230,7 +238,7 @@ class CreateNote extends Component {
               && tags.map(tag => (
                 <button
                   key={tag.id}
-                  className={tagIds.includes(tag.id) ? 'highlighted' : ''}
+                  className={tagIds.includes(tag.id) ? 'highlighted' : 'not-highlighted'}
                   onClick={() => addTag(tag.id)}
                   type="button"
                 >
