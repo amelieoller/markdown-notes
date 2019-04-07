@@ -47,7 +47,7 @@ const Tags = ({
           </span>
           <span
             onClick={() => {
-              const result = window.confirm('Want to delete?');
+              const result = window.confirm(`Are you sure you want to delete '${tag.name}'?`);
               result && deleteTag(tag.id);
             }}
             className="delete"

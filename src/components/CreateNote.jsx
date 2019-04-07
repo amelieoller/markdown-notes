@@ -125,6 +125,7 @@ const StyledCreateNote = styled.div`
         font-size: 0.9em;
         font-weight: 300;
         cursor: pointer;
+        background-color: transparent;
       }
 
       button:hover {
@@ -223,14 +224,13 @@ class CreateNote extends Component {
         <div className="new-note-footer">
           <div className="left">
             <Button onClick={handleNoteSubmit} text="Save Note" />
-            {/* <Button onClick={handleNoteClear} text="Clear" small /> */}
           </div>
           <div className="right tags">
             {tags
               && tags.map(tag => (
                 <button
                   key={tag.id}
-                  className={tagIds.includes(tag.id) ? 'tag highlighted' : 'tag'}
+                  className={tagIds.includes(tag.id) ? 'highlighted' : ''}
                   onClick={() => addTag(tag.id)}
                   type="button"
                 >

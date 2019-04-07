@@ -42,7 +42,7 @@ const StyledNote = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5em;
+    padding: 0.5em 1.5em;
   }
 
   .footer .left button {
@@ -52,6 +52,7 @@ const StyledNote = styled.div`
   .tags.right {
     display: flex;
     font-weight: 300;
+    flex-wrap: wrap;
 
     .tag {
       margin-left: 7px;
@@ -67,7 +68,7 @@ const Note = ({
     <Icon
       className="clear-button"
       onClick={() => {
-        const result = window.confirm('Want to delete?');
+        const result = window.confirm(`Are you sure you want to delete '${note.content.substr(0, 25)}...'?`);
         result && deleteNote(note.id);
       }}
       icon={ICONS.TRASH}

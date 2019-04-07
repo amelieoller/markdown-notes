@@ -6,7 +6,6 @@ const StyledButton = styled.button`
   background: white;
   color: ${props => props.theme.primaryHighlight};
   font-size: ${props => (props.small ? '.8em' : '1em')};
-  margin: 0.5em;
   padding: ${props => (props.small ? '0.1em .4em' : '0.25em 1em')};
   border: 2px solid ${props => props.theme.primaryHighlight};
   border-radius: 3px;
