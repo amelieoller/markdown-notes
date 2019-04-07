@@ -7,16 +7,32 @@ import styled from 'styled-components';
 import { deleteNote } from '../actions/noteActions';
 import MarkdownField from './MarkdownField';
 import Button from './Button';
+import Icon from './Icon';
+import { ICONS } from '../constants';
 
 const StyledNote = styled.div`
   display: inline-block;
   width: 100%;
   background: #fff;
   margin-bottom: 1em;
+  position: relative;
+
+  .clear-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5rem;
+    cursor: pointer;
+
+    &:hover path {
+      fill: ${props => props.theme.primaryHighlight} !important;
+    }
+  }
 
   > *:first-child {
     padding: 0.73em 1.5em;
     white-space: pre-line;
+    position: relative;
   }
 
   .footer {
@@ -47,6 +63,16 @@ const Note = ({
 }) => (
   <StyledNote>
     <MarkdownField content={note.content} />
+    <Icon
+      className="clear-button"
+      onClick={() => {
+        const result = window.confirm('Want to delete?');
+        result && deleteNote(note.id);
+      }}
+      icon={ICONS.TRASH}
+      color="#d8d8d8"
+      size={14}
+    />
     <div className="footer">
       <div className="left">
         <Button
@@ -54,14 +80,6 @@ const Note = ({
           onClick={() => {
             setEditNote(note);
           }}
-        />
-        <Button
-          text="Delete"
-          onClick={() => {
-            const result = window.confirm('Want to delete?');
-            result && deleteNote(note.id);
-          }}
-          small
         />
       </div>
       <div className="right tags">

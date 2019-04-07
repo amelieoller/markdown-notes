@@ -4,6 +4,8 @@ import styled, { keyframes } from 'styled-components';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import MarkdownField from './MarkdownField';
 import Button from './Button';
+import Icon from './Icon';
+import { ICONS } from '../constants';
 
 require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/closetag');
@@ -47,13 +49,13 @@ const StyledCreateNote = styled.div`
 
   .result-pane {
     background: white;
+    position: relative;
     @media (max-width: 700px) {
       grid-column: span 2;
     }
   }
 
   .result-pane > div {
-    position: relative;
     background: white;
     overflow: auto;
     padding: 10px;
@@ -75,6 +77,18 @@ const StyledCreateNote = styled.div`
 
   .result {
     width: 100%;
+  }
+
+  .clear-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1rem;
+    cursor: pointer;
+
+    &:hover path {
+      fill: ${props => props.theme.primaryHighlight} !important;
+    }
   }
 
   .editor textarea {
@@ -192,12 +206,23 @@ class CreateNote extends Component {
         </div>
 
         <div className="result-pane">
-          {content !== '' && <MarkdownField content={content} htmlMode={htmlMode} />}
+          {content !== '' && (
+            <>
+              <MarkdownField content={content} htmlMode={htmlMode} />
+              <Icon
+                className="clear-button"
+                onClick={handleNoteClear}
+                icon={ICONS.TRASH}
+                color="#d8d8d8"
+                size={14}
+              />
+            </>
+          )}
         </div>
         <div className="new-note-footer">
           <div className="left">
             <Button onClick={handleNoteSubmit} text="Save Note" />
-            <Button onClick={handleNoteClear} text="Clear" small />
+            {/* <Button onClick={handleNoteClear} text="Clear" small /> */}
           </div>
           <div className="right tags">
             {tags
