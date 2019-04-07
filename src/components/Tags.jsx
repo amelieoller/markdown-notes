@@ -3,30 +3,25 @@ import { connect } from 'react-redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import CreateTag from './CreateTag';
 import { deleteTag } from '../actions/tagActions';
 
 const StyledTag = styled.span`
   color: white;
+  margin: 0em 0.5em 1em 0em;
+  font-size: 0.8em;
+  font-weight: 300;
+  cursor: pointer;
+  border: 1px solid grey;
+  padding: 4px 12px;
+  border-radius: 15px;
+  border-color: ${props => props.theme.lightPrimaryHighlight};
+  background: ${props => (props.isHighlighted ? props.theme.lightPrimaryHighlight : 'transparent')};
 
-  .tag {
-    margin: 0em 0.5em 0.5em 0em;
-    font-size: 0.8em;
-    font-weight: 300;
-    cursor: pointer;
-    border: 1px solid grey;
-    padding: 4px 12px;
-    border-radius: 15px;
-    border-color: ${props => props.theme.lightPrimaryHighlight};
-
-    &:hover {
-      transition: background-color 0.2s ease;
-      background-color: ${props => props.theme.lightPrimaryHighlight};
-    }
-  }
-
-  .highlighted {
-    background: ${props => props.theme.lightPrimaryHighlight};
+  &:hover {
+    transition: background-color 0.2s ease;
+    background-color: ${props => props.theme.lightPrimaryHighlight};
   }
 
   .delete {
@@ -46,21 +41,19 @@ const Tags = ({
   <>
     {tags
       && tags.map(tag => (
-        <StyledTag>
-          <div key={tag.id} className={filteredTags.includes(tag.id) ? 'tag highlighted' : 'tag'}>
-            <span key={tag.id} onClick={() => setTagFilter(tag.id)}>
-              {tag.name}
-            </span>
-            <span
-              onClick={() => {
-                const result = window.confirm('Want to delete?');
-                result && deleteTag(tag.id);
-              }}
-              className="delete"
-            >
-              x
-            </span>
-          </div>
+        <StyledTag key={tag.id} {...tag} isHighlighted={filteredTags.includes(tag.id)}>
+          <span key={tag.id} onClick={() => setTagFilter(tag.id)}>
+            {tag.name}
+          </span>
+          <span
+            onClick={() => {
+              const result = window.confirm('Want to delete?');
+              result && deleteTag(tag.id);
+            }}
+            className="delete"
+          >
+            x
+          </span>
         </StyledTag>
       ))}
     <CreateTag />
@@ -74,6 +67,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   deleteTag: key => dispatch(deleteTag(key)),
 });
+
+Tags.propTypes = {
+  tags: PropTypes.arrayOf(PropTypes.object),
+  setTagFilter: PropTypes.func.isRequired,
+  filteredTags: PropTypes.arrayOf(PropTypes.object).isRequired,
+  deleteTag: PropTypes.func.isRequired,
+};
+
+Tags.defaultProps = { tags: [] };
 
 export default compose(
   connect(
