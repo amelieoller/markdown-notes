@@ -23,6 +23,7 @@ const StyledNote = styled.div`
     right: 0;
     margin: 0.5rem;
     cursor: pointer;
+    filter: drop-shadow(2px 2px 1.4px rgba(0, 0, 0, 0.3));
 
     &:hover path {
       transition: fill 0.3s ease;
@@ -68,12 +69,14 @@ const Note = ({
     <Icon
       className="clear-button"
       onClick={() => {
-        const result = window.confirm(`Are you sure you want to delete '${note.content.substr(0, 25)}...'?`);
+        const result = window.confirm(
+          `Are you sure you want to delete '${note.content.substr(0, 25)}...'?`,
+        );
         result && deleteNote(note.id);
       }}
       icon={ICONS.TRASH}
-      color="#d8d8d8"
-      size={14}
+      color="#909598"
+      size={16}
     />
     <div className="footer">
       <div className="left">

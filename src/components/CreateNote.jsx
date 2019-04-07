@@ -30,7 +30,7 @@ const slideInKeyframes = keyframes`
 
 const StyledCreateNote = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 50% 50%;
   box-shadow: 0px 1px 15px 1px rgba(0, 0, 0, 0.3);
 
   .CodeMirror {
@@ -85,6 +85,7 @@ const StyledCreateNote = styled.div`
     right: 0;
     margin: 1rem;
     cursor: pointer;
+    filter: drop-shadow(2px 2px 1.4px rgba(0, 0, 0, 0.3));
 
     &:hover path {
       transition: fill 0.3s ease;
@@ -223,7 +224,7 @@ class CreateNote extends Component {
                 className="clear-button"
                 onClick={handleNoteClear}
                 icon={ICONS.TRASH}
-                color="#d8d8d8"
+                color="#909598"
                 size={14}
               />
             </>
