@@ -1,7 +1,22 @@
 import React, { Component } from 'react';
 import firebase from 'firebase/app';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { createTag } from '../actions/tagActions';
+import FLoatingLabelInput from './FLoatingLabelInput';
+import Icon from './Icon';
+import { ICONS } from '../constants';
+
+const StyledCreateTag = styled.div`
+  margin-left: 1rem;
+`;
+
+const StyledPlus = styled.span`
+  display: inline-block;
+  padding: 0.2em 0;
+  cursor: pointer;
+  color: white;
+`;
 
 class CreateTag extends Component {
   constructor() {
@@ -36,29 +51,38 @@ class CreateTag extends Component {
     const { tagContent, formIsOpen } = this.state;
 
     return (
-      <>
+      <StyledCreateTag>
         {!formIsOpen ? (
-          <span
+          <StyledPlus
             onClick={() => this.setState({
               formIsOpen: true,
             })
             }
-            className="tag-form-plus"
           >
             +
-          </span>
+          </StyledPlus>
         ) : (
-          <form action="" onSubmit={e => this.handleSubmit(e)}>
-            <input
-              type="text"
-              placeholder="New Tag"
-              value={tagContent}
-              onChange={e => this.setState({ tagContent: e.target.value })}
-              className="new-tag"
-            />
-          </form>
+          <FLoatingLabelInput
+            placeholderLabel="New Tag"
+            id="new-tag"
+            value={tagContent}
+            onChange={e => this.setState({ tagContent: e.target.value })}
+            onSubmit={e => this.handleSubmit(e)}
+          >
+            {formIsOpen && (
+              <span
+                className="search-icon"
+                role="button"
+                tabIndex="0"
+                onClick={() => this.setState({ formIsOpen: false })}
+                onKeyPress={() => this.setState({ formIsOpen: false })}
+              >
+                <Icon icon={ICONS.CLEAR} color="white" size={14} />
+              </span>
+            )}
+          </FLoatingLabelInput>
         )}
-      </>
+      </StyledCreateTag>
     );
   }
 }
