@@ -1,46 +1,8 @@
 import React, { Component } from 'react';
 import algoliasearch from 'algoliasearch';
-import styled from 'styled-components';
+import FLoatingLabelInput from './FLoatingLabelInput';
 import Icon from './Icon';
 import { ICONS } from '../constants';
-
-const StyledSearch = styled.div`
-  .search-input {
-    /* border: 1px solid #b64545; */
-    /* border-radius: 0.2em 0 0 0.2em; */
-    display: block;
-    float: left;
-    height: 30px;
-    margin: 0;
-    padding: 0 10px;
-    width: 200px;
-  }
-
-  .input-group-btn {
-    position: relative;
-    font-size: 0;
-    white-space: nowrap;
-    width: 1%;
-    vertical-align: middle;
-    display: table-cell;
-  }
-
-  .search-button {
-    background: linear-gradient(#b64545, #FD6565);
-    box-sizing: border-box;
-    /* border: 1px solid #b64545; */
-    border-radius: 0 0.25em 0.25em 0;
-    display: block;
-    float: left;
-    height: 30px;
-    line-height: 30px;
-    margin: 0;
-    padding: 0;
-    position: relative;
-    width: 50px;
-    cursor: pointer;
-  }
-`;
 
 class Search extends Component {
   constructor() {
@@ -55,6 +17,9 @@ class Search extends Component {
   handleSearch = (e) => {
     e.preventDefault();
     const { query } = this.state;
+
+    if (query === '') return;
+
     const client = algoliasearch(
       process.env.REACT_APP_ALGOLIA_ID,
       process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
@@ -76,6 +41,9 @@ class Search extends Component {
 
   onClearSearch = (e) => {
     e.preventDefault();
+    const { query } = this.state;
+
+    if (query === '') return;
 
     this.props.setSearchFilter([]);
     this.setState({
@@ -88,25 +56,35 @@ class Search extends Component {
     const { query, searched } = this.state;
 
     return (
-      <StyledSearch>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="Search Notes"
-          onChange={e => this.setState({ query: e.target.value })}
-          value={query}
-          onKeyPress={e => e.key === 'Enter' && this.handleSearch(e)}
-        />
+      <FLoatingLabelInput
+        placeholderLabel="Search Notes"
+        value={query}
+        onChange={e => this.setState({ query: e.target.value })}
+        onSubmit={this.handleSearch}
+        id="search-notes"
+      >
         {searched ? (
-          <button type="submit" className="search-button" onClick={e => this.onClearSearch(e)}>
-            <Icon icon={ICONS.CLEAR} color="white" />
-          </button>
+          <span
+            className="search-icon"
+            onClick={this.onClearSearch}
+            role="button"
+            onKeyPress={this.onClearSearch}
+            tabIndex="0"
+          >
+            <Icon icon={ICONS.CLEAR} color="white" size={14} />
+          </span>
         ) : (
-          <button type="submit" className="search-button" onClick={e => this.handleSearch(e)}>
-            <Icon icon={ICONS.SEARCH} color="white" />
-          </button>
+          <span
+            className="search-icon"
+            onClick={this.handleSearch}
+            role="button"
+            onKeyPress={this.handleSearch}
+            tabIndex="0"
+          >
+            <Icon icon={ICONS.SEARCH} color="white" size={14} />
+          </span>
         )}
-      </StyledSearch>
+      </FLoatingLabelInput>
     );
   }
 }
