@@ -42,7 +42,13 @@ const Tags = ({
     {tags
       && tags.map(tag => (
         <StyledTag key={tag.id} {...tag} isHighlighted={filteredTags.includes(tag.id)}>
-          <span key={tag.id} onClick={() => setTagFilter(tag.id)}>
+          <span
+            key={tag.id}
+            onClick={() => setTagFilter(tag.id)}
+            onKeyPress={() => setTagFilter(tag.id)}
+            role="button"
+            tabIndex="0"
+          >
             {tag.name}
           </span>
           <span
@@ -50,7 +56,13 @@ const Tags = ({
               const result = window.confirm(`Are you sure you want to delete '${tag.name}'?`);
               result && deleteTag(tag.id);
             }}
+            onKeyPress={() => {
+              const result = window.confirm(`Are you sure you want to delete '${tag.name}'?`);
+              result && deleteTag(tag.id);
+            }}
             className="delete"
+            role="button"
+            tabIndex="0"
           >
             x
           </span>
