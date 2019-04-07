@@ -25,6 +25,7 @@ const StyledNote = styled.div`
     cursor: pointer;
 
     &:hover path {
+      transition: fill 0.3s ease;
       fill: ${props => props.theme.primaryHighlight} !important;
     }
   }
