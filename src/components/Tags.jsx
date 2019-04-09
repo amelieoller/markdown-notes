@@ -19,7 +19,8 @@ const StyledTag = styled.span`
   border-color: ${props => props.theme.lightPrimaryHighlight};
   background: ${props => (props.isHighlighted ? props.theme.lightPrimaryHighlight : 'transparent')};
 
-  &:hover, &:active {
+  &:hover,
+  &:active {
     transition: background-color 0.2s ease;
   }
 
