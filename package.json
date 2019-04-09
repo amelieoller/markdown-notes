@@ -14,10 +14,10 @@
     "markdown-to-jsx": "^6.9.3",
     "node-sass": "^4.11.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.4",
+    "react": "16",
     "react-autosize-textarea": "^6.0.0",
     "react-codemirror2": "^5.1.0",
-    "react-dom": "^16.8.4",
+    "react-dom": "16",
     "react-markdown": "^4.0.6",
     "react-redux": "^5.0.0",
     "react-redux-firebase": "^2.2.6",
@@ -28,7 +28,9 @@
     "redux-firestore": "^0.7.2",
     "redux-thunk": "^2.3.0",
     "reset-css": "^4.0.1",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "enzyme-adapter-react-16": "^1.12.1",
+    "enzyme": "^3.9.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -44,5 +46,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "enzyme-to-json": "^3.3.5",
+    "eslint-plugin-jest": "^22.4.1",
+    "jest-styled-components": "^6.3.1"
+  }
 }

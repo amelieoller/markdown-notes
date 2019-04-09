@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import algoliasearch from 'algoliasearch';
+import PropTypes from 'prop-types';
 import FLoatingLabelInput from './FLoatingLabelInput';
 import Icon from './Icon';
 import { ICONS } from '../constants';
@@ -88,5 +89,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  setSearchFilter: PropTypes.func.isRequired,
+};
 
 export default Search;

@@ -28,12 +28,9 @@ const Button = (props) => {
   );
 };
 
-Button.defaultProps = {
-  text: 'Submit',
-};
-
 Button.propTypes = {
-  text: PropTypes.string,
+  text: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };
 
 export default Button;
