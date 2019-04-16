@@ -21,6 +21,7 @@ const StyledTag = styled.span`
 
   &:hover,
   &:active {
+    background-color: ${props => props.theme.lightPrimaryHighlight};
     transition: background-color 0.2s ease;
   }
 
