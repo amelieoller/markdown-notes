@@ -17,7 +17,7 @@
     "react": "16",
     "react-autosize-textarea": "^6.0.0",
     "react-codemirror2": "^5.1.0",
-    "react-dom": "16",
+    "react-dom": ">=16.0.1",
     "react-markdown": "^4.0.6",
     "react-redux": "^5.0.0",
     "react-redux-firebase": "^2.2.6",
