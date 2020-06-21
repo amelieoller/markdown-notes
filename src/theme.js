@@ -1,0 +1,17 @@
+export const theme = {
+  background: '#FFFFFF',
+  onBackground: '#363740',
+  onBackgroundLight: '#A4A6B3',
+  primary: '#7059FF',
+  surface: '#363740',
+  onSurface: '#838590',
+  onSurfacePrimary: '#DDE2FF',
+  onSurfaceLight: '#9ea1b314',
+  surfaceTwo: '#F7F8FC',
+  onSurfaceTwo: '#707178',
+  onSurfaceTwoPrimary: '#3853ff66',
+  onSurfaceTwoLight: '#9fa2b414',
+  borderRadius: '4px',
+  spacing: '10px',
+  spacingLarge: '30px',
+};

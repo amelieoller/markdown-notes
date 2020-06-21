@@ -1,5 +1,7 @@
-export const createTag = tag => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const createTag = (tag) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  firestore
     .collection('tags')
     .add(tag)
     .then(() => {
@@ -10,8 +12,10 @@ export const createTag = tag => (dispatch, getState, { getFirestore }) => {
     });
 };
 
-export const updateTag = tag => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const updateTag = (tag) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  firestore
     .collection('tags')
     .doc(tag.id)
     .update(tag)
@@ -23,8 +27,10 @@ export const updateTag = tag => (dispatch, getState, { getFirestore }) => {
     });
 };
 
-export const deleteTag = key => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const deleteTag = (key) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  firestore
     .collection('tags')
     .doc(key)
     .delete()

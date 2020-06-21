@@ -1,6 +1,39 @@
-import React, { Component } from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
+const FloatingLabelInput = ({
+  placeholderLabel,
+  value,
+  onChange,
+  type,
+  onSubmit,
+  id,
+  children,
+}) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const ref = useRef(null);
+
+  return (
+    <StyledInput value={value} isFocused={isFocused}>
+      <input
+        id={id}
+        className={value ? 'filled' : ''}
+        type={type}
+        value={value}
+        onChange={onChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        onKeyPress={(e) => e.key === 'Enter' && onSubmit(e)}
+        ref={ref}
+      />
+      <label htmlFor={id} onClick={() => ref.current.focus()}>
+        {placeholderLabel}
+      </label>
+      {children}
+    </StyledInput>
+  );
+};
 
 const StyledInput = styled.div`
   position: relative;
@@ -21,8 +54,8 @@ const StyledInput = styled.div`
     max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
-    font-size: ${props => (props.value || props.focused ? '0.75em' : 'inherit')};
-    transform: ${props => (props.value || props.focused ? 'translateY(-125%)' : '')};
+    font-size: ${({ isFocused, value }) => (value || isFocused ? '0.75em' : 'inherit')};
+    transform: ${({ isFocused, value }) => (value || isFocused ? 'translateY(-125%)' : '')};
     cursor: auto;
   }
 
@@ -41,7 +74,7 @@ const StyledInput = styled.div`
 
     &:focus,
     &.filled {
-      box-shadow: 0 1px 0 0 ${props => props.theme.lightPrimaryHighlight};
+      box-shadow: 0 1px 0 0 ${({ theme }) => theme.primary};
     }
   }
 
@@ -52,45 +85,7 @@ const StyledInput = styled.div`
   }
 `;
 
-class FLoatingLabelInput extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      focused: false,
-    };
-  }
-
-  render() {
-    const {
-      placeholderLabel, value, onChange, type, onSubmit, id, children,
-    } = this.props;
-
-    return (
-      <StyledInput {...this.props} {...this.state}>
-        <input
-          id={id}
-          className={value ? 'filled' : ''}
-          type={type}
-          value={value}
-          onChange={onChange}
-          onFocus={() => this.setState({ focused: true })}
-          onBlur={() => this.setState({ focused: false })}
-          onKeyPress={e => e.key === 'Enter' && onSubmit(e)}
-          ref={(input) => {
-            this.textInput = input;
-          }}
-        />
-        <label htmlFor={id} onClick={() => this.textInput.focus()}>
-          {placeholderLabel}
-        </label>
-        {children}
-      </StyledInput>
-    );
-  }
-}
-
-FLoatingLabelInput.propTypes = {
+FloatingLabelInput.propTypes = {
   placeholderLabel: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired,
@@ -100,10 +95,10 @@ FLoatingLabelInput.propTypes = {
   children: PropTypes.shape({}).isRequired,
 };
 
-FLoatingLabelInput.defaultProps = {
+FloatingLabelInput.defaultProps = {
   placeholderLabel: 'Input',
   value: '',
   type: 'text',
 };
 
-export default FLoatingLabelInput;
+export default FloatingLabelInput;

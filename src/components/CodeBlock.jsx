@@ -1,19 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import eighties from 'react-syntax-highlighter/dist/styles/hljs/tomorrow-night-eighties';
+import { tomorrowNightEighties } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 
 const CodeBlock = ({ language, value }) => (
   <SyntaxHighlighter
     language={language}
-    style={eighties}
+    style={tomorrowNightEighties}
     showLineNumbers="true"
-    codeTagProps={{ style: { fontFamily: 'DankMono' } }}
+    codeTagProps={{ style: { fontFamily: 'Source Code Pro' } }}
   >
     {value}
   </SyntaxHighlighter>
 );
-
 
 CodeBlock.defaultProps = {
   language: '',

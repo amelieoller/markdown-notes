@@ -9,8 +9,7 @@ const propsCSS = {
     background-color: transparent;
     color: ${({ theme }) => theme.colors.onSurface};
     border: 2px solid
-      ${({ theme, buttonType }) =>
-        buttonType ? theme.colors[buttonType] : theme.colors.secondary};
+      ${({ theme, buttonType }) => (buttonType ? theme.colors[buttonType] : theme.colors.secondary)};
 
     &:hover {
       background-color: ${({ theme, buttonType }) =>
@@ -32,10 +31,6 @@ const propsCSS = {
   large: css`
     font-size: 1.5rem;
     padding: 8px 13px;
-
-    svg {
-      height: 20px;
-    }
   `,
 
   buttonType: css`
@@ -57,8 +52,7 @@ const StyledButton = styled.button`
   cursor: pointer;
   font-size: 1.3rem;
   border: 2px solid
-    ${({ theme, buttonType }) =>
-      buttonType ? theme.colors[buttonType] : theme.colors.secondary};
+    ${({ theme, buttonType }) => (buttonType ? theme.colors[buttonType] : theme.colors.secondary)};
   display: flex;
   align-items: center;
   display: inline-block;
@@ -67,14 +61,12 @@ const StyledButton = styled.button`
     background: ${({ theme }) => theme.colors.darker(1, 'secondary')};
     border: 2px solid
       ${({ theme, buttonType }) =>
-        buttonType
-          ? theme.colors.darker(1, buttonType)
-          : theme.colors.darker(1, 'secondary')};
+        buttonType ? theme.colors.darker(1, buttonType) : theme.colors.darker(1, 'secondary')};
   }
 
-  svg {
+  /* svg {
     height: 17px;
-  }
+  } */
 
   & > *:not(:last-child) {
     margin-right: 6px;

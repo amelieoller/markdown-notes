@@ -1,5 +1,7 @@
-export const createNote = note => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const createNote = (note) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  firestore
     .collection('notes')
     .add(note)
     .then(() => {
@@ -10,8 +12,12 @@ export const createNote = note => (dispatch, getState, { getFirestore }) => {
     });
 };
 
-export const updateNote = note => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const updateNote = (note) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+
+  firestore
     .collection('notes')
     .doc(note.id)
     .update(note)
@@ -23,8 +29,10 @@ export const updateNote = note => (dispatch, getState, { getFirestore }) => {
     });
 };
 
-export const deleteNote = key => (dispatch, getState, { getFirestore }) => {
-  getFirestore()
+export const deleteNote = (key) => (dispatch, getState, getFirebase) => {
+  const firestore = getFirebase().firestore();
+
+  firestore
     .collection('notes')
     .doc(key)
     .delete()

@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
+
 import Note from './Note';
 
 const StyledNotes = styled.div`
@@ -14,35 +14,31 @@ const StyledNotes = styled.div`
   width: 95%;
 `;
 
-const filterBy = (notes, filterArr) => (filterArr.length !== 0 ? notes.filter(note => filterArr.includes(note.id)) : notes);
+const filterBy = (notes, filterArr) =>
+  filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
 
-const Notes = ({
-  notes, setEditNote, tagFilter, searchFilter,
-}) => (
-  <StyledNotes>
-    {notes
-      && filterBy(notes, searchFilter)
-        .filter(note => tagFilter.every(tagId => note.tagIds.includes(tagId)))
-        .sort(
-          (a, b) => (b.updated ? b.updated.toDate() : new Date())
-            - (a.updated ? a.updated.toDate() : new Date()),
-        )
-        .map(note => <Note key={note.id} note={note} setEditNote={setEditNote} />)}
-  </StyledNotes>
-);
+const Notes = ({ filteredTagIds, filteredNoteIds }) => {
+  const notes = useSelector((state) => state.firestore.ordered.notes);
+
+  return (
+    <StyledNotes>
+      {notes &&
+        filterBy(notes, filteredNoteIds)
+          .filter((note) => filteredTagIds.every((tagId) => note.tagIds.includes(tagId)))
+          .sort(
+            (a, b) =>
+              (b.updated ? b.updated.toDate() : new Date()) -
+              (a.updated ? a.updated.toDate() : new Date()),
+          )
+          .map((note) => <Note key={note.id} note={note} />)}
+    </StyledNotes>
+  );
+};
 
 Notes.propTypes = {
   notes: PropTypes.arrayOf(PropTypes.object),
-  setEditNote: PropTypes.func.isRequired,
-  tagFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
-  searchFilter: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filteredTagIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  filteredNoteIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const mapStateToProps = state => ({
-  notes: state.firestore.ordered.notes,
-});
-
-export default compose(
-  connect(mapStateToProps),
-  firestoreConnect([{ collection: 'notes' }]),
-)(Notes);
+export default Notes;

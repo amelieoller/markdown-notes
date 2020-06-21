@@ -1,25 +1,22 @@
-import React, { Component } from 'react';
-import algoliasearch from 'algoliasearch';
+import React, { useState } from 'react';
+import algoliasearch from 'algoliasearch/lite';
 import PropTypes from 'prop-types';
-import FLoatingLabelInput from './FLoatingLabelInput';
+
+import FloatingLabelInput from './FloatingLabelInput';
 import Icon from './Icon';
 import { ICONS } from '../constants';
+import { mockResults } from './mockSearchResults';
+import Input from '../atoms/Input/Input';
 
-class Search extends Component {
-  constructor() {
-    super();
+const Search = ({ setSearchResultNotes, placeholderText }) => {
+  const [query, setQuery] = useState('');
+  const [searched, setSearched] = useState(false);
 
-    this.state = {
-      query: '',
-      searched: false,
-    };
-  }
+  const handleSearch = (value) => {
+    if (value === '') return;
 
-  handleSearch = (e) => {
-    e.preventDefault();
-    const { query } = this.state;
-
-    if (query === '') return;
+    // setSearchResultNotes(mockResults);
+    // setSearched(true);
 
     const client = algoliasearch(
       process.env.REACT_APP_ALGOLIA_ID,
@@ -27,71 +24,65 @@ class Search extends Component {
     );
     const index = client.initIndex('notes');
 
-    index
-      .search({
-        query,
-      })
-      .then((responses) => {
-        const noteTags = responses.hits.map(note => note.objectID);
-        this.props.setSearchFilter(noteTags);
-        this.setState({
-          searched: true,
-        });
-      });
-  };
+    index.search(value).then(({ hits }) => {
+      const hitsWithIds = hits.map((hit) => ({ ...hit, id: hit.objectID }));
 
-  onClearSearch = (e) => {
-    e.preventDefault();
-    const { query } = this.state;
-
-    if (query === '') return;
-
-    this.props.setSearchFilter([]);
-    this.setState({
-      query: '',
-      searched: false,
+      setSearchResultNotes(hitsWithIds);
+      setSearched(true);
     });
   };
 
-  render() {
-    const { query, searched } = this.state;
+  const onClearSearch = (e) => {
+    // e.preventDefault();
 
-    return (
-      <FLoatingLabelInput
-        placeholderLabel="Search Notes"
-        value={query}
-        onChange={e => this.setState({ query: e.target.value })}
-        onSubmit={this.handleSearch}
-        id="search-notes"
-      >
-        {searched ? (
-          <span
-            className="search-icon"
-            onClick={this.onClearSearch}
-            role="button"
-            onKeyPress={this.onClearSearch}
-            tabIndex="0"
-          >
-            <Icon icon={ICONS.CLEAR} color="white" size={14} />
-          </span>
-        ) : (
-          <span
-            className="search-icon"
-            onClick={this.handleSearch}
-            role="button"
-            onKeyPress={this.handleSearch}
-            tabIndex="0"
-          >
-            <Icon icon={ICONS.SEARCH} color="white" size={14} />
-          </span>
-        )}
-      </FLoatingLabelInput>
-    );
-  }
-}
+    if (query === '') return;
+
+    setQuery('');
+    setSearchResultNotes([]);
+    setSearched(false);
+  };
+
+  return (
+    <Input label={placeholderText} handleOnBlur={handleSearch} defaultValue={query} />
+    // <FloatingLabelInput
+    //   placeholderLabel="Search Notes"
+    //   value={query}
+    //   onChange={(e) => setQuery(e.target.value)}
+    //   onSubmit={handleSearch}
+    //   id="search-notes"
+    // >
+    //   {searched ? (
+    //     <span
+    //       className="search-icon"
+    //       onClick={onClearSearch}
+    //       role="button"
+    //       onKeyPress={onClearSearch}
+    //       tabIndex="0"
+    //     >
+    //       <Icon icon={ICONS.CLEAR} color="white" size={14} />
+    //     </span>
+    //   ) : (
+    //     <span
+    //       className="search-icon"
+    //       onClick={handleSearch}
+    //       role="button"
+    //       onKeyPress={handleSearch}
+    //       tabIndex="0"
+    //     >
+    //       <Icon icon={ICONS.SEARCH} color="white" size={14} />
+    //     </span>
+    //   )}
+    // </FloatingLabelInput>
+  );
+};
 
 Search.propTypes = {
-  setSearchFilter: PropTypes.func.isRequired,
+  setSearchResultNotes: PropTypes.func.isRequired,
+  placeholderText: PropTypes.string,
+};
+
+Search.defaultProps = {
+  placeholderText: 'Search',
 };
 
 export default Search;

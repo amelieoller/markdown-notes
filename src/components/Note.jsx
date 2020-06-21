@@ -1,14 +1,80 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { deleteNote } from '../actions/noteActions';
-import MarkdownField from './MarkdownField';
+import MarkdownFormattedText from './MarkdownFormattedText';
 import Button from './Button';
 import Icon from './Icon';
 import { ICONS } from '../constants';
+
+const Note = ({ note }) => {
+  const noteSections = note.content.split('---');
+  const [endPoint, setEndPoint] = useState(1);
+  const tags = useSelector((state) => state.firestore.ordered.tags);
+  const dispatch = useDispatch();
+
+  return (
+    <StyledNote>
+      <MarkdownFormattedText content={noteSections.slice(0, endPoint).join('---')} />
+      {noteSections.length > 1 && (
+        <>
+          {endPoint !== noteSections.length && (
+            <Button
+              text="More"
+              onClick={() => {
+                setEndPoint(endPoint + 1);
+              }}
+            />
+          )}
+
+          {endPoint !== 1 && (
+            <Button
+              text="Less"
+              onClick={() => {
+                setEndPoint(endPoint - 1);
+              }}
+            />
+          )}
+        </>
+      )}
+      <Icon
+        className="clear-button"
+        onClick={() => {
+          const result = window.confirm(
+            `Are you sure you want to delete '${note.content.substr(0, 25)}...'?`,
+          );
+          result && dispatch(deleteNote(note.id));
+        }}
+        icon={ICONS.TRASH}
+        color="#909598"
+        size={16}
+      />
+      <div className="footer">
+        <div className="left">
+          <Button
+            text="Edit"
+            onClick={() => {
+              dispatch({ type: 'SET_CURRENT_NOTE', note });
+            }}
+          />
+        </div>
+        <div className="right tags">
+          {tags &&
+            note.tagIds &&
+            tags
+              .filter((t) => note.tagIds.includes(t.id))
+              .map((tag) => (
+                <div key={tag.id} className="tag">
+                  {tag.name}
+                </div>
+              ))}
+        </div>
+      </div>
+    </StyledNote>
+  );
+};
 
 const StyledNote = styled.div`
   display: inline-block;
@@ -16,6 +82,7 @@ const StyledNote = styled.div`
   background: #fff;
   margin-bottom: 1em;
   position: relative;
+  border: 1px solid #adadad;
 
   .clear-button {
     position: absolute;
@@ -27,14 +94,8 @@ const StyledNote = styled.div`
 
     &:hover path {
       transition: fill 0.3s ease;
-      fill: ${props => props.theme.primaryHighlight} !important;
+      fill: ${(props) => props.theme.primary} !important;
     }
-  }
-
-  > *:first-child {
-    padding: 0.73em 1.5em;
-    white-space: pre-line;
-    position: relative;
   }
 
   .footer {
@@ -43,7 +104,7 @@ const StyledNote = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5em 1.5em;
+    padding: 0.4em 0.8em;
   }
 
   .footer .left button {
@@ -61,68 +122,13 @@ const StyledNote = styled.div`
   }
 `;
 
-const Note = ({
-  note, deleteNote, setEditNote, tags,
-}) => (
-  <StyledNote>
-    <MarkdownField content={note.content} />
-    <Icon
-      className="clear-button"
-      onClick={() => {
-        const result = window.confirm(
-          `Are you sure you want to delete '${note.content.substr(0, 25)}...'?`,
-        );
-        result && deleteNote(note.id);
-      }}
-      icon={ICONS.TRASH}
-      color="#909598"
-      size={16}
-    />
-    <div className="footer">
-      <div className="left">
-        <Button
-          text="Edit"
-          onClick={() => {
-            setEditNote(note);
-          }}
-        />
-      </div>
-      <div className="right tags">
-        {note.tagIds
-          && tags
-            .filter(t => note.tagIds.includes(t.id))
-            .map(tag => (
-              <div key={tag.id} className="tag">
-                {tag.name}
-              </div>
-            ))}
-      </div>
-    </div>
-  </StyledNote>
-);
-
 Note.propTypes = {
   note: PropTypes.shape({
     content: PropTypes.string,
     created: PropTypes.object,
+    id: PropTypes.string,
+    tagIds: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
-  setEditNote: PropTypes.func.isRequired,
-  deleteNote: PropTypes.func.isRequired,
-  tags: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  deleteNote: key => dispatch(deleteNote(key)),
-});
-
-const mapStateToProps = state => ({
-  tags: state.firestore.ordered.tags,
-});
-
-export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  ),
-  firestoreConnect([{ collection: 'tags' }]),
-)(Note);
+export default Note;
