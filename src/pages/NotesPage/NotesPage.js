@@ -31,12 +31,12 @@ const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
 };
 
 const NotesPage = () => {
-  useFirestoreConnect(['lectures']);
+  useFirestoreConnect(['notes']);
 
   const dispatch = useDispatch();
 
   const notes = useSelector((state) => state.firestore.ordered.notes);
-  const { currentNote } = useSelector((state) => state);
+  const { currentNoteToEdit } = useSelector((state) => state);
 
   const [selectedNote, setSelectedNote] = useState(null);
   const [linkedNotes, setLinkedNotes] = useState([]);
@@ -44,6 +44,7 @@ const NotesPage = () => {
   const [filteredTagIds, setFilteredTagIds] = useState([]);
   const [filteredNoteIds, setFilteredNoteIds] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
+  const [showNoteEdit, setShowNoteEdit] = useState(false);
 
   useEffect(() => {
     if (notes) {
@@ -57,10 +58,10 @@ const NotesPage = () => {
   };
 
   useEffect(() => {
-    if (currentNote.title) {
-      setSelectedNote({ tagIds: [], noteLinkIds: [], ...currentNote });
+    if (currentNoteToEdit.title) {
+      setSelectedNote(currentNoteToEdit);
     }
-  }, [currentNote]);
+  }, [currentNoteToEdit]);
 
   useEffect(() => {
     if (selectedNote && notes) {
@@ -72,9 +73,15 @@ const NotesPage = () => {
     }
   }, [selectedNote]);
 
-  const handleAddLectureClick = () => {};
+  const handleAddNoteClick = () => {
+    setShowNoteEdit(true);
+  };
 
-  const handleEditLectureClick = () => {};
+  const handleEditLectureClick = () => {
+    setShowNoteEdit(true);
+
+    dispatch({ type: 'SET_CURRENT_NOTE', note: selectedNote });
+  };
 
   const handleDeleteNote = (noteId) => {
     dispatch(deleteNote(noteId));
@@ -108,6 +115,7 @@ const NotesPage = () => {
   };
 
   const handleNoteClick = (note) => {
+    setShowNoteEdit(false);
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
     setSelectedNote(note);
   };
@@ -126,7 +134,7 @@ const NotesPage = () => {
     <SidebarsMainTemplate>
       <LectureSidebar
         items={notes && sortAndFilter(filteredNotes, filteredNoteIds, filteredTagIds)}
-        handleAddClick={handleAddLectureClick}
+        handleAddClick={handleAddNoteClick}
         handleItemClick={handleNoteClick}
         handleDeleteItem={handleDeleteNote}
         buttonText="Add Lecture"
@@ -135,11 +143,7 @@ const NotesPage = () => {
         <>
           <Book />
           <span>Notes</span>
-          <IconButton
-            onClick={handleAddLectureClick}
-            color="onSurface"
-            hoverColor="onSurfacePrimary"
-          >
+          <IconButton onClick={handleAddNoteClick} color="onSurface" hoverColor="onSurfacePrimary">
             <Plus />
           </IconButton>
         </>
@@ -153,7 +157,6 @@ const NotesPage = () => {
 
       <LectureSidebar
         items={linkedNotes}
-        handleAddClick={handleEditLectureClick}
         handleItemClick={handleTopicClick}
         handleDeleteItem={handleDeleteNoteLink}
         buttonText="Edit Lecture"
@@ -174,8 +177,10 @@ const NotesPage = () => {
       </LectureSidebar>
 
       <>
-        {currentNote.title && <NoteEditor selectedNote={selectedNote} />}
-        {selectedNote && <Note note={selectedNote} />}
+        {(currentNoteToEdit.title || showNoteEdit) && (
+          <NoteEditor currentNoteToEdit={currentNoteToEdit} />
+        )}
+        {!(currentNoteToEdit.title || showNoteEdit) && selectedNote && <Note note={selectedNote} />}
       </>
     </SidebarsMainTemplate>
   );

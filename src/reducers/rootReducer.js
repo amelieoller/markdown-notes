@@ -11,7 +11,7 @@ import lectureReducer from './lectureReducer';
 const rootReducer = combineReducers({
   notes: notesReducer,
   tags: tagsReducer,
-  currentNote: currentNote,
+  currentNoteToEdit: currentNote,
   currentLecture: currentLecture,
   lectures: lectureReducer,
   firebase: firebaseReducer,

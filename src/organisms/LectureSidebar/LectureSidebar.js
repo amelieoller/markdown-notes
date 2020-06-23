@@ -96,7 +96,6 @@ const CollapseButton = styled.span`
 
 LectureSidebar.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})),
-  handleAddClick: PropTypes.func,
   handleItemClick: PropTypes.func,
 };
 

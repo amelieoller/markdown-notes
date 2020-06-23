@@ -20,17 +20,12 @@ require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/theme/material.css');
 
-const NoteEditor = () => {
-  const { currentNote } = useSelector((state) => state);
+const NoteEditor = ({ currentNoteToEdit }) => {
   const tags = useSelector((state) => state.firestore.ordered.tags);
   const dispatch = useDispatch();
   const firestore = useFirestore();
 
-  const [note, setNote] = useState(currentNote);
-
-  useEffect(() => {
-    setNote({ tagIds: [], noteLinkIds: [], language: 'Code', ...currentNote });
-  }, [currentNote]);
+  const [note, setNote] = useState(currentNoteToEdit);
 
   const handleNoteChange = (attribute) => {
     setNote({ ...note, ...attribute });

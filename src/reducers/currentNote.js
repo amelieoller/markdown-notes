@@ -5,7 +5,7 @@ const currentNote = (state = initState, action) => {
     case 'SET_CURRENT_NOTE':
       return action.note;
     case 'CLEAR_CURRENT_NOTE':
-      return { title: '', content: '', tagIds: [] };
+      return { title: '', content: '', tagIds: [], language: 'code' };
     default:
       return state;
   }
