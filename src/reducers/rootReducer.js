@@ -5,12 +5,14 @@ import { firebaseReducer } from 'react-redux-firebase';
 import notesReducer from './notesReducer';
 import tagsReducer from './tagsReducer';
 import currentNote from './currentNote';
+import currentLecture from './currentLecture';
 import lectureReducer from './lectureReducer';
 
 const rootReducer = combineReducers({
   notes: notesReducer,
   tags: tagsReducer,
   currentNote: currentNote,
+  currentLecture: currentLecture,
   lectures: lectureReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer,

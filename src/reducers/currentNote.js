@@ -1,4 +1,4 @@
-const initState = { title: '', content: '', tagIds: [] };
+const initState = { title: '', content: '', tagIds: [], language: 'code' };
 
 const currentNote = (state = initState, action) => {
   switch (action.type) {
