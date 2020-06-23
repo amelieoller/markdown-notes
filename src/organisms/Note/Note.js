@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { deleteNote } from '../../actions/noteActions';
 import MarkdownFormattedText from '../../components/MarkdownFormattedText';
 import Button from '../../components/Button';
-import { ReactComponent as ChevronsDown } from '../../assets/icons/chevrons-down.svg';
-import { ReactComponent as ChevronsUp } from '../../assets/icons/chevrons-up.svg';
-import IconButton from '../../atoms/IconButton/IconButton';
 
-const Note = ({ note, setShowAddLecture }) => {
+const Note = ({ note }) => {
   const dispatch = useDispatch();
   const tags = useSelector((state) => state.firestore.ordered.tags);
-
-  const noteSections = note.content.split('---');
-
-  const [endPoint, setEndPoint] = useState(1);
 
   const filterTags = () => {
     return tags
@@ -30,37 +22,9 @@ const Note = ({ note, setShowAddLecture }) => {
 
   return (
     <StyledNote>
-      <MarkdownFormattedText key={note.id} content={noteSections.slice(0, endPoint).join('---')} />
+      <MarkdownFormattedText key={note.id} content={note.content} />
 
       <Footer>
-        {noteSections.length > 1 && (
-          <MoreLess>
-            {endPoint !== noteSections.length && (
-              <IconButton
-                onClick={() => {
-                  setEndPoint(endPoint + 1);
-                }}
-                color="onBackgroundLight"
-                hoverColor="primary"
-              >
-                <ChevronsDown />
-              </IconButton>
-            )}
-
-            {endPoint !== 1 && (
-              <IconButton
-                onClick={() => {
-                  setEndPoint(endPoint - 1);
-                }}
-                color="onBackgroundLight"
-                hoverColor="primary"
-              >
-                <ChevronsUp />
-              </IconButton>
-            )}
-          </MoreLess>
-        )}
-
         {tags && !!note.tagIds.length && (
           <Tags>
             <span className="tag-label">Tags:</span>
@@ -71,7 +35,6 @@ const Note = ({ note, setShowAddLecture }) => {
         <Button
           text="Edit"
           onClick={() => {
-            setShowAddLecture(true);
             dispatch({ type: 'SET_CURRENT_NOTE', note });
           }}
         />
@@ -85,12 +48,6 @@ const StyledNote = styled.div``;
 const Footer = styled.div`
   & > * {
     margin-bottom: 20px;
-  }
-`;
-
-const MoreLess = styled.div`
-  & > *:first-child {
-    margin-right: ${({ theme }) => theme.spacing};
   }
 `;
 

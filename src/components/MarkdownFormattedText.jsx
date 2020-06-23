@@ -1,15 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Markdown from 'react-markdown';
 
 import CodeBlock from './CodeBlock';
+import { ReactComponent as ChevronsDown } from '../assets/icons/chevrons-down.svg';
+import { ReactComponent as ChevronsUp } from '../assets/icons/chevrons-up.svg';
+import IconButton from '../atoms/IconButton/IconButton';
 
-const MarkdownFormattedText = ({ content }) => (
-  <StyledMarkdown>
-    <Markdown source={content} renderers={{ code: CodeBlock }} />
-  </StyledMarkdown>
-);
+const MarkdownFormattedText = ({ content }) => {
+  const [endPoint, setEndPoint] = useState(1);
+  const noteSections = content.split('---');
+
+  return (
+    <StyledMarkdown>
+      <Markdown
+        source={noteSections.slice(0, endPoint).join('---')}
+        renderers={{ code: CodeBlock }}
+      />
+
+      {noteSections.length > 1 && (
+        <MoreLess>
+          {endPoint !== noteSections.length && (
+            <IconButton
+              onClick={() => {
+                setEndPoint(endPoint + 1);
+              }}
+              color="onBackgroundLight"
+              hoverColor="primary"
+            >
+              <ChevronsDown />
+            </IconButton>
+          )}
+
+          {endPoint !== 1 && (
+            <IconButton
+              onClick={() => {
+                setEndPoint(endPoint - 1);
+              }}
+              color="onBackgroundLight"
+              hoverColor="primary"
+            >
+              <ChevronsUp />
+            </IconButton>
+          )}
+        </MoreLess>
+      )}
+    </StyledMarkdown>
+  );
+};
+
+const MoreLess = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing};
+
+  & > *:first-child {
+    margin-right: ${({ theme }) => theme.spacing};
+  }
+`;
 
 const StyledMarkdown = styled.div`
   /* @extend-elements */
@@ -25,13 +72,17 @@ const StyledMarkdown = styled.div`
     hyphens: none;
   }
 
+  & *:first-child {
+    margin-top: 0;
+  }
+
   code[class*='language-'],
   pre[class*='language-'] {
     @extend %extend_1;
   }
 
   pre {
-    background-color: ${({ theme }) => theme.codeBackground};
+    background-color: ${({ theme }) => theme.surfaceTwo};
     margin-bottom: 1em;
   }
 
@@ -72,11 +123,12 @@ const StyledMarkdown = styled.div`
   }
 
   ol {
-    list-style: inside;
+    list-style: none;
     counter-reset: b;
-    margin-bottom: 2em;
+    margin-bottom: 2rem;
 
     li {
+      padding-left: 27px;
       position: relative;
       margin-bottom: 10px;
 
@@ -102,6 +154,7 @@ const StyledMarkdown = styled.div`
         content: counters(b, '.') ' ';
         counter-increment: b;
         left: -8px;
+        color: ${({ theme }) => theme.onBackgroundLight};
         position: absolute;
         text-align: right;
         width: 29px;
@@ -114,13 +167,13 @@ const StyledMarkdown = styled.div`
   }
 
   ul {
-    list-style: inside;
-    margin-bottom: 2em;
+    list-style: none;
+    margin-bottom: 2rem;
 
     li {
+      padding-left: 27px;
       position: relative;
       margin-bottom: 2px;
-      line-height: 1.2;
 
       > * {
         margin-bottom: 10px;
@@ -141,18 +194,19 @@ const StyledMarkdown = styled.div`
 
     > li:before {
       content: '';
+      background-color: ${({ theme }) => theme.onBackgroundLight};
       border-radius: 9999px;
       width: 6px;
       height: 6px;
       left: 12px;
-      top: 10px;
+      top: 5px;
       position: absolute;
     }
   }
 
   code {
-    font-size: 85%;
-    background: ${({ theme }) => theme.codeBackground};
+    font-size: 90%;
+    background: ${({ theme }) => theme.surfaceTwo};
     padding: 0.2em 0.4em;
     border-radius: 3px;
     font-weight: 300;
@@ -160,17 +214,20 @@ const StyledMarkdown = styled.div`
 
   pre code {
     background: transparent;
-    font-size: 1em;
     padding: 0;
-    line-height: 1em;
+    line-height: 1.15em;
   }
 
   blockquote {
     padding-left: 20px;
     position: relative;
     border-left: 4px solid ${({ theme }) => theme.primary};
-    margin-bottom: 4em;
-    margin-top: 4em;
+    margin-bottom: 3em;
+    margin-top: 3em;
+  }
+
+  em {
+    font-style: italic;
   }
 
   img {

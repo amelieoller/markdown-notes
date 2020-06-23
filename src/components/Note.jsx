@@ -10,35 +10,13 @@ import Icon from './Icon';
 import { ICONS } from '../constants';
 
 const Note = ({ note }) => {
-  const noteSections = note.content.split('---');
-  const [endPoint, setEndPoint] = useState(1);
   const tags = useSelector((state) => state.firestore.ordered.tags);
   const dispatch = useDispatch();
 
   return (
     <StyledNote>
-      <MarkdownFormattedText content={noteSections.slice(0, endPoint).join('---')} />
-      {noteSections.length > 1 && (
-        <>
-          {endPoint !== noteSections.length && (
-            <Button
-              text="More"
-              onClick={() => {
-                setEndPoint(endPoint + 1);
-              }}
-            />
-          )}
+      <MarkdownFormattedText content={note.content} />
 
-          {endPoint !== 1 && (
-            <Button
-              text="Less"
-              onClick={() => {
-                setEndPoint(endPoint - 1);
-              }}
-            />
-          )}
-        </>
-      )}
       <Icon
         className="clear-button"
         onClick={() => {
