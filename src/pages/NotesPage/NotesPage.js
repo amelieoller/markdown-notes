@@ -133,9 +133,8 @@ const NotesPage = () => {
         dark
       >
         <>
-          <span>
-            <Book /> Notes
-          </span>
+          <Book />
+          <span>Notes</span>
           <IconButton
             onClick={handleAddLectureClick}
             color="onSurface"
@@ -161,9 +160,8 @@ const NotesPage = () => {
         showButton={selectedNote}
       >
         <>
-          <span>
-            <Link /> Linked Notes
-          </span>
+          <Link />
+          <span>Linked Notes</span>
 
           <IconButton
             onClick={handleEditLectureClick}
