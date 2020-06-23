@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components/macro';
 
 const climbingBox = keyframes`
   0% {transform:translate(0, -1em) rotate(-45deg)}

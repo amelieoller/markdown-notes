@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components/macro';
 
 const withOnText = (string) => `on${string.charAt(0).toUpperCase() + string.slice(1)}`;
 

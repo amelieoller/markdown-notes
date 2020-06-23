@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 const SidebarsMainTemplate = ({ children }) => {
   return (
@@ -46,7 +46,7 @@ const SidebarWrapper = styled.div`
 const MainView = styled.div`
   flex-basis: 0;
   flex-grow: 1;
-  padding: ${({ theme }) => theme.spacingLarge};
+  padding: ${({ theme }) => theme.spacingLarge} 60px;
   overflow-y: scroll;
   height: 100%;
   width: 100%;

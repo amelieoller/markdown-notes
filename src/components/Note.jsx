@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { deleteNote } from '../actions/noteActions';

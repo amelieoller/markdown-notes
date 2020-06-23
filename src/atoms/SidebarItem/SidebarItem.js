@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ReactComponent as Minus } from '../../assets/icons/minus.svg';
 import { ReactComponent as JavaScript } from '../../assets/icons/javascript.svg';

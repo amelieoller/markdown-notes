@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { useFirestore } from 'react-redux-firebase';
 import { useSelector, useDispatch } from 'react-redux';

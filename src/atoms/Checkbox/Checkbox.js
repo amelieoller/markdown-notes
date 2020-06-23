@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import CheckSquare from '_assets/icons/check-square.svg';
 import Square from '_assets/icons/square.svg';

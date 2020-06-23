@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 import { ReactComponent as JavaScript } from '../../assets/icons/javascript.svg';
 import { ReactComponent as Ruby } from '../../assets/icons/ruby.svg';

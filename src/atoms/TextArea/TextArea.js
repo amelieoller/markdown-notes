@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Textarea from 'react-textarea-autosize';
 
-const TextAreaComponent = ({
-  label,
-  placeholder = label,
-  handleOnBlur,
-  defaultValue,
-  style,
-}) => {
+const TextAreaComponent = ({ label, placeholder = label, handleOnBlur, defaultValue, style }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
 
   useEffect(() => {

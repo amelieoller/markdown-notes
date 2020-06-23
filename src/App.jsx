@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components/macro';
 import { useFirestoreConnect } from 'react-redux-firebase';
 import { Switch, Route, Redirect } from 'react-router';
 
