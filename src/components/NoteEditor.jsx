@@ -7,10 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createNote, updateNote } from '../actions/noteActions';
 import MarkdownFormattedText from './MarkdownFormattedText';
 import Button from './Button';
-import Icon from './Icon';
-import { ICONS } from '../constants';
 import LinkNotes from './LinkNotes';
 import { addOrRemoveFromArr, getTitle } from './utils';
+import Languages from '../molecules/Languages';
 
 require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/closetag');
@@ -30,7 +29,7 @@ const NoteEditor = () => {
   const [note, setNote] = useState(currentNote);
 
   useEffect(() => {
-    setNote({ tagIds: [], noteLinkIds: [], ...currentNote });
+    setNote({ tagIds: [], noteLinkIds: [], language: 'Code', ...currentNote });
   }, [currentNote]);
 
   const handleNoteChange = (attribute) => {
@@ -103,27 +102,32 @@ const NoteEditor = () => {
         {note.content !== '' && <MarkdownFormattedText content={note.content} />}
       </StyledNoteEditor>
 
-      <Footer>
-        <LeftFooter>
-          <Button onClick={handleNoteSubmit} text="Save Note" />
-          <Button onClick={handleNoteClear} text="Discard Note" />
-          <LinkNotes addNoteIdLink={addNoteIdLink} />
-        </LeftFooter>
+      <Tags>
+        {tags && (
+          <div className="tags">
+            {tags.map((tag) => (
+              <button
+                key={tag.id}
+                className={
+                  note.tagIds && note.tagIds.includes(tag.id) ? 'highlighted' : 'not-highlighted'
+                }
+                onClick={() => addTag(tag.id)}
+                type="button"
+              >
+                {tag.name}
+              </button>
+            ))}
+          </div>
+        )}
+      </Tags>
 
-        {tags &&
-          tags.map((tag) => (
-            <button
-              key={tag.id}
-              className={
-                note.tagIds && note.tagIds.includes(tag.id) ? 'highlighted' : 'not-highlighted'
-              }
-              onClick={() => addTag(tag.id)}
-              type="button"
-            >
-              {tag.name}
-            </button>
-          ))}
-      </Footer>
+      <Languages handleChange={handleNoteChange} language={note.language} />
+
+      <Buttons>
+        <Button onClick={handleNoteSubmit} text="Save Note" />
+        <Button onClick={handleNoteClear} text="Discard Changes" />
+        <LinkNotes addNoteIdLink={addNoteIdLink} />
+      </Buttons>
     </div>
   );
 };
@@ -136,7 +140,7 @@ const PreviewTag = styled.div`
   text-align: center;
 `;
 
-const LeftFooter = styled.div`
+const Buttons = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 2fr;
   grid-gap: ${({ theme }) => theme.spacing};
@@ -169,13 +173,11 @@ const StyledNoteEditor = styled.div`
   }
 `;
 
-const Footer = styled.div`
+const Tags = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-end;
-  padding: 0.3em;
-  background: white;
 
   .left button {
     margin-right: 1em;
