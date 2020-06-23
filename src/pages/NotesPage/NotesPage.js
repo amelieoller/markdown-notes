@@ -7,12 +7,15 @@ import { useFirestoreConnect } from 'react-redux-firebase';
 import Search from '../../components/Search';
 import NoteEditor from '../../components/NoteEditor';
 import Tags from '../../components/Tags';
-import Notes from '../../components/Notes';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
-import Lecture from '../../organisms/Lecture';
 import { deleteNote } from '../../actions/noteActions';
-import SidebarsMainTemplate from '../../templates';
+import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
 import Note from '../../organisms/Note';
+import { ReactComponent as Book } from '../../assets/icons/book.svg';
+import { ReactComponent as GrauationCap } from '../../assets/icons/graduation-cap.svg';
+import { ReactComponent as Link } from '../../assets/icons/link.svg';
+import IconButton from '../../atoms/IconButton/IconButton';
+import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 
 const filterBy = (notes, filterArr) =>
   filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
@@ -36,14 +39,20 @@ const NotesPage = () => {
   const { currentNote } = useSelector((state) => state);
 
   const [selectedNote, setSelectedNote] = useState(null);
-  const [lectureNotes, setLectureNotes] = useState([]);
-  const [showAddLecture, setShowAddLecture] = useState(false);
+  const [linkedNotes, setLinkedNotes] = useState([]);
 
   const [filteredTagIds, setFilteredTagIds] = useState([]);
   const [filteredNoteIds, setFilteredNoteIds] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
+
+  useEffect(() => {
+    if (notes) {
+      setFilteredNotes(notes);
+    }
+  }, [notes]);
 
   const resetLecture = () => {
-    setLectureNotes([]);
+    setLinkedNotes([]);
     setSelectedNote(null);
   };
 
@@ -59,18 +68,13 @@ const NotesPage = () => {
         notes.find((note) => note.id === noteId),
       );
 
-      setLectureNotes(connectedNotes);
+      setLinkedNotes(connectedNotes);
     }
   }, [selectedNote]);
 
-  const handleAddLectureClick = () => {
-    setShowAddLecture(true);
-    resetLecture();
-  };
+  const handleAddLectureClick = () => {};
 
-  const handleEditLectureClick = () => {
-    setShowAddLecture(true);
-  };
+  const handleEditLectureClick = () => {};
 
   const handleDeleteNote = (noteId) => {
     dispatch(deleteNote(noteId));
@@ -103,41 +107,77 @@ const NotesPage = () => {
     setFilteredNoteIds(noteIds);
   };
 
+  const handleNoteClick = (note) => {
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+    setSelectedNote(note);
+  };
+
+  const getNotesIds = (foundItems) => {
+    const newFiltered = foundItems.map((item) => notes.find((i) => i.id === item.id));
+
+    setFilteredNotes(newFiltered);
+  };
+
+  const clearNoteSearch = () => {
+    setFilteredNotes(notes);
+  };
+
   return (
-    // <StyledNotesPage>
-    //   <NoteEditor />
-
-    //   <SearchAndFilter>
-    //     <Search setSearchResultNotes={updateFilteredNoteIds} placeholderText="Search Notes" />
-    //     <Tags updateFilteredTagIds={updateFilteredTagIds} filteredTagIds={filteredTagIds} />
-    //   </SearchAndFilter>
-    //   <Notes filteredTagIds={filteredTagIds} filteredNoteIds={filteredNoteIds} />
-    // </StyledNotesPage>
-
     <SidebarsMainTemplate>
       <LectureSidebar
-        sidebarTitle="Notes"
-        items={notes && sortAndFilter(notes, filteredNoteIds, filteredTagIds)}
+        items={notes && sortAndFilter(filteredNotes, filteredNoteIds, filteredTagIds)}
         handleAddClick={handleAddLectureClick}
-        handleItemClick={setSelectedNote}
+        handleItemClick={handleNoteClick}
         handleDeleteItem={handleDeleteNote}
         buttonText="Add Lecture"
         dark
-      />
+      >
+        <>
+          <span>
+            <Book /> Notes
+          </span>
+          <IconButton
+            onClick={handleAddLectureClick}
+            color="onSurface"
+            hoverColor="onSurfacePrimary"
+          >
+            <Plus />
+          </IconButton>
+        </>
+
+        <Search
+          setSearchResultNotes={getNotesIds}
+          placeholderText="Search"
+          clearSearch={clearNoteSearch}
+        />
+      </LectureSidebar>
 
       <LectureSidebar
-        sidebarTitle={selectedNote ? selectedNote.title : 'Select a note'}
-        items={lectureNotes}
+        items={linkedNotes}
         handleAddClick={handleEditLectureClick}
         handleItemClick={handleTopicClick}
         handleDeleteItem={handleDeleteNoteLink}
         buttonText="Edit Lecture"
         showButton={selectedNote}
-      />
+      >
+        <>
+          <span>
+            <Link /> Linked Notes
+          </span>
+
+          <IconButton
+            onClick={handleEditLectureClick}
+            color="onSurfaceTwo"
+            hoverColor="onSurfaceTwoPrimary"
+          >
+            <Plus />
+          </IconButton>
+        </>
+      </LectureSidebar>
 
       <>
-        {showAddLecture && <NoteEditor selectedNote={selectedNote} />}
-        {selectedNote && <Note note={selectedNote} setShowAddLecture={setShowAddLecture} />}
+        {currentNote.title && <NoteEditor selectedNote={selectedNote} />}
+        {selectedNote && <Note note={selectedNote} />}
       </>
     </SidebarsMainTemplate>
   );
