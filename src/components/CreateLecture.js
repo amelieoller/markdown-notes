@@ -8,18 +8,17 @@ import { addOrRemoveFromArr } from './utils';
 import Button from './Button';
 import { createLecture, updateLecture } from '../actions/lectureActions';
 import Input from '../atoms/Input/Input';
+import Languages from '../molecules/Languages';
 
-const CreateLecture = ({ lecture }) => {
+const CreateLecture = ({ selectedLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
-  const [noteIds, setNoteIds] = useState([]);
-  const [title, setTitle] = useState();
+  const [lecture, setLecture] = useState({ title: '', noteIds: [], language: 'code' });
 
   useEffect(() => {
-    if (lecture) {
-      setTitle(lecture.title);
-      setNoteIds(lecture.noteIds);
+    if (selectedLecture) {
+      setLecture(selectedLecture);
     }
-  }, [lecture]);
+  }, [selectedLecture]);
 
   const dispatch = useDispatch();
 
@@ -28,49 +27,91 @@ const CreateLecture = ({ lecture }) => {
   };
 
   const handleNoteClick = (noteId) => {
-    const newIds = addOrRemoveFromArr(noteIds, noteId);
+    const newIds = addOrRemoveFromArr(lecture.noteIds, noteId);
 
-    setNoteIds(newIds);
+    setLecture((prevLecture) => ({ ...prevLecture, noteIds: newIds }));
+  };
+
+  const handleLectureChange = (attributeObj) => {
+    setLecture((prevLecture) => ({ ...prevLecture, ...attributeObj }));
   };
 
   const handleCreateLecture = () => {
-    if (title) {
-      if (lecture && lecture.id) {
-        dispatch(updateLecture({ title, noteIds, id: lecture.id }));
+    if (lecture.title) {
+      if (selectedLecture && selectedLecture.id) {
+        dispatch(updateLecture(lecture));
       } else {
-        dispatch(createLecture({ title, noteIds }));
+        dispatch(createLecture(lecture));
       }
 
-      setTitle('');
-      setNoteIds([]);
       setNotesFound([]);
+      setLecture({ title: '', noteIds: [], language: '' });
     }
   };
 
   return (
     <StyledCreateLecture>
-      <Input label="Lecture Title" handleOnBlur={setTitle} defaultValue={title} />
-      <Search setSearchResultNotes={setSearchResultNotes} placeholderText="Add Note Sections" />
+      <h1>{lecture ? 'Update Lecture' : 'Create Lecture'}</h1>
 
-      {notesFound.map((note) => (
-        <NoteSearchResult
-          key={note.id}
-          onClick={() => handleNoteClick(note.id)}
-          isActive={noteIds.includes(note.id)}
-        >
-          {note.title}
-        </NoteSearchResult>
-      ))}
-      <Button text={lecture ? 'Update Lecture' : 'Create Lecture'} onClick={handleCreateLecture} />
+      <FormSection>
+        <Input
+          label="Lecture Title"
+          handleOnBlur={(value) => handleLectureChange({ title: value })}
+          defaultValue={lecture.title}
+          border
+        />
+        <Search
+          setSearchResultNotes={setSearchResultNotes}
+          placeholderText="Find Notes To Link"
+          border
+        />
+
+        {!!notesFound.length && (
+          <NoteSearchResults>
+            {notesFound.map((note) => (
+              <NoteSearchResult
+                key={note.id}
+                onClick={() => handleNoteClick(note.id)}
+                isActive={lecture.noteIds.includes(note.id)}
+              >
+                {note.title}
+              </NoteSearchResult>
+            ))}
+          </NoteSearchResults>
+        )}
+
+        <Languages handleChange={handleLectureChange} language={lecture.language} />
+
+        <Button
+          text={lecture ? 'Update Lecture' : 'Create Lecture'}
+          onClick={handleCreateLecture}
+        />
+      </FormSection>
     </StyledCreateLecture>
   );
 };
 
 const StyledCreateLecture = styled.div``;
 
+const FormSection = styled.div`
+  & > * {
+    margin-bottom: 15px;
+  }
+`;
+
+const NoteSearchResults = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  grid-gap: 5px;
+`;
+
 const NoteSearchResult = styled.div`
   cursor: pointer;
-  background: ${({ isActive }) => isActive && 'blue'};
+  background: ${({ isActive, theme }) => isActive && theme.onSurfaceTwoPrimary};
+  color: ${({ isActive, theme }) => (isActive ? 'white' : theme.onBackgroundLight)};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  border: 2px solid ${({ theme }) => theme.onSurfaceTwoPrimary};
+  padding: 5px;
 `;
 
 CreateLecture.propTypes = {};
