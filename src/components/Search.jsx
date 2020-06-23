@@ -2,14 +2,10 @@ import React, { useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import PropTypes from 'prop-types';
 
-import FloatingLabelInput from './FloatingLabelInput';
-import Icon from './Icon';
-import { ICONS } from '../constants';
 import { mockResults } from './mockSearchResults';
 import Input from '../atoms/Input/Input';
 
-const Search = ({ setSearchResultNotes, placeholderText }) => {
-  const [query, setQuery] = useState('');
+const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border }) => {
   const [searched, setSearched] = useState(false);
 
   const handleSearch = (value) => {
@@ -32,47 +28,19 @@ const Search = ({ setSearchResultNotes, placeholderText }) => {
     });
   };
 
-  const onClearSearch = (e) => {
-    // e.preventDefault();
-
-    if (query === '') return;
-
-    setQuery('');
-    setSearchResultNotes([]);
+  const clearInput = (e) => {
+    clearSearch();
     setSearched(false);
   };
 
   return (
-    <Input label={placeholderText} handleOnBlur={handleSearch} defaultValue={query} />
-    // <FloatingLabelInput
-    //   placeholderLabel="Search Notes"
-    //   value={query}
-    //   onChange={(e) => setQuery(e.target.value)}
-    //   onSubmit={handleSearch}
-    //   id="search-notes"
-    // >
-    //   {searched ? (
-    //     <span
-    //       className="search-icon"
-    //       onClick={onClearSearch}
-    //       role="button"
-    //       onKeyPress={onClearSearch}
-    //       tabIndex="0"
-    //     >
-    //       <Icon icon={ICONS.CLEAR} color="white" size={14} />
-    //     </span>
-    //   ) : (
-    //     <span
-    //       className="search-icon"
-    //       onClick={handleSearch}
-    //       role="button"
-    //       onKeyPress={handleSearch}
-    //       tabIndex="0"
-    //     >
-    //       <Icon icon={ICONS.SEARCH} color="white" size={14} />
-    //     </span>
-    //   )}
-    // </FloatingLabelInput>
+    <Input
+      label={placeholderText}
+      onKeyDown={handleSearch}
+      clearInput={clearInput}
+      showX={searched}
+      border={border}
+    />
   );
 };
 
