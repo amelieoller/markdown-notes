@@ -79,4 +79,8 @@ export default styled.createGlobalStyle`
     height: 20px;
     width: 20px;
   }
+
+  strong {
+    font-weight: bold;
+  }
 `;

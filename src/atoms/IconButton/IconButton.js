@@ -20,6 +20,8 @@ const StyledIconButton = styled.button`
   justify-content: center;
   text-decoration: none;
   background-color: ${({ theme, background }) => theme[background] || background};
+  border-radius: 50%;
+  padding: 5px;
 
   &:hover,
   &:focus {
