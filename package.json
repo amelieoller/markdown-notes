@@ -5,6 +5,7 @@
   "dependencies": {
     "@uiw/react-codemirror": "^2.2.1",
     "algoliasearch": "^4.3.0",
+    "array-move": "^2.2.2",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "firebase": "^7.15.1",
@@ -25,6 +26,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-sortable-hoc": "^1.11.0",
     "react-syntax-highlighter": "^12.2.1",
     "redux": "^4.0.5",
     "redux-firebase": "^0.3.3",

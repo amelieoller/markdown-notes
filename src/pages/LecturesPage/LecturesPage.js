@@ -7,8 +7,14 @@ import { useFirestoreConnect } from 'react-redux-firebase';
 import CreateLecture from '../../components/CreateLecture';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import Lecture from '../../organisms/Lecture';
-import { deleteLecture } from '../../actions/lectureActions';
-import SidebarsMainTemplate from '../../templates';
+import { deleteLecture, updateLecture } from '../../actions/lectureActions';
+import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
+import IconButton from '../../atoms/IconButton/IconButton';
+import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
+import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
+import { ReactComponent as Link } from '../../assets/icons/link.svg';
+import { ReactComponent as Edit } from '../../assets/icons/edit.svg';
+import LectureSidebarDraggable from '../../organisms/LectureSidebarDragable/LectureSidebarDraggable';
 
 const LecturesPage = () => {
   useFirestoreConnect(['lectures']);
@@ -29,14 +35,21 @@ const LecturesPage = () => {
 
   useEffect(() => {
     if (selectedLecture && notes) {
-      const connectedNotes = selectedLecture.noteIds.map((noteId) =>
-        notes.find((note) => note.id === noteId),
-      );
+      const hydrateNotesIds = (noteIds) =>
+        noteIds.map((noteId) => notes.find((note) => note.id === noteId));
 
-      setLectureNotes(connectedNotes);
+      setLectureNotes(hydrateNotesIds(selectedLecture.noteIds));
       setShowAddLecture(false);
     }
   }, [selectedLecture]);
+
+  const handleNoteReorder = (newNotesOrder) => {
+    setLectureNotes(newNotesOrder);
+    // persist new order
+    dispatch(
+      updateLecture({ noteIds: newNotesOrder.map((note) => note.id), id: selectedLecture.id }),
+    );
+  };
 
   const handleAddLectureClick = () => {
     setShowAddLecture(true);
@@ -63,28 +76,55 @@ const LecturesPage = () => {
   return (
     <SidebarsMainTemplate>
       <LectureSidebar
-        sidebarTitle="Lectures"
         items={lectures}
         handleAddClick={handleAddLectureClick}
         handleItemClick={setSelectedLecture}
         handleDeleteItem={handleDeleteLecture}
         buttonText="Add Lecture"
         dark
-      />
+      >
+        <>
+          <GraduationCap />
+          <span>Lectures</span>
 
-      <LectureSidebar
-        sidebarTitle={selectedLecture ? selectedLecture.title : 'Select a lecture'}
+          <IconButton
+            onClick={handleAddLectureClick}
+            color="onSurface"
+            hoverColor="onSurfacePrimary"
+          >
+            <Plus />
+          </IconButton>
+        </>
+      </LectureSidebar>
+
+      <LectureSidebarDraggable
         items={lectureNotes}
         handleAddClick={handleEditLectureClick}
         handleItemClick={handleTopicClick}
         handleDeleteItem={handleDeleteLectureNote}
         buttonText="Edit Lecture"
         showButton={selectedLecture}
-      />
+        handleNoteReorder={handleNoteReorder}
+      >
+        <>
+          <Link />
+          <span>Linked Notes</span>
+
+          <IconButton
+            onClick={handleEditLectureClick}
+            color="onSurfaceTwo"
+            hoverColor="onSurfaceTwoPrimary"
+          >
+            <Edit />
+          </IconButton>
+        </>
+      </LectureSidebarDraggable>
 
       <>
-        {showAddLecture && <CreateLecture lecture={selectedLecture} />}
-        {selectedLecture && <Lecture lecture={selectedLecture} notes={lectureNotes} />}
+        {showAddLecture && <CreateLecture selectedLecture={selectedLecture} />}
+        {selectedLecture && !showAddLecture && (
+          <Lecture lecture={selectedLecture} notes={lectureNotes} />
+        )}
       </>
     </SidebarsMainTemplate>
   );
