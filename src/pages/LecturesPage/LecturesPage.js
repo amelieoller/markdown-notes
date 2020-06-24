@@ -65,12 +65,18 @@ const LecturesPage = () => {
     resetLecture();
   };
 
-  const handleDeleteLectureNote = () => {
-    console.log('deleteLectureNote');
+  const handleDeleteLectureNote = (noteId) => {
+    const newNoteIds = selectedLecture.noteIds.filter((id) => id !== noteId);
+    setLectureNotes(lectureNotes.filter((note) => note.id !== noteId));
+    dispatch(updateLecture({ id: selectedLecture.id, noteIds: newNoteIds }));
   };
 
   const handleTopicClick = () => {
     console.log('handleTopicClick');
+  };
+
+  const updateCurrentLecture = (lecture) => {
+    setSelectedLecture(lecture);
   };
 
   return (
@@ -121,7 +127,12 @@ const LecturesPage = () => {
       </LectureSidebarDraggable>
 
       <>
-        {showAddLecture && <CreateLecture selectedLecture={selectedLecture} />}
+        {showAddLecture && (
+          <CreateLecture
+            selectedLecture={selectedLecture}
+            updateCurrentLecture={updateCurrentLecture}
+          />
+        )}
         {selectedLecture && !showAddLecture && (
           <Lecture lecture={selectedLecture} notes={lectureNotes} />
         )}

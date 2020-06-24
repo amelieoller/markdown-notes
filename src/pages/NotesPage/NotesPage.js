@@ -8,11 +8,10 @@ import Search from '../../components/Search';
 import NoteEditor from '../../components/NoteEditor';
 import Tags from '../../components/Tags';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
-import { deleteNote } from '../../actions/noteActions';
+import { deleteNote, updateNote } from '../../actions/noteActions';
 import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
 import Note from '../../organisms/Note';
 import { ReactComponent as Book } from '../../assets/icons/book.svg';
-import { ReactComponent as GrauationCap } from '../../assets/icons/graduation-cap.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
@@ -59,7 +58,7 @@ const NotesPage = () => {
 
   useEffect(() => {
     if (currentNoteToEdit.title) {
-      setSelectedNote(currentNoteToEdit);
+      setSelectedNote({ ...currentNoteToEdit });
     }
   }, [currentNoteToEdit]);
 
@@ -88,30 +87,13 @@ const NotesPage = () => {
     resetLecture();
   };
 
-  const handleDeleteNoteLink = () => {
-    console.log('deleteLectureNote');
+  const handleDeleteNoteLink = (noteId) => {
+    const newNoteIds = selectedNote.noteLinkIds.filter((id) => id !== noteId);
+    dispatch(updateNote({ id: selectedNote.id, noteLinkIds: newNoteIds }));
   };
 
   const handleTopicClick = () => {
     console.log('handleTopicClick');
-  };
-
-  const updateFilteredTagIds = (tagId) => {
-    if (filteredTagIds.includes(tagId)) {
-      setFilteredTagIds(filteredTagIds.filter((tag) => tag !== tagId));
-    } else {
-      setFilteredTagIds([...filteredTagIds, tagId]);
-    }
-  };
-
-  const updateFilteredNoteIds = (notes) => {
-    const noteIds = notes.map((note) => note.objectID);
-
-    if (noteIds.length === 0) {
-      console.log('nothing was found');
-    }
-
-    setFilteredNoteIds(noteIds);
   };
 
   const handleNoteClick = (note) => {
@@ -178,7 +160,10 @@ const NotesPage = () => {
 
       <>
         {(currentNoteToEdit.title || showNoteEdit) && (
-          <NoteEditor currentNoteToEdit={currentNoteToEdit} />
+          <NoteEditor
+            currentNoteToEdit={currentNoteToEdit}
+            updateCurrentNote={(note) => setSelectedNote(note)}
+          />
         )}
         {!(currentNoteToEdit.title || showNoteEdit) && selectedNote && <Note note={selectedNote} />}
       </>

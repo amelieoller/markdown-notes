@@ -102,6 +102,7 @@ const LectureSidebarDraggable = ({
         handleDeleteButtonClick={handleDeleteButtonClick}
         dark={dark}
         activeItem={activeItem}
+        pressDelay={100}
       />
     </StyledLectureSidebarDraggable>
   );

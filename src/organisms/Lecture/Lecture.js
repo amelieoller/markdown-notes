@@ -57,6 +57,10 @@ const StyledLecture = styled.div`
     margin-top: 0;
     margin-bottom: 0.67em;
   }
+
+  & > div {
+    margin-bottom: 45px;
+  }
 `;
 
 Lecture.propTypes = {

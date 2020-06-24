@@ -10,7 +10,7 @@ import { createLecture, updateLecture } from '../actions/lectureActions';
 import Input from '../atoms/Input/Input';
 import Languages from '../molecules/Languages';
 
-const CreateLecture = ({ selectedLecture }) => {
+const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
   const [lecture, setLecture] = useState({ title: '', noteIds: [], language: 'code' });
 
@@ -36,10 +36,11 @@ const CreateLecture = ({ selectedLecture }) => {
     setLecture((prevLecture) => ({ ...prevLecture, ...attributeObj }));
   };
 
-  const handleCreateLecture = () => {
+  const handleSaveLectureClick = () => {
     if (lecture.title) {
       if (selectedLecture && selectedLecture.id) {
         dispatch(updateLecture(lecture));
+        updateCurrentLecture(lecture);
       } else {
         dispatch(createLecture(lecture));
       }
@@ -51,7 +52,7 @@ const CreateLecture = ({ selectedLecture }) => {
 
   return (
     <StyledCreateLecture>
-      <h1>{lecture ? 'Update Lecture' : 'Create Lecture'}</h1>
+      <h1>{lecture.id ? 'Update Lecture' : 'Create Lecture'}</h1>
 
       <FormSection>
         <Input
@@ -83,8 +84,8 @@ const CreateLecture = ({ selectedLecture }) => {
         <Languages handleChange={handleLectureChange} language={lecture.language} />
 
         <Button
-          text={lecture ? 'Update Lecture' : 'Create Lecture'}
-          onClick={handleCreateLecture}
+          text={lecture.id ? 'Update Lecture' : 'Create Lecture'}
+          onClick={handleSaveLectureClick}
         />
       </FormSection>
     </StyledCreateLecture>
