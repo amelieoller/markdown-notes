@@ -10,17 +10,9 @@ import Button from './Button';
 import LinkNotes from './LinkNotes';
 import { addOrRemoveFromArr, getTitle } from './utils';
 import Languages from '../molecules/Languages';
+import CodeMirrorArea from '../atoms/CodeMirrorArea/CodeMirrorArea';
 
-require('codemirror/mode/markdown/markdown');
-require('codemirror/addon/edit/closetag');
-require('codemirror/addon/edit/continuelist');
-require('codemirror/addon/edit/closebrackets');
-require('codemirror/addon/comment/comment');
-require('codemirror/mode/xml/xml');
-require('codemirror/mode/javascript/javascript');
-require('codemirror/theme/material.css');
-
-const NoteEditor = ({ currentNoteToEdit }) => {
+const NoteEditor = ({ currentNoteToEdit, updateCurrentNote }) => {
   const tags = useSelector((state) => state.firestore.ordered.tags);
   const dispatch = useDispatch();
   const firestore = useFirestore();
@@ -39,6 +31,7 @@ const NoteEditor = ({ currentNoteToEdit }) => {
 
     if (note.id) {
       dispatch(updateNote({ ...note, updated: today, title }));
+      updateCurrentNote({ ...note, updated: today, title });
     } else {
       dispatch(createNote({ ...note, updated: today, created: today, title }));
     }
@@ -66,30 +59,7 @@ const NoteEditor = ({ currentNoteToEdit }) => {
     <div>
       <StyledNoteEditor>
         <div className="editor-pane">
-          <CodeMirror
-            value={note.content}
-            options={{
-              mode: 'markdown',
-              theme: 'material',
-              viewportMargin: Infinity,
-              lineNumbers: true,
-              autoScroll: true,
-              autoCursor: true,
-              lineWrapping: true,
-              autoCloseTags: true,
-              tabSize: 2,
-              autofocus: true,
-              autoCloseBrackets: true,
-              toggleComment: true,
-              extraKeys: {
-                Enter: 'newlineAndIndentContinueMarkdownList',
-                'Cmd-/': 'toggleComment',
-              },
-            }}
-            onBeforeChange={(editor, data, value) => {
-              handleNoteChange({ content: value });
-            }}
-          />
+          <CodeMirrorArea note={note} handleNoteChange={handleNoteChange} />
         </div>
 
         <PreviewTag>-------- Preview --------</PreviewTag>

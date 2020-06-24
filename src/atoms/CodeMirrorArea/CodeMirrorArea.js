@@ -6,18 +6,20 @@ require('codemirror/mode/markdown/markdown');
 require('codemirror/addon/edit/closetag');
 require('codemirror/addon/edit/continuelist');
 require('codemirror/addon/edit/closebrackets');
-require('codemirror/mode/xml/xml');
-require('codemirror/theme/material.css');
 require('codemirror/addon/comment/comment');
+require('codemirror/mode/xml/xml');
 require('codemirror/mode/javascript/javascript');
+require('codemirror/theme/material.css');
+require('codemirror/mode/jsx/jsx');
 
-const CodeMirrorArea = ({ handleOnChange, defaultValue, style }) => (
+const CodeMirrorArea = ({ note, handleNoteChange }) => (
   <CodeMirror
-    value={defaultValue}
+    value={note.content}
     options={{
-      style: style,
       mode: 'markdown',
+      theme: 'material',
       viewportMargin: Infinity,
+      lineNumbers: true,
       autoScroll: true,
       autoCursor: true,
       lineWrapping: true,
@@ -32,18 +34,16 @@ const CodeMirrorArea = ({ handleOnChange, defaultValue, style }) => (
       },
     }}
     onBeforeChange={(editor, data, value) => {
-      handleOnChange(value);
+      handleNoteChange({ content: value });
     }}
-    className="code-mirror"
   />
 );
 
 CodeMirrorArea.propTypes = {
-  handleOnChange: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  style: PropTypes.shape({}),
+  handleNoteChange: PropTypes.func.isRequired,
+  note: PropTypes.shape({
+    content: PropTypes.string,
+  }),
 };
 
 CodeMirrorArea.defaultProps = {
