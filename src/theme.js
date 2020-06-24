@@ -12,6 +12,7 @@ export const theme = {
   onSurfaceTwo: '#707178',
   onSurfaceTwoPrimary: '#3853ff66',
   onSurfaceTwoLight: '#70717814',
+  codeBackground: ' rgba(9, 30, 66, 0.08)',
   borderRadius: '4px',
   spacing: '10px',
   spacingLarge: '20px',

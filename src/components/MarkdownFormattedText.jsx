@@ -52,6 +52,7 @@ const MarkdownFormattedText = ({ content }) => {
 
 const MoreLess = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing};
+  margin-top: -15px;
 
   & > *:first-child {
     margin-right: ${({ theme }) => theme.spacing};
@@ -59,8 +60,12 @@ const MoreLess = styled.div`
 `;
 
 const StyledMarkdown = styled.div`
-  /* @extend-elements */
-  %extend_1 {
+  & *:first-child {
+    margin-top: 0;
+  }
+
+  code[class*='language-'],
+  pre[class*='language-'] {
     font-family: 'Source Code Pro', monospace;
     text-align: left;
     white-space: pre;
@@ -70,15 +75,6 @@ const StyledMarkdown = styled.div`
     line-height: 1.5;
     tab-size: 2;
     hyphens: none;
-  }
-
-  & *:first-child {
-    margin-top: 0;
-  }
-
-  code[class*='language-'],
-  pre[class*='language-'] {
-    @extend %extend_1;
   }
 
   pre {
@@ -131,6 +127,7 @@ const StyledMarkdown = styled.div`
       padding-left: 27px;
       position: relative;
       margin-bottom: 10px;
+      line-height: 1.1;
 
       > * {
         margin-bottom: 10px;
@@ -174,6 +171,7 @@ const StyledMarkdown = styled.div`
       padding-left: 27px;
       position: relative;
       margin-bottom: 2px;
+      line-height: 1.1;
 
       > * {
         margin-bottom: 10px;
@@ -205,11 +203,22 @@ const StyledMarkdown = styled.div`
   }
 
   code {
-    font-size: 90%;
-    background: ${({ theme }) => theme.surfaceTwo};
+    font-size: 85%;
+    background: ${({ theme }) => theme.codeBackground};
     padding: 0.2em 0.4em;
     border-radius: 3px;
     font-weight: 300;
+
+    font-size: 13.712px;
+    font-weight: normal;
+    /* background-color: rgba(9, 30, 66, 0.08); */
+    font-family: SFMono-Medium, 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Mono', Menlo,
+      Consolas, Courier, monospace;
+    white-space: pre-wrap;
+    box-shadow: rgba(9, 30, 66, 0.08) -4px 0px 0px 0px, rgba(9, 30, 66, 0.08) 4px 0px 0px 0px;
+    padding: 2px 0px;
+    border-style: none;
+    margin: 0px 4px;
   }
 
   pre code {
