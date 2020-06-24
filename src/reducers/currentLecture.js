@@ -5,7 +5,7 @@ const currentLecture = (state = initState, action) => {
     case 'SET_CURRENT_LECTURE':
       return action.lecture;
     case 'CLEAR_CURRENT_LECTURE':
-      return { title: '', content: '', tagIds: [] };
+      return { title: '', content: '', tagIds: [], language: 'code' };
     default:
       return state;
   }
