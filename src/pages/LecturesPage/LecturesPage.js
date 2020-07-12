@@ -126,7 +126,7 @@ const LecturesPage = () => {
         </>
       </LectureSidebarDraggable>
 
-      <>
+      <div>
         {showAddLecture && (
           <CreateLecture
             selectedLecture={selectedLecture}
@@ -136,7 +136,7 @@ const LecturesPage = () => {
         {selectedLecture && !showAddLecture && (
           <Lecture lecture={selectedLecture} notes={lectureNotes} />
         )}
-      </>
+      </div>
     </SidebarsMainTemplate>
   );
 };

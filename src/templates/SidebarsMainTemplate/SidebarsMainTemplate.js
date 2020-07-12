@@ -38,8 +38,11 @@ const SidebarWrapper = styled.div`
   position: relative;
 
   & > * {
-    height: 100%;
-    overflow-y: scroll;
+    & > *:last-child {
+      height: 100%;
+      overflow-y: scroll;
+      padding-bottom: 120px;
+    }
   }
 `;
 
