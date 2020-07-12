@@ -5,8 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 
 import Search from '../../components/Search';
-import NoteEditor from '../../components/NoteEditor';
-import Tags from '../../components/Tags';
+import NoteEditor from '../../organisms/NoteEditor.js';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import { deleteNote, updateNote } from '../../actions/noteActions';
 import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
@@ -43,7 +42,6 @@ const NotesPage = () => {
   const [filteredTagIds, setFilteredTagIds] = useState([]);
   const [filteredNoteIds, setFilteredNoteIds] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
-  const [showNoteEdit, setShowNoteEdit] = useState(false);
 
   useEffect(() => {
     if (notes) {
@@ -73,17 +71,16 @@ const NotesPage = () => {
   }, [selectedNote]);
 
   const handleAddNoteClick = () => {
-    setShowNoteEdit(true);
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
   };
 
   const handleEditLectureClick = () => {
-    setShowNoteEdit(true);
-
     dispatch({ type: 'SET_CURRENT_NOTE', note: selectedNote });
   };
 
   const handleDeleteNote = (noteId) => {
     dispatch(deleteNote(noteId));
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
     resetLecture();
   };
 
@@ -97,9 +94,7 @@ const NotesPage = () => {
   };
 
   const handleNoteClick = (note) => {
-    setShowNoteEdit(false);
-    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
-    setSelectedNote(note);
+    dispatch({ type: 'SET_CURRENT_NOTE', note });
   };
 
   const getNotesIds = (foundItems) => {
@@ -158,15 +153,7 @@ const NotesPage = () => {
         </>
       </LectureSidebar>
 
-      <>
-        {(currentNoteToEdit.title || showNoteEdit) && (
-          <NoteEditor
-            currentNoteToEdit={currentNoteToEdit}
-            updateCurrentNote={(note) => setSelectedNote(note)}
-          />
-        )}
-        {!(currentNoteToEdit.title || showNoteEdit) && selectedNote && <Note note={selectedNote} />}
-      </>
+      <NoteEditor currentNoteToEdit={currentNoteToEdit} />
     </SidebarsMainTemplate>
   );
 };

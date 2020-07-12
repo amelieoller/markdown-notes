@@ -15,8 +15,6 @@ export const createNote = (note) => (dispatch, getState, getFirebase) => {
 export const updateNote = (note) => (dispatch, getState, getFirebase) => {
   const firestore = getFirebase().firestore();
 
-  dispatch({ type: 'CLEAR_CURRENT_NOTE' });
-
   firestore
     .collection('notes')
     .doc(note.id)

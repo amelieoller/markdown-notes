@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@uiw/react-codemirror": "^2.2.1",
+    "@remirror/pm": "^1.0.0-next.3",
     "algoliasearch": "^4.3.0",
     "array-move": "^2.2.2",
     "babel-plugin-macros": "^2.8.0",
@@ -19,7 +19,6 @@
     "prop-types": "^15.7.2",
     "react": "16.13.1",
     "react-autosize-textarea": "^7.0.0",
-    "react-codemirror2": "^7.2.1",
     "react-dom": "^16.13.1",
     "react-markdown": "^4.3.1",
     "react-redux": "^7.2.0",
@@ -33,6 +32,8 @@
     "redux-firebase": "^0.3.3",
     "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
+    "refractor": "^3.0.0",
+    "remirror": "^1.0.0-next.3",
     "reset-css": "^5.0.1",
     "styled-components": "^5.1.1",
     "styled-reset": "^4.1.6"
