@@ -2,80 +2,59 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components/macro';
 
-const withOnText = (string) => `on${string.charAt(0).toUpperCase() + string.slice(1)}`;
-
 const propsCSS = {
-  outline: css`
-    background-color: transparent;
-    color: ${({ theme }) => theme.colors.onSurface};
-    border: 2px solid
-      ${({ theme, buttonType }) => (buttonType ? theme.colors[buttonType] : theme.colors.secondary)};
-
-    &:hover {
-      background-color: ${({ theme, buttonType }) =>
-        buttonType ? theme.colors[buttonType] : theme.colors.secondary};
-      color: ${({ theme, buttonType }) =>
-        buttonType ? theme.colors[withOnText(buttonType)] : theme.colors.onSecondary};
-    }
-  `,
-
   small: css`
-    font-size: 1.1rem;
-    padding: 4px 9px;
+    font-size: 0.9rem;
+    padding: 0.15em 0.5em;
+    grid-gap: 5px;
 
     svg {
-      height: 15px;
+      height: 13px;
     }
   `,
 
-  large: css`
-    font-size: 1.5rem;
-    padding: 8px 13px;
-  `,
-
-  buttonType: css`
-    background: ${({ theme, buttonType }) => theme.colors[buttonType]};
-    color: ${({ theme, buttonType }) => theme.colors[withOnText(buttonType)]};
+  danger: css`
+    color: ${({ theme }) => theme.danger};
+    border-color: ${({ theme }) => theme.danger};
 
     &:hover {
-      background: ${({ theme, buttonType }) => theme.colors.darker(1, buttonType)};
+      background: ${({ theme }) => theme.danger};
+      color: ${({ theme }) => theme.onDanger};
     }
+  `,
+
+  isActive: css`
+    background: ${({ theme }) => theme.primary};
+    color: white;
   `,
 };
 
 const StyledButton = styled.button`
-  border-radius: ${({ theme }) => theme.sizes.borderRadius};
-  padding: ${({ theme }) => theme.sizes.spacingInput};
-  background: ${({ theme }) => theme.colors.secondary};
-  border: none;
-  color: ${({ theme }) => theme.colors.onSecondary};
+  border-radius: ${({ theme }) => theme.borderRadius};
+  padding: 0.2em 0.65em;
+  background: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.primary};
   cursor: pointer;
-  font-size: 1.3rem;
-  border: 2px solid
-    ${({ theme, buttonType }) => (buttonType ? theme.colors[buttonType] : theme.colors.secondary)};
-  display: flex;
+  font-size: 1.1rem;
+  border: 2px solid ${({ theme }) => theme.primary};
   align-items: center;
-  display: inline-block;
+  display: grid;
+  grid-auto-flow: column;
+  grid-gap: 8px;
+
+  svg {
+    height: 18px;
+  }
 
   &:hover {
-    background: ${({ theme }) => theme.colors.darker(1, 'secondary')};
-    border: 2px solid
-      ${({ theme, buttonType }) =>
-        buttonType ? theme.colors.darker(1, buttonType) : theme.colors.darker(1, 'secondary')};
+    transition: all 0.3s ease;
+    background: ${({ theme }) => theme.primary};
+    color: white;
   }
 
-  /* svg {
-    height: 17px;
-  } */
-
-  & > *:not(:last-child) {
-    margin-right: 6px;
-  }
-
-  ${(props) => props.buttonType && propsCSS.buttonType};
-  ${(props) => props.size === 'small' && propsCSS.small};
-  ${(props) => props.size === 'large' && propsCSS.large};
-  ${(props) => props.outline && propsCSS.outline};
+  ${(props) => props.danger && propsCSS.danger};
+  ${(props) => props.small && propsCSS.small};
+  ${(props) => props.isActive && propsCSS.isActive};
 `;
 
 const Button = ({ children, ...buttonProps }) => (
@@ -87,15 +66,13 @@ const Button = ({ children, ...buttonProps }) => (
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
-  buttonType: PropTypes.oneOf(['error', 'success', 'warning', 'info']),
-  size: PropTypes.oneOf(['small', 'normal', 'large']),
-  outline: PropTypes.bool,
+  danger: PropTypes.bool,
+  small: PropTypes.bool,
+  isActive: PropTypes.bool,
 };
 
 Button.defaultProps = {
   type: 'info',
-  size: 'normal',
-  outline: false,
 };
 
 export default Button;

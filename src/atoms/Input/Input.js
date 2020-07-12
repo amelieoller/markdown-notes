@@ -76,7 +76,7 @@ const Input = ({
           border={border}
         />
         {(showX || inputValue !== '') && (
-          <ClearButton onClick={onClear}>
+          <ClearButton onClick={onClear} border={border}>
             <X />
           </ClearButton>
         )}
@@ -91,8 +91,8 @@ const Input = ({
 
 const ClearButton = styled.button`
   position: absolute;
-  right: 24px;
-  top: 8px;
+  right: ${({ border }) => (border ? '8px' : '24px')};
+  top: ${({ border }) => (border ? '4px' : '8px')};
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.onBackgroundLight};
@@ -114,16 +114,10 @@ const InputWrapper = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing};
 `;
 
-const StyledLabel = styled.label`
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.textLight};
-  font-size: 0.75em;
-`;
-
 const StyledInput = styled.input`
   width: 100%;
-  font-size: 1em;
-  padding: 6px ${({ theme }) => theme.spacingLarge};
+  font-size: ${({ border }) => (border ? '.9rem' : '1rem')};
+  padding: ${({ theme, border }) => (border ? '0.15em 0.5em' : `6px ${theme.spacingLarge}`)};
   margin-top: 2px;
   font-weight: 300;
   border: ${({ border, theme }) => (border ? `2px solid ${theme.onBackgroundLight}` : 'none')};

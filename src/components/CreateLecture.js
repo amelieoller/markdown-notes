@@ -5,10 +5,10 @@ import { useDispatch } from 'react-redux';
 
 import Search from './Search';
 import { addOrRemoveFromArr } from './utils';
-import Button from './Button';
 import { createLecture, updateLecture } from '../actions/lectureActions';
 import Input from '../atoms/Input/Input';
 import Languages from '../molecules/Languages';
+import Button from '../atoms/Button';
 
 const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
@@ -83,10 +83,9 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
         <Languages handleChange={handleLectureChange} language={lecture.language} />
 
-        <Button
-          text={lecture.id ? 'Update Lecture' : 'Create Lecture'}
-          onClick={handleSaveLectureClick}
-        />
+        <Button onClick={handleSaveLectureClick}>
+          {lecture.id ? 'Update Lecture' : 'Create Lecture'}
+        </Button>
       </FormSection>
     </StyledCreateLecture>
   );
