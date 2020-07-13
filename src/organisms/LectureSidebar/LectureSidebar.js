@@ -6,11 +6,21 @@ import SidebarItem from '../../atoms/SidebarItem/SidebarItem';
 import { ReactComponent as ChevronsLeft } from '../../assets/icons/chevrons-left.svg';
 import { ReactComponent as ChevronsRight } from '../../assets/icons/chevrons-right.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
-import Search from '../../components/Search';
 
-const LectureSidebar = ({ items, handleItemClick, handleDeleteItem, dark, children }) => {
+const LectureSidebar = ({
+  items,
+  handleItemClick,
+  handleDeleteItem,
+  dark,
+  children,
+  currentActiveItem,
+}) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [activeItem, setActiveItem] = useState(null);
+
+  useEffect(() => {
+    setActiveItem(currentActiveItem);
+  }, [currentActiveItem]);
 
   const handleClick = (item) => {
     handleItemClick(item);
@@ -24,30 +34,34 @@ const LectureSidebar = ({ items, handleItemClick, handleDeleteItem, dark, childr
 
   return (
     <StyledLectureSidebar dark={dark} isSidebarOpen={isSidebarOpen}>
-      <CollapseButton>
-        <IconButton
-          onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
-          color={dark ? 'onSurface' : 'onSurfaceTwo'}
-          hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
-          background={dark ? 'onSurfaceLight' : 'onSurfaceTwoLight'}
-        >
-          {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
-        </IconButton>
-      </CollapseButton>
-      <TitleArea>{children.length ? children[0] : children}</TitleArea>
-      {children.length && <SearchArea>{children[1]}</SearchArea>}
+      <SidebarHeader>
+        <CollapseButton>
+          <IconButton
+            onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
+            color={dark ? 'onSurfacePrimary' : 'onSurfacePrimary'}
+            hoverColor="primaryDark"
+            background={dark ? 'onSurfaceTwoPrimary' : 'primary'}
+          >
+            {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
+          </IconButton>
+        </CollapseButton>
+        <TitleArea>{children.length ? children[0] : children}</TitleArea>
+        {children.length && <SearchArea>{children[1]}</SearchArea>}
+      </SidebarHeader>
 
-      {items &&
-        items.map((item) => (
-          <SidebarItem
-            key={item.id}
-            item={item}
-            handleItemClick={handleClick}
-            handleDeleteItem={handleDeleteButtonClick}
-            isActive={activeItem && activeItem.id === item.id}
-            dark={dark}
-          />
-        ))}
+      <ScrollArea>
+        {items &&
+          items.map((item) => (
+            <SidebarItem
+              key={item.id}
+              item={item}
+              handleItemClick={handleClick}
+              handleDeleteItem={handleDeleteButtonClick}
+              isActive={activeItem && activeItem.id === item.id}
+              dark={dark}
+            />
+          ))}
+      </ScrollArea>
     </StyledLectureSidebar>
   );
 };
@@ -60,6 +74,10 @@ const StyledLectureSidebar = styled.div`
   height: 100%;
   padding: ${({ theme }) => theme.spacingLarge} 0;
 `;
+
+const SidebarHeader = styled.div``;
+
+const ScrollArea = styled.div``;
 
 const TitleArea = styled.h4`
   font-size: 19px;

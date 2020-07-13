@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { useDispatch, useSelector } from 'react-redux';
 
 import MarkdownFormattedText from '../../components/MarkdownFormattedText';
-import Button from '../../components/Button';
+import Button from '../../atoms/Button';
 
 const Note = ({ note }) => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ const Note = ({ note }) => {
 
   return (
     <StyledNote>
-      <MarkdownFormattedText key={note.id} content={note.content} />
+      <MarkdownFormattedText key={note.id} note={note} />
 
       <Footer>
         {tags && !!note.tagIds.length && (
@@ -33,11 +33,12 @@ const Note = ({ note }) => {
         )}
 
         <Button
-          text="Edit"
           onClick={() => {
             dispatch({ type: 'SET_CURRENT_NOTE', note });
           }}
-        />
+        >
+          Edit
+        </Button>
       </Footer>
     </StyledNote>
   );

@@ -81,29 +81,33 @@ const LectureSidebarDraggable = ({
 
   return (
     <StyledLectureSidebarDraggable dark={dark} isSidebarOpen={isSidebarOpen}>
-      <CollapseButton>
-        <IconButton
-          onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
-          color={dark ? 'onSurface' : 'onSurfaceTwo'}
-          hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
-          background={dark ? 'onSurfaceLight' : 'onSurfaceTwoLight'}
-        >
-          {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
-        </IconButton>
-      </CollapseButton>
+      <SidebarHeader>
+        <CollapseButton>
+          <IconButton
+            onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
+            color={dark ? 'onSurface' : 'onSurfaceTwo'}
+            hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
+            background={dark ? 'onSurfaceLight' : 'onSurfaceTwoLight'}
+          >
+            {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
+          </IconButton>
+        </CollapseButton>
 
-      <TitleArea>{children.length ? children[0] : children}</TitleArea>
-      {children.length && <SearchArea>{children[1]}</SearchArea>}
+        <TitleArea>{children.length ? children[0] : children}</TitleArea>
+        {children.length && <SearchArea>{children[1]}</SearchArea>}
+      </SidebarHeader>
 
-      <SortableList
-        onSortEnd={onSortEnd}
-        items={sortedItems}
-        handleClick={handleClick}
-        handleDeleteButtonClick={handleDeleteButtonClick}
-        dark={dark}
-        activeItem={activeItem}
-        pressDelay={100}
-      />
+      <ScrollArea>
+        <SortableList
+          onSortEnd={onSortEnd}
+          items={sortedItems}
+          handleClick={handleClick}
+          handleDeleteButtonClick={handleDeleteButtonClick}
+          dark={dark}
+          activeItem={activeItem}
+          pressDelay={100}
+        />
+      </ScrollArea>
     </StyledLectureSidebarDraggable>
   );
 };
@@ -116,6 +120,10 @@ const StyledLectureSidebarDraggable = styled.div`
   height: 100%;
   padding: ${({ theme }) => theme.spacingLarge} 0;
 `;
+
+const SidebarHeader = styled.div``;
+
+const ScrollArea = styled.div``;
 
 const TitleArea = styled.h4`
   font-size: 19px;
