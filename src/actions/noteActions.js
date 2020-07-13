@@ -6,7 +6,11 @@ export const createNote = (note) => (dispatch, getState, getFirebase) => {
     .add(note)
     .then((docRef) => {
       dispatch({ type: 'CREATE_NOTE', note });
-      dispatch({ type: 'SET_CURRENT_NOTE', note: { ...note, id: docRef.id } });
+      // Only set a new current note if there is no noteId coming in or
+      // If there is a note with an id currently in state
+      if (!getState().currentNoteToEdit.id && !note.id) {
+        dispatch({ type: 'SET_CURRENT_NOTE', note: { ...note, id: docRef.id } });
+      }
     })
     .catch((err) => {
       dispatch({ type: 'CREATE_NOTE_ERROR', err });
