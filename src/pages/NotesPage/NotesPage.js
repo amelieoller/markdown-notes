@@ -61,14 +61,20 @@ const NotesPage = () => {
   }, [currentNoteToEdit]);
 
   useEffect(() => {
+    if (!currentNoteToEdit.id) {
+      setLinkedNotes([]);
+
+      return;
+    }
+
     if (selectedNote && notes) {
-      const connectedNotes = selectedNote.noteLinkIds.map((noteId) =>
-        notes.find((note) => note.id === noteId),
-      );
+      const connectedNotes = selectedNote.noteLinkIds
+        .map((noteId) => notes.find((note) => note.id === noteId))
+        .filter((note) => !!note);
 
       setLinkedNotes(connectedNotes);
     }
-  }, [selectedNote]);
+  }, [currentNoteToEdit, selectedNote]);
 
   const handleAddNoteClick = () => {
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
@@ -89,8 +95,8 @@ const NotesPage = () => {
     dispatch(updateNote({ id: selectedNote.id, noteLinkIds: newNoteIds }));
   };
 
-  const handleTopicClick = () => {
-    console.log('handleTopicClick');
+  const handleTopicClick = (note) => {
+    dispatch({ type: 'SET_CURRENT_NOTE', note });
   };
 
   const handleNoteClick = (note) => {
@@ -114,6 +120,7 @@ const NotesPage = () => {
         handleAddClick={handleAddNoteClick}
         handleItemClick={handleNoteClick}
         handleDeleteItem={handleDeleteNote}
+        currentActiveItem={currentNoteToEdit}
         buttonText="Add Lecture"
         dark
       >
@@ -153,7 +160,7 @@ const NotesPage = () => {
         </>
       </LectureSidebar>
 
-      <NoteEditor currentNoteToEdit={currentNoteToEdit} />
+      <NoteEditor currentNoteToEdit={currentNoteToEdit} linkedNotes={linkedNotes} />
     </SidebarsMainTemplate>
   );
 };

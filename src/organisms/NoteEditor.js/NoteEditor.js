@@ -1,172 +1,248 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components/macro';
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
-import { RemirrorProvider, useRemirror, createReactManager } from 'remirror/react';
-import { ListPreset } from 'remirror/preset/list';
 import { useFirestore } from 'react-redux-firebase';
 import { createNote, updateNote } from '../../actions/noteActions';
-
-import Button from '../../atoms/Button';
-import LinkNotes from '../../components/LinkNotes';
-import Languages from '../../molecules/Languages';
-
+import { CorePreset } from 'remirror/preset/core';
+import { RemirrorProvider, useManager } from 'remirror/react';
 import { BoldExtension } from 'remirror/extension/bold';
 import { ItalicExtension } from 'remirror/extension/italic';
+import { CodeBlockExtension } from 'remirror/extension/code-block';
+import { useRemirror } from '@remirror/react';
 import { CodeExtension } from 'remirror/extension/code';
 import { HeadingExtension } from 'remirror/extension/heading';
 import { BlockquoteExtension } from 'remirror/extension/blockquote';
-import { PlaceholderExtension } from 'remirror/extension/placeholder';
 import { UnderlineExtension } from 'remirror/extension/underline';
 import { ImageExtension } from 'remirror/extension/image';
-import { CodeBlockExtension } from 'remirror/extension/code-block';
+import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
+import { LinkExtension } from 'remirror/extension/link';
+
+import LinkNotes from '../../components/LinkNotes';
+import Languages from '../../molecules/Languages';
 
 import javascript from 'refractor/lang/javascript';
 import jsx from 'refractor/lang/jsx';
 import ruby from 'refractor/lang/ruby';
+
 import { getTitle, addOrRemoveFromArr } from '../../components/utils';
+import Button from '../../atoms/Button';
+import { ReactComponent as Save } from '../../assets/icons/save.svg';
+import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 
-const manager = createReactManager([
-  new ListPreset(),
-  new BoldExtension(),
-  new ItalicExtension(),
-  new HeadingExtension(),
-  new BlockquoteExtension(),
-  new CodeExtension(),
-  new ImageExtension(),
-  new UnderlineExtension(),
-  new PlaceholderExtension({ placeholder: 'Start typing...' }),
-  new CodeBlockExtension({
-    supportedLanguages: [javascript, jsx, ruby],
-    defaultLanguage: 'javascript',
-    syntaxTheme: 'atomDark',
-  }),
-]);
+const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
+  const prevNoteRef = useRef();
+  const prevValueRef = useRef();
+  const prevHasBeenEditedRef = useRef();
 
-const starterTextJson = {
-  type: 'doc',
-  content: [
-    {
-      type: 'heading',
-      attrs: {
-        level: 1,
-      },
+  const NoteWrapper = () => {
+    const tags = useSelector((state) => state.firestore.ordered.tags);
+    const dispatch = useDispatch();
+    const firestore = useFirestore();
+
+    const manager = useManager([
+      new CorePreset(),
+      new HeadingExtension(),
+      new BlockquoteExtension(),
+      new CodeExtension(),
+      new ImageExtension(),
+      new HorizontalRuleExtension(),
+      new LinkExtension(),
+      new BoldExtension(),
+      new ItalicExtension(),
+      new UnderlineExtension(),
+      new CodeBlockExtension({
+        supportedLanguages: [javascript, jsx, ruby],
+      }),
+    ]);
+
+    const [note, setNote] = useState(currentNoteToEdit);
+    const [hasBeenEdited, setHasBeenEdited] = useState(0);
+
+    const initialValue = manager.createState({});
+
+    const [value, setValue] = useState(initialValue);
+
+    useEffect(() => {
+      prevNoteRef.current = note;
+    });
+    const prevNote = prevNoteRef.current;
+
+    useEffect(() => {
+      prevValueRef.current = value;
+    });
+    const prevValue = prevValueRef.current;
+
+    useEffect(() => {
+      prevHasBeenEditedRef.current = hasBeenEdited;
+    });
+    const prevHasBeenEdited = prevHasBeenEditedRef.current;
+
+    useEffect(() => {
+      if (note && prevNote && note.id !== prevNote.id && prevHasBeenEdited) {
+        handleNoteSubmit(prevNote, prevValue, true);
+      }
+    }, [currentNoteToEdit]);
+
+    const handleNoteSubmit = (note, value, noSwitch) => {
+      const contentArr = value.doc.toJSON();
+      // If the note does not have content, return
+
+      const today = firestore.Timestamp.now();
+      const noteHadBeenEdited = !!contentArr.content[0].content;
+      let finishedNote;
+
+      if (note.id) {
+        // If the the note in state has an ID (that means it's being edited), check if the content has changed
+        if (noteHadBeenEdited) {
+          const title = getTitle(contentArr.content[0].content[0].text);
+
+          finishedNote = { ...note, content: contentArr, updated: today, title };
+        } else {
+          finishedNote = { ...note, updated: today };
+        }
+
+        if (!noSwitch) {
+          dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
+        }
+
+        dispatch(updateNote(finishedNote));
+      } else {
+        if (noteHadBeenEdited) {
+          // If the note does not have an id, save it as a new note
+          const title = getTitle(contentArr.content[0].content[0].text);
+          finishedNote = { ...note, content: contentArr, updated: today, title };
+
+          if (!noSwitch) {
+            dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
+          }
+          dispatch(createNote({ ...finishedNote, created: today }));
+        }
+      }
+
+      setHasBeenEdited(false);
+    };
+
+    const resetValueState = () => {
+      const newValue = manager.createState({});
+
+      setNote(currentNoteToEdit);
+      setValue(newValue);
+      // setHasBeenEdited(false);
+    };
+
+    const handleNoteDiscard = () => {
+      resetValueState();
+    };
+
+    const addTag = (id) => {
+      const newTagIds = addOrRemoveFromArr(note.tagIds, id);
+
+      setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
+      setHasBeenEdited(true);
+    };
+
+    const addNoteIdLink = (noteId) => {
+      const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
+
+      setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
+      setHasBeenEdited(true);
+    };
+
+    const handleLanguageChange = (languageObj) => {
+      setNote((prevNote) => ({ ...prevNote, ...languageObj }));
+      setHasBeenEdited(true);
+    };
+
+    const initialContent = {
+      type: 'doc',
       content: [
         {
-          type: 'text',
-          text: 'New Note...',
+          type: 'heading',
+          attrs: {
+            level: 1,
+          },
+          content: [
+            {
+              type: 'text',
+              text: 'Create a new note...',
+            },
+          ],
         },
       ],
-    },
-  ],
-};
+    };
 
-const NoteEditor = ({ currentNoteToEdit }) => {
-  const tags = useSelector((state) => state.firestore.ordered.tags);
+    return (
+      <div>
+        <RemirrorProvider
+          manager={manager}
+          initialContent={note.content || initialContent}
+          onChange={(parameter) => {
+            const { state, tr } = parameter;
 
-  const dispatch = useDispatch();
-  const firestore = useFirestore();
+            if (tr?.docChanged) {
+              setHasBeenEdited(true);
+              setValue(state);
+            }
+          }}
+        >
+          <Editor />
+        </RemirrorProvider>
 
-  const [note, setNote] = useState(currentNoteToEdit);
-  const [hasBeenEdited, setHasBeenEdited] = useState(false);
+        {showEdit && (
+          <>
+            <SubHeader>Tags</SubHeader>
+            <Tags>
+              {tags &&
+                tags.map((tag) => (
+                  <Button
+                    key={tag.id}
+                    onClick={() => addTag(tag.id)}
+                    type="button"
+                    isActive={note.tagIds && note.tagIds.includes(tag.id)}
+                    small
+                  >
+                    {tag.name}
+                  </Button>
+                ))}
+            </Tags>
 
-  const initialValue = manager.createState({});
+            <SubHeader>Categories/Languages</SubHeader>
+            <Languages handleChange={handleLanguageChange} language={note.language} />
 
-  const [value, setValue] = useState(initialValue);
-
-  const handleNoteSubmit = () => {
-    const contentArr = value.doc.toJSON();
-
-    // If the note does not have content, return
-    if (!contentArr.content.length) return;
-
-    const today = firestore.Timestamp.now();
-    const title = getTitle(contentArr.content[0].content[0].text);
-    const finishedNote = { ...note, content: contentArr, updated: today, title };
-
-    if (note.id) {
-      // If the the note in state has an ID (that means it's being edited), check if the content has changed
-      dispatch(updateNote(finishedNote));
-    } else {
-      // If the note does not have an id, save it as a new note
-      dispatch(createNote({ ...finishedNote, created: today }));
-    }
-
-    setHasBeenEdited(false);
-  };
-
-  useEffect(() => {
-    if (hasBeenEdited) {
-      handleNoteSubmit();
-    }
-
-    const newValue = manager.createState({
-      content: currentNoteToEdit.content || starterTextJson,
-    });
-
-    setNote(currentNoteToEdit);
-    setValue(newValue);
-    setHasBeenEdited(false);
-  }, [currentNoteToEdit]);
-
-  const addTag = (id) => {
-    const newTagIds = addOrRemoveFromArr(note.tagIds, id);
-
-    setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
-  };
-
-  const addNoteIdLink = (noteId) => {
-    const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
-
-    setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
-  };
-
-  return (
-    <>
-      <RemirrorProvider
-        manager={manager}
-        value={value}
-        onChange={(parameter) => {
-          const { state, tr } = parameter;
-
-          setHasBeenEdited(!!state.doc.textContent);
-          setValue(state);
-        }}
-      >
-        <Editor />
-      </RemirrorProvider>
-
-      <Tags>
-        {tags && (
-          <div className="tags">
-            {tags.map((tag) => (
-              <button
-                key={tag.id}
-                className={
-                  note.tagIds && note.tagIds.includes(tag.id) ? 'highlighted' : 'not-highlighted'
-                }
-                onClick={() => addTag(tag.id)}
-                type="button"
-              >
-                {tag.name}
-              </button>
-            ))}
-          </div>
+            <SubHeader>Linked Notes</SubHeader>
+            <LinkNotes
+              addNoteIdLink={addNoteIdLink}
+              linkIds={note.noteLinkIds}
+              previousLinkedNotes={linkedNotes}
+            />
+          </>
         )}
-      </Tags>
 
-      <Languages
-        handleChange={(languageObj) => setNote((prevNote) => ({ ...prevNote, ...languageObj }))}
-        language={note.language}
-      />
+        <Buttons>
+          {!!hasBeenEdited && (
+            <>
+              <Button onClick={() => handleNoteSubmit(note, value)}>
+                <Save /> Save Note
+              </Button>
 
-      <Buttons>
-        {hasBeenEdited && <Button text="Save Note" onClick={handleNoteSubmit} />}
-        {/* <Button onClick={handleNoteSubmit}>Save Note</Button> */}
-        {/* <Button onClick={handleNoteClear}>Discard Changes</Button> */}
-        <LinkNotes addNoteIdLink={addNoteIdLink} />
-      </Buttons>
-    </>
-  );
+              <Button
+                onClick={() =>
+                  window.confirm(`Are you sure you want to discard the changes you have made?`) &&
+                  handleNoteDiscard()
+                }
+                danger
+              >
+                <Trash /> Discard Changes
+              </Button>
+            </>
+          )}
+        </Buttons>
+      </div>
+    );
+  };
+
+  return <NoteWrapper />;
 };
 
 const Editor = () => {
@@ -176,70 +252,47 @@ const Editor = () => {
 };
 
 const Buttons = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
-  grid-gap: ${({ theme }) => theme.spacing};
-  align-items: center;
+  display: flex;
+  margin: 1rem 0;
+
+  & > *:not(:last-child) {
+    margin-right: 10px;
+  }
+`;
+
+const SubHeader = styled.h3`
+  margin: 18px 0 10px 0;
+  text-transform: uppercase;
+  color: #838590c2;
+  font-weight: 600;
+  border-bottom: 2px solid #8385906e;
+  padding: 0 2px 2px 2px;
+  width: fit-content;
 `;
 
 const Tags = styled.div`
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  align-items: flex-end;
 
-  .left button {
-    margin-right: 1em;
+  & > *:not(:last-child) {
+    margin-right: 5px;
   }
 
-  .tags {
-    color: #263238;
-
-    button {
-      position: relative;
-      color: #263238;
-      text-decoration: none;
-      border: none;
-      margin: 0.2em 0.3em;
-      font-size: 0.9em;
-      font-weight: 300;
-      cursor: pointer;
-      background-color: transparent;
-    }
-
-    button:hover {
-      color: #263238;
-    }
-
-    button:before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 1px;
-      bottom: 0;
-      left: 0;
-      background-color: #263238;
-      visibility: hidden;
-      transform: scaleX(0);
-      transition: all 0.3s ease-in-out 0s;
-    }
-
-    button:hover:before,
-    button:active:before,
-    button.highlighted:before {
-      visibility: visible;
-      transform: scaleX(1);
-    }
-
-    @media (pointer: coarse) {
-      button.not-highlighted:before {
-        visibility: hidden;
-        transform: scaleX(0);
-      }
-    }
+  & > * {
+    margin-bottom: 5px;
   }
 `;
 
-NoteEditor.propTypes = {};
+NoteEditor.propTypes = {
+  currentNoteToEdit: PropTypes.shape({
+    content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  }),
+  linkedNotes: PropTypes.arrayOf(PropTypes.shape({})),
+  showEdit: PropTypes.bool,
+};
+
+NoteEditor.defaultProps = {
+  showEdit: true,
+};
 
 export default NoteEditor;

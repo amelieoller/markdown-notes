@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
-import MarkdownFormattedText from '../../components/MarkdownFormattedText';
+import NoteEditor from '../NoteEditor.js';
 
 const Lecture = ({ lecture, notes }) => {
   return (
@@ -10,7 +10,7 @@ const Lecture = ({ lecture, notes }) => {
       <h1 className="lecture-title">{lecture.title}</h1>
 
       {notes.map((note) => (
-        <MarkdownFormattedText key={note.id} content={note.content} />
+        <NoteEditor key={note.id} currentNoteToEdit={note} showEdit={false} />
       ))}
     </StyledLecture>
   );
@@ -70,7 +70,7 @@ Lecture.propTypes = {
   notes: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      content: PropTypes.string,
+      content: PropTypes.shape({}),
     }),
   ),
 };

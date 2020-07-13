@@ -10255,9 +10255,9 @@ levn@^0.3.0, levn@~0.3.0:
     type-check "~0.3.2"
 
 lib0@^0.2.15, lib0@^0.2.20, lib0@^0.2.24, lib0@^0.2.27:
-  version "0.2.31"
-  resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.31.tgz#439bb0b4823e5a416ee58e161f6741c0e4013511"
-  integrity sha512-NRuEnSww/O29MTFqxA+t+d6DtTKf+XYpzTcu7DOLLy0Xn/AeixNHEZhJNKPwPofUVqfOvdGbWogYZTDu/ruRbA==
+  version "0.2.32"
+  resolved "https://registry.yarnpkg.com/lib0/-/lib0-0.2.32.tgz#ec4572d84c00355a8d998b83eb950cf9da9c2792"
+  integrity sha512-cHHKhHTojtvFSsthTk+CKuD17jMHIxuZxYpTzXj9TeQLPNoGNDPl6ax+J6eFETVe3ZvPMh3V0nGfJgGo6QgSvA==
   dependencies:
     isomorphic.js "^0.1.3"
 

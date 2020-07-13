@@ -4,8 +4,9 @@ export const createNote = (note) => (dispatch, getState, getFirebase) => {
   firestore
     .collection('notes')
     .add(note)
-    .then(() => {
+    .then((docRef) => {
       dispatch({ type: 'CREATE_NOTE', note });
+      dispatch({ type: 'SET_CURRENT_NOTE', note: { ...note, id: docRef.id } });
     })
     .catch((err) => {
       dispatch({ type: 'CREATE_NOTE_ERROR', err });
