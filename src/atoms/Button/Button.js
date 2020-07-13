@@ -23,6 +23,16 @@ const propsCSS = {
     }
   `,
 
+  faded: css`
+    color: ${({ theme }) => theme.primaryFaded};
+    border-color: ${({ theme }) => theme.primaryFaded};
+
+    &:hover {
+      background: ${({ theme }) => theme.primaryFaded};
+      color: ${({ theme }) => theme.onprimaryFaded};
+    }
+  `,
+
   isActive: css`
     background: ${({ theme }) => theme.primary};
     color: white;
@@ -54,6 +64,7 @@ const StyledButton = styled.button`
 
   ${(props) => props.danger && propsCSS.danger};
   ${(props) => props.small && propsCSS.small};
+  ${(props) => props.faded && propsCSS.faded};
   ${(props) => props.isActive && propsCSS.isActive};
 `;
 
@@ -69,6 +80,7 @@ Button.propTypes = {
   danger: PropTypes.bool,
   small: PropTypes.bool,
   isActive: PropTypes.bool,
+  faded: PropTypes.bool,
 };
 
 Button.defaultProps = {

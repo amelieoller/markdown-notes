@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
 import { createNote, updateNote } from '../../actions/noteActions';
-import { CorePreset } from 'remirror/preset/core';
+import { ListPreset } from 'remirror/preset/list';
 import { RemirrorProvider, useManager } from 'remirror/react';
 import { BoldExtension } from 'remirror/extension/bold';
 import { ItalicExtension } from 'remirror/extension/italic';
@@ -41,7 +41,7 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
     const firestore = useFirestore();
 
     const manager = useManager([
-      new CorePreset(),
+      new ListPreset(),
       new HeadingExtension(),
       new BlockquoteExtension(),
       new CodeExtension(),
@@ -201,6 +201,7 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
                     type="button"
                     isActive={note.tagIds && note.tagIds.includes(tag.id)}
                     small
+                    faded
                   >
                     {tag.name}
                   </Button>

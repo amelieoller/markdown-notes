@@ -89,18 +89,11 @@ export default styled.createGlobalStyle`
   }
 
   blockquote {
-    background: #f9f9f9;
-    border-left: 8px solid #ccc;
-    padding: 0.4em 8px;
-  }
+    background: ${({ theme }) => theme.surfaceTwo};
+    padding: 0.4em 12px;
 
-  blockquote:before {
-    color: #ccc;
-    content: open-quote;
-    font-size: 4em;
-    line-height: 0.1em;
-    margin-right: 0.25em;
-    vertical-align: -0.4em;
+    position: relative;
+    border-left: 4px solid ${({ theme }) => theme.primaryFaded};
   }
 
   blockquote p {
@@ -119,9 +112,10 @@ export default styled.createGlobalStyle`
   pre {
     display: block;
     overflow-x: auto;
-    background: rgb(45, 45, 45);
+    background: ${({ theme }) => theme.surfaceTwo};
     color: rgb(204, 204, 204);
     padding: 0.5em;
+    margin-bottom: 1em;
   }
 
   & *:first-child {
@@ -140,19 +134,9 @@ export default styled.createGlobalStyle`
     hyphens: none;
   }
 
-  pre {
+  pre[class*='language-'] {
     background-color: ${({ theme }) => theme.surfaceTwo};
-    margin-bottom: 1em;
   }
-
-  /* pre[class*='language-'] {
-    overflow: auto;
-    font-size: 1.4em;
-
-    code {
-      white-space: pre;
-    }
-  } */
 
   a {
     color: ${({ theme }) => theme.primary};
@@ -288,14 +272,6 @@ export default styled.createGlobalStyle`
     line-height: 1.15em;
     box-shadow: none;
     margin: 0;
-  }
-
-  blockquote {
-    padding-left: 20px;
-    position: relative;
-    border-left: 4px solid ${({ theme }) => theme.primary};
-    margin-bottom: 3em;
-    margin-top: 3em;
   }
 
   em {
