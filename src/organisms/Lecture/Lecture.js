@@ -9,9 +9,11 @@ const Lecture = ({ lecture, notes }) => {
     <StyledLecture>
       <h1 className="lecture-title">{lecture.title}</h1>
 
-      {notes.map((note) => (
-        <NoteEditor key={note.id} currentNoteToEdit={note} showEdit={false} />
-      ))}
+      {notes
+        .filter((n) => n)
+        .map((note) => (
+          <NoteEditor key={note.id} currentNoteToEdit={note} showEdit={false} />
+        ))}
     </StyledLecture>
   );
 };

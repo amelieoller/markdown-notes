@@ -57,7 +57,7 @@ const LectureSidebarDraggable = ({
 
   useEffect(() => {
     if (items) {
-      setSortedItems(items);
+      setSortedItems(items.filter((i) => i));
     }
   }, [items]);
 

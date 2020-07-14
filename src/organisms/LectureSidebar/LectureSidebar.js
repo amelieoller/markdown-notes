@@ -51,16 +51,18 @@ const LectureSidebar = ({
 
       <ScrollArea>
         {items &&
-          items.map((item) => (
-            <SidebarItem
-              key={item.id}
-              item={item}
-              handleItemClick={handleClick}
-              handleDeleteItem={handleDeleteButtonClick}
-              isActive={activeItem && activeItem.id === item.id}
-              dark={dark}
-            />
-          ))}
+          items
+            .filter((i) => !!i)
+            .map((item) => (
+              <SidebarItem
+                key={item.id}
+                item={item}
+                handleItemClick={handleClick}
+                handleDeleteItem={handleDeleteButtonClick}
+                isActive={activeItem && activeItem.id === item.id}
+                dark={dark}
+              />
+            ))}
       </ScrollArea>
     </StyledLectureSidebar>
   );

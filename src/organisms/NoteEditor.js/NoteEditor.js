@@ -128,11 +128,12 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
 
       setNote(currentNoteToEdit);
       setValue(newValue);
-      // setHasBeenEdited(false);
+      setHasBeenEdited(false);
     };
 
     const handleNoteDiscard = () => {
       resetValueState();
+      dispatch({ type: 'SET_CURRENT_NOTE', note: currentNoteToEdit });
     };
 
     const addTag = (id) => {
@@ -173,73 +174,74 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
     };
 
     return (
-      <div>
-        <RemirrorProvider
-          manager={manager}
-          initialContent={note.content || initialContent}
-          onChange={(parameter) => {
-            const { state, tr } = parameter;
+      <StyledWrapper>
+        <MainContent>
+          <RemirrorProvider
+            manager={manager}
+            initialContent={note.content || initialContent}
+            onChange={(parameter) => {
+              const { state, tr } = parameter;
 
-            if (tr?.docChanged) {
-              setHasBeenEdited(true);
-              setValue(state);
-            }
-          }}
-        >
-          <Editor />
-        </RemirrorProvider>
+              if (tr?.docChanged) {
+                setHasBeenEdited(true);
+                setValue(state);
+              }
+            }}
+          >
+            <Editor />
+          </RemirrorProvider>
+        </MainContent>
 
         {showEdit && (
-          <>
-            <SubHeader>Tags</SubHeader>
-            <Tags>
-              {tags &&
-                tags.map((tag) => (
-                  <Button
-                    key={tag.id}
-                    onClick={() => addTag(tag.id)}
-                    type="button"
-                    isActive={note.tagIds && note.tagIds.includes(tag.id)}
-                    small
-                    faded
-                  >
-                    {tag.name}
+          <FooterWrapper>
+            <Footer>
+              <Languages handleChange={handleLanguageChange} language={note.language} />
+
+              <Tags>
+                {tags &&
+                  tags.map((tag) => (
+                    <Button
+                      key={tag.id}
+                      onClick={() => addTag(tag.id)}
+                      type="button"
+                      isActive={note.tagIds && note.tagIds.includes(tag.id)}
+                      small
+                      faded
+                    >
+                      {tag.name}
+                    </Button>
+                  ))}
+              </Tags>
+
+              <LinkNotes
+                addNoteIdLink={addNoteIdLink}
+                linkIds={note.noteLinkIds}
+                previousLinkedNotes={linkedNotes}
+              />
+
+              <Buttons>
+                <>
+                  <Button onClick={() => handleNoteSubmit(note, value)} disabled={!hasBeenEdited}>
+                    <Save /> Save Note
                   </Button>
-                ))}
-            </Tags>
 
-            <SubHeader>Categories/Languages</SubHeader>
-            <Languages handleChange={handleLanguageChange} language={note.language} />
-
-            <SubHeader>Linked Notes</SubHeader>
-            <LinkNotes
-              addNoteIdLink={addNoteIdLink}
-              linkIds={note.noteLinkIds}
-              previousLinkedNotes={linkedNotes}
-            />
-          </>
+                  <Button
+                    onClick={() =>
+                      window.confirm(
+                        `Are you sure you want to discard the changes you have made?`,
+                      ) && handleNoteDiscard()
+                    }
+                    disabled={!hasBeenEdited}
+                    danger
+                  >
+                    <Trash /> Discard Changes
+                  </Button>
+                </>
+              </Buttons>
+            </Footer>
+          </FooterWrapper>
         )}
-
-        <Buttons>
-          {!!hasBeenEdited && (
-            <>
-              <Button onClick={() => handleNoteSubmit(note, value)}>
-                <Save /> Save Note
-              </Button>
-
-              <Button
-                onClick={() =>
-                  window.confirm(`Are you sure you want to discard the changes you have made?`) &&
-                  handleNoteDiscard()
-                }
-                danger
-              >
-                <Trash /> Discard Changes
-              </Button>
-            </>
-          )}
-        </Buttons>
-      </div>
+      </StyledWrapper>
     );
   };
 
@@ -252,28 +254,50 @@ const Editor = () => {
   return <div {...getRootProps()} />;
 };
 
+const StyledWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+
+  & > *:first-child {
+    padding: ${({ theme }) => theme.spacingLarge} 60px;
+  }
+`;
+
+const MainContent = styled.div`
+  padding: 20px 60px;
+  & > *:first-child {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+  }
+`;
+
 const Buttons = styled.div`
   display: flex;
-  margin: 1rem 0;
+  margin: 1.5rem 0;
 
   & > *:not(:last-child) {
     margin-right: 10px;
   }
 `;
 
-const SubHeader = styled.h3`
-  margin: 18px 0 10px 0;
-  text-transform: uppercase;
-  color: #838590c2;
-  font-weight: 600;
-  border-bottom: 2px solid #8385906e;
-  padding: 0 2px 2px 2px;
-  width: fit-content;
+const FooterWrapper = styled.div`
+  background: ${({ theme }) => theme.onSurfaceThree};
+  padding: 40px 60px ${({ theme }) => theme.spacingLarge} 60px;
+`;
+
+const Footer = styled.div`
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
 `;
 
 const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 1.5rem;
 
   & > *:not(:last-child) {
     margin-right: 5px;
