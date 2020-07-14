@@ -37,6 +37,12 @@ const propsCSS = {
     background: ${({ theme }) => theme.primary};
     color: white;
   `,
+
+  disabled: css`
+    border-color: ${({ theme }) => theme.onBackgroundLight};
+    color: ${({ theme }) => theme.onBackgroundLight};
+    pointer-events: none;
+  `,
 };
 
 const StyledButton = styled.button`
@@ -66,6 +72,7 @@ const StyledButton = styled.button`
   ${(props) => props.small && propsCSS.small};
   ${(props) => props.faded && propsCSS.faded};
   ${(props) => props.isActive && propsCSS.isActive};
+  ${(props) => props.disabled && propsCSS.disabled};
 `;
 
 const Button = ({ children, ...buttonProps }) => (
@@ -81,6 +88,7 @@ Button.propTypes = {
   small: PropTypes.bool,
   isActive: PropTypes.bool,
   faded: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 Button.defaultProps = {

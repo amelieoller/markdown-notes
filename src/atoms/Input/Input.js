@@ -120,8 +120,13 @@ const StyledInput = styled.input`
   padding: ${({ theme, border }) => (border ? '0.15em 0.5em' : `6px ${theme.spacingLarge}`)};
   margin-top: 2px;
   font-weight: 300;
-  border: ${({ border, theme }) => (border ? `2px solid ${theme.onBackgroundLight}` : 'none')};
-  border-radius: ${({ border, theme }) => border && theme.borderRadius};
+  border: ${({ border, theme }) => (border ? `2px solid ${theme.primaryFaded}` : 'none')};
+  border-radius: ${({ border, theme }) => (border ? theme.borderRadius : 0)};
+  -webkit-appearance: none;
+
+  &::placeholder {
+    color: ${({ theme }) => theme.onBackgroundLight};
+  }
 `;
 
 const HelpText = styled.div`

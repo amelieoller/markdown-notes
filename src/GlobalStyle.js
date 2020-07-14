@@ -279,7 +279,6 @@ export default styled.createGlobalStyle`
   }
 
   img {
-    margin-bottom: 2em;
     max-width: 100%;
   }
 

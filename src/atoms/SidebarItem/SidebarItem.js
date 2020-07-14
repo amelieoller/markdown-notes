@@ -39,9 +39,9 @@ const SidebarItem = ({ item, handleItemClick, isActive, handleDeleteItem, dark }
       case 'ruby':
         return <Ruby />;
       case 'terminal':
-        return <Terminal className="color" />;
+        return <Terminal />;
       default:
-        return <Code className="color" />;
+        return <Code />;
     }
   };
 

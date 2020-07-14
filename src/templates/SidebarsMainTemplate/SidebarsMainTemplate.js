@@ -49,15 +49,11 @@ const SidebarWrapper = styled.div`
 const MainView = styled.div`
   flex-basis: 0;
   flex-grow: 1;
-  padding: ${({ theme }) => theme.spacingLarge} 60px;
   overflow-y: scroll;
   height: 100%;
   width: 100%;
 
   & > * {
-    max-width: 1000px;
-    margin: 0 auto;
-
     & > *:first-child {
       margin-top: 0;
     }
