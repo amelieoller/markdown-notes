@@ -9,7 +9,6 @@ import NoteEditor from '../../organisms/NoteEditor.js';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import { deleteNote, updateNote } from '../../actions/noteActions';
 import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
-import Note from '../../organisms/Note';
 import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
@@ -123,6 +122,7 @@ const NotesPage = () => {
         currentActiveItem={currentNoteToEdit}
         buttonText="Add Lecture"
         dark
+        isOpen={true}
       >
         <>
           <Book />
@@ -145,6 +145,7 @@ const NotesPage = () => {
         handleDeleteItem={handleDeleteNoteLink}
         buttonText="Edit Lecture"
         showButton={selectedNote}
+        isOpen={false}
       >
         <>
           <Link />

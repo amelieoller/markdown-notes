@@ -254,7 +254,7 @@ export default styled.createGlobalStyle`
     padding: 0.2em 0.4em;
     border-radius: 3px;
     font-weight: 300;
-    font-size: 13.712px;
+    font-size: 85%;
     font-weight: normal;
     /* background-color: rgba(9, 30, 66, 0.08); */
     font-family: SFMono-Medium, 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Mono', Menlo,
