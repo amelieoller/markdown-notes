@@ -50,8 +50,9 @@ const LectureSidebarDraggable = ({
   dark,
   children,
   handleNoteReorder,
+  isOpen,
 }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
   const [activeItem, setActiveItem] = useState(null);
   const [sortedItems, setSortedItems] = useState([]);
 

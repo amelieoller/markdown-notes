@@ -14,8 +14,9 @@ const LectureSidebar = ({
   dark,
   children,
   currentActiveItem,
+  isOpen,
 }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
   const [activeItem, setActiveItem] = useState(null);
 
   useEffect(() => {
