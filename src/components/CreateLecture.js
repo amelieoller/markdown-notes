@@ -91,7 +91,9 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   );
 };
 
-const StyledCreateLecture = styled.div``;
+const StyledCreateLecture = styled.div`
+  padding: 20px 60px;
+`;
 
 const FormSection = styled.div`
   & > * {

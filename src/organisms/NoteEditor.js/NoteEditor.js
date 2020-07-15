@@ -30,7 +30,7 @@ import Button from '../../atoms/Button';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 
-const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
+const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLecture }) => {
   const prevNoteRef = useRef();
   const prevValueRef = useRef();
   const prevHasBeenEditedRef = useRef();
@@ -116,7 +116,11 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
           if (!noSwitch) {
             dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
           }
-          dispatch(createNote({ ...finishedNote, created: today }));
+          dispatch(createNote({ ...finishedNote, created: today })).then((noteId) => {
+            if (currentNoteToEdit.lectureId) {
+              addNoteLinkToLecture(noteId);
+            }
+          });
         }
       }
 
@@ -192,7 +196,7 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
           </RemirrorProvider>
         </MainContent>
 
-        {showEdit && (
+        {showEdit ? (
           <FooterWrapper>
             <Footer>
               <Languages handleChange={handleLanguageChange} language={note.language} />
@@ -240,6 +244,23 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit }) => {
               </Buttons>
             </Footer>
           </FooterWrapper>
+        ) : (
+          <MinimalSave>
+            <Button onClick={() => handleNoteSubmit(note, value)} disabled={!hasBeenEdited}>
+              <Save />
+            </Button>
+
+            <Button
+              onClick={() =>
+                window.confirm(`Are you sure you want to discard the changes you have made?`) &&
+                handleNoteDiscard()
+              }
+              disabled={!hasBeenEdited}
+              danger
+            >
+              <Trash />
+            </Button>
+          </MinimalSave>
         )}
       </StyledWrapper>
     );
@@ -259,12 +280,18 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
+  position: relative;
 
   & > *:first-child {
     padding: ${({ theme }) => theme.spacingLarge} 60px;
   }
 `;
 
+const MinimalSave = styled.div`
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 const MainContent = styled.div`
   padding: 20px 60px;
   & > *:first-child {

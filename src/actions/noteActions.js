@@ -1,7 +1,7 @@
 export const createNote = (note) => (dispatch, getState, getFirebase) => {
   const firestore = getFirebase().firestore();
 
-  firestore
+  return firestore
     .collection('notes')
     .add(note)
     .then((docRef) => {
@@ -11,6 +11,8 @@ export const createNote = (note) => (dispatch, getState, getFirebase) => {
       if (!getState().currentNoteToEdit.id && !note.id) {
         dispatch({ type: 'SET_CURRENT_NOTE', note: { ...note, id: docRef.id } });
       }
+
+      return docRef.id;
     })
     .catch((err) => {
       dispatch({ type: 'CREATE_NOTE_ERROR', err });

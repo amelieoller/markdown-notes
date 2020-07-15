@@ -1,10 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
+import { useSelector } from 'react-redux';
 
 import NoteEditor from '../NoteEditor.js';
 
-const Lecture = ({ lecture, notes }) => {
+const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
+  const { currentNoteToEdit } = useSelector((state) => state);
+
   return (
     <StyledLecture>
       <h1 className="lecture-title">{lecture.title}</h1>
@@ -14,6 +17,12 @@ const Lecture = ({ lecture, notes }) => {
         .map((note) => (
           <NoteEditor key={note.id} currentNoteToEdit={note} showEdit={false} />
         ))}
+
+      <hr />
+      <NoteEditor
+        currentNoteToEdit={{ ...currentNoteToEdit, lectureId: lecture.id }}
+        addNoteLinkToLecture={addNoteLinkToLecture}
+      />
     </StyledLecture>
   );
 };
@@ -57,11 +66,8 @@ const StyledLecture = styled.div`
   .lecture-title {
     font-size: 2em;
     margin-top: 0;
-    margin-bottom: 0.67em;
-  }
-
-  & > div {
-    margin-bottom: 45px;
+    margin-bottom: 0;
+    padding: 20px 60px;
   }
 `;
 

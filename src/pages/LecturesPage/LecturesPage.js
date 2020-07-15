@@ -24,17 +24,20 @@ const LecturesPage = () => {
   const lectures = useSelector((state) => state.firestore.ordered.lectures);
   const notes = useSelector((state) => state.firestore.ordered.notes);
 
-  const [selectedLecture, setSelectedLecture] = useState(null);
+  const initialLecture = { title: '', content: '', noteIds: [], language: 'code' };
+
+  const [selectedLecture, setSelectedLecture] = useState(initialLecture);
   const [lectureNotes, setLectureNotes] = useState([]);
-  const [showAddLecture, setShowAddLecture] = useState(false);
+  const [showAddLecture, setShowAddLecture] = useState(true);
+  const [showAddLectureNote, setShowAddLectureNote] = useState(true);
 
   const resetLecture = () => {
     setLectureNotes([]);
-    setSelectedLecture(null);
+    setSelectedLecture(initialLecture);
   };
 
   useEffect(() => {
-    if (selectedLecture && notes) {
+    if (selectedLecture.id && notes) {
       const hydrateNotesIds = (noteIds) =>
         noteIds.map((noteId) => notes.find((note) => note.id === noteId));
 
@@ -53,7 +56,7 @@ const LecturesPage = () => {
 
   const handleAddLectureClick = () => {
     setShowAddLecture(true);
-    resetLecture();
+    // resetLecture();
   };
 
   const handleEditLectureClick = () => {
@@ -79,6 +82,19 @@ const LecturesPage = () => {
     setSelectedLecture(lecture);
   };
 
+  const addNoteLinkToLecture = (noteId) => {
+    const newLectureNoteIds = [...lectureNotes.filter((n) => n).map((note) => note.id), noteId];
+    dispatch(
+      updateLecture({
+        noteIds: newLectureNoteIds,
+        id: selectedLecture.id,
+      }),
+    );
+
+    setSelectedLecture({ ...selectedLecture, noteIds: [...selectedLecture.noteIds, noteId] });
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+  };
+
   return (
     <SidebarsMainTemplate>
       <LectureSidebar
@@ -88,6 +104,7 @@ const LecturesPage = () => {
         handleDeleteItem={handleDeleteLecture}
         buttonText="Add Lecture"
         dark
+        isOpen={true}
       >
         <>
           <GraduationCap />
@@ -111,6 +128,7 @@ const LecturesPage = () => {
         buttonText="Edit Lecture"
         showButton={selectedLecture}
         handleNoteReorder={handleNoteReorder}
+        isOpen={false}
       >
         <>
           <Link />
@@ -134,7 +152,11 @@ const LecturesPage = () => {
           />
         )}
         {selectedLecture && !showAddLecture && (
-          <Lecture lecture={selectedLecture} notes={lectureNotes} />
+          <Lecture
+            lecture={selectedLecture}
+            notes={lectureNotes}
+            addNoteLinkToLecture={addNoteLinkToLecture}
+          />
         )}
       </div>
     </SidebarsMainTemplate>
