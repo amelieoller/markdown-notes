@@ -13,6 +13,7 @@ import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
+import chevronDown from '../../assets/icons/chevron-down.svg';
 
 const filterBy = (notes, filterArr) =>
   filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
@@ -83,14 +84,9 @@ const NotesPage = () => {
     dispatch({ type: 'SET_CURRENT_NOTE', note: selectedNote });
   };
 
-  const handleDeleteNote = (noteId) => {
-    dispatch(deleteNote(noteId));
-    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
-    resetLecture();
-  };
-
   const handleDeleteNoteLink = (noteId) => {
     const newNoteIds = selectedNote.noteLinkIds.filter((id) => id !== noteId);
+
     dispatch(updateNote({ id: selectedNote.id, noteLinkIds: newNoteIds }));
   };
 
@@ -112,31 +108,41 @@ const NotesPage = () => {
     setFilteredNotes(notes);
   };
 
+  const handleDeleteNote = (noteId) => {
+    dispatch(deleteNote(noteId));
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+  };
+
   return (
     <SidebarsMainTemplate>
       <LectureSidebar
         items={notes && sortAndFilter(filteredNotes, filteredNoteIds, filteredTagIds)}
         handleAddClick={handleAddNoteClick}
         handleItemClick={handleNoteClick}
-        handleDeleteItem={handleDeleteNote}
         currentActiveItem={currentNoteToEdit}
         buttonText="Add Lecture"
         dark
         isOpen={true}
       >
-        <>
-          <Book />
-          <span>Notes</span>
+        <div>
+          <span>
+            <Book />
+            <h4>Notes</h4>
+          </span>
           <IconButton onClick={handleAddNoteClick} color="onSurface" hoverColor="onSurfacePrimary">
             <Plus />
           </IconButton>
-        </>
-
+        </div>
         <Search
           setSearchResultNotes={getNotesIds}
           placeholderText="Search"
           clearSearch={clearNoteSearch}
         />
+        <TagFilter name="" id="" defaultValue="filter">
+          <option value="filter">Filter</option>
+          <option value="">Value 1</option>
+          <option value="">Value 2</option>
+        </TagFilter>
       </LectureSidebar>
 
       <LectureSidebar
@@ -146,10 +152,13 @@ const NotesPage = () => {
         buttonText="Edit Lecture"
         showButton={selectedNote}
         isOpen={false}
+        deleteIcon
       >
-        <>
-          <Link />
-          <span>Linked Notes</span>
+        <div>
+          <span>
+            <Link />
+            <h4>Linked Notes</h4>
+          </span>
 
           <IconButton
             onClick={handleEditLectureClick}
@@ -158,13 +167,37 @@ const NotesPage = () => {
           >
             <Plus />
           </IconButton>
-        </>
+        </div>
       </LectureSidebar>
 
-      <NoteEditor currentNoteToEdit={currentNoteToEdit} linkedNotes={linkedNotes} />
+      <NoteEditor
+        currentNoteToEdit={currentNoteToEdit}
+        linkedNotes={linkedNotes}
+        handleDelete={handleDeleteNote}
+      />
     </SidebarsMainTemplate>
   );
 };
+
+const TagFilter = styled.select`
+  width: 100%;
+  height: 30px;
+  padding: 0 ${({ theme }) => theme.spacingLarge};
+  color: ${({ theme }) => theme.background};
+  font-size: 1rem;
+  border: none;
+  background: #5f616b;
+  border-radius: 0;
+
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background-image: linear-gradient(45deg, transparent 50%, #363740 50%),
+    linear-gradient(135deg, #363740 50%, transparent 50%);
+  background-position: calc(100% - 28px) calc(1em + -3px), calc(100% - 23px) calc(1em + -3px);
+  background-size: 5px 5px, 5px 5px, 1px 1.5em;
+  background-repeat: no-repeat;
+`;
 
 NotesPage.propTypes = {};
 

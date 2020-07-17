@@ -29,8 +29,16 @@ import { getTitle, addOrRemoveFromArr } from '../../components/utils';
 import Button from '../../atoms/Button';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
+import { ReactComponent as X } from '../../assets/icons/x.svg';
+import CreateTag from '../CreateTag';
 
-const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLecture }) => {
+const NoteEditor = ({
+  currentNoteToEdit,
+  linkedNotes,
+  showEdit,
+  addNoteLinkToLecture,
+  handleDelete,
+}) => {
   const prevNoteRef = useRef();
   const prevValueRef = useRef();
   const prevHasBeenEditedRef = useRef();
@@ -178,7 +186,7 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLec
     };
 
     return (
-      <StyledWrapper>
+      <StyledWrapper showEdit={showEdit}>
         <MainContent>
           <RemirrorProvider
             manager={manager}
@@ -194,13 +202,35 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLec
           >
             <Editor />
           </RemirrorProvider>
+
+          {!showEdit && (
+            <MinimalSave>
+              <Button
+                onClick={() => handleNoteSubmit(note, value)}
+                disabled={!hasBeenEdited}
+                iconOnly
+              >
+                <Save />
+              </Button>
+
+              <Button
+                onClick={() =>
+                  window.confirm(`Are you sure you want to discard the changes you have made?`) &&
+                  handleNoteDiscard()
+                }
+                disabled={!hasBeenEdited}
+                danger
+                iconOnly
+              >
+                <X />
+              </Button>
+            </MinimalSave>
+          )}
         </MainContent>
 
-        {showEdit ? (
+        {showEdit && (
           <FooterWrapper>
             <Footer>
-              <Languages handleChange={handleLanguageChange} language={note.language} />
-
               <Tags>
                 {tags &&
                   tags.map((tag) => (
@@ -215,6 +245,8 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLec
                       {tag.name}
                     </Button>
                   ))}
+
+                <CreateTag />
               </Tags>
 
               <LinkNotes
@@ -238,29 +270,24 @@ const NoteEditor = ({ currentNoteToEdit, linkedNotes, showEdit, addNoteLinkToLec
                     disabled={!hasBeenEdited}
                     danger
                   >
-                    <Trash /> Discard Changes
+                    <X /> Discard Changes
                   </Button>
+                  {currentNoteToEdit.id && (
+                    <Button
+                      onClick={() =>
+                        window.confirm(`Are you sure you want to delete this note?`) &&
+                        handleDelete(currentNoteToEdit.id)
+                      }
+                      danger
+                      iconOnly
+                    >
+                      <Trash />
+                    </Button>
+                  )}
                 </>
               </Buttons>
             </Footer>
           </FooterWrapper>
-        ) : (
-          <MinimalSave>
-            <Button onClick={() => handleNoteSubmit(note, value)} disabled={!hasBeenEdited}>
-              <Save />
-            </Button>
-
-            <Button
-              onClick={() =>
-                window.confirm(`Are you sure you want to discard the changes you have made?`) &&
-                handleNoteDiscard()
-              }
-              disabled={!hasBeenEdited}
-              danger
-            >
-              <Trash />
-            </Button>
-          </MinimalSave>
         )}
       </StyledWrapper>
     );
@@ -280,32 +307,39 @@ const StyledWrapper = styled.div`
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
-  position: relative;
 
   & > *:first-child {
-    padding: ${({ theme }) => theme.spacingLarge} 60px;
+    padding: ${({ showEdit, theme }) => (showEdit ? '60px' : `${theme.spacingLarge} 60px`)};
   }
 `;
 
 const MinimalSave = styled.div`
   position: absolute;
-  right: 0;
-  top: 0;
+  left: 15px;
+  top: 20px;
+
+  & > *:first-child {
+    margin-bottom: 5px;
+  }
 `;
+
 const MainContent = styled.div`
-  padding: 20px 60px;
+  padding: 60px;
+  position: relative;
+
   & > *:first-child {
     max-width: 1000px;
-    margin: 0 auto;
     width: 100%;
   }
 `;
 
 const Buttons = styled.div`
   display: flex;
-  margin: 1.5rem 0;
+  margin: 0.5rem 0;
+  flex-wrap: wrap;
 
-  & > *:not(:last-child) {
+  & > * {
+    margin-bottom: 10px;
     margin-right: 10px;
   }
 `;
@@ -317,14 +351,13 @@ const FooterWrapper = styled.div`
 
 const Footer = styled.div`
   max-width: 1000px;
-  margin: 0 auto;
   position: relative;
 `;
 
 const Tags = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
 
   & > *:not(:last-child) {
     margin-right: 5px;

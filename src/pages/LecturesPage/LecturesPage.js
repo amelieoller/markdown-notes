@@ -63,11 +63,6 @@ const LecturesPage = () => {
     setShowAddLecture(true);
   };
 
-  const handleDeleteLecture = (lectureId) => {
-    dispatch(deleteLecture(lectureId));
-    resetLecture();
-  };
-
   const handleDeleteLectureNote = (noteId) => {
     const newNoteIds = selectedLecture.noteIds.filter((id) => id !== noteId);
     setLectureNotes(lectureNotes.filter((note) => note.id !== noteId));
@@ -101,14 +96,15 @@ const LecturesPage = () => {
         items={lectures}
         handleAddClick={handleAddLectureClick}
         handleItemClick={setSelectedLecture}
-        handleDeleteItem={handleDeleteLecture}
         buttonText="Add Lecture"
         dark
         isOpen={true}
       >
-        <>
-          <GraduationCap />
-          <span>Lectures</span>
+        <div>
+          <span>
+            <GraduationCap />
+            <h4>Lectures</h4>
+          </span>
 
           <IconButton
             onClick={handleAddLectureClick}
@@ -117,7 +113,7 @@ const LecturesPage = () => {
           >
             <Plus />
           </IconButton>
-        </>
+        </div>
       </LectureSidebar>
 
       <LectureSidebarDraggable
@@ -129,10 +125,13 @@ const LecturesPage = () => {
         showButton={selectedLecture}
         handleNoteReorder={handleNoteReorder}
         isOpen={false}
+        deleteIcon
       >
-        <>
-          <Link />
-          <span>Linked Notes</span>
+        <div>
+          <span>
+            <Link />
+            <h4>Linked Notes</h4>
+          </span>
 
           <IconButton
             onClick={handleEditLectureClick}
@@ -141,7 +140,7 @@ const LecturesPage = () => {
           >
             <Edit />
           </IconButton>
-        </>
+        </div>
       </LectureSidebarDraggable>
 
       <div>

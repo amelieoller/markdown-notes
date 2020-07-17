@@ -1,15 +1,38 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
+import { deleteLecture } from '../../actions/lectureActions';
 import NoteEditor from '../NoteEditor.js';
+import Button from '../../atoms/Button';
+import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 
 const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
   const { currentNoteToEdit } = useSelector((state) => state);
 
+  const dispatch = useDispatch();
+
+  const handleDeleteLecture = (lectureId) => {
+    dispatch(deleteLecture(lectureId));
+    dispatch({ type: 'CLEAR_CURRENT_LECTURE' });
+  };
+
   return (
     <StyledLecture>
+      <MinimalDelete>
+        <Button
+          onClick={() =>
+            window.confirm(`Are you sure you want to discard the changes you have made?`) &&
+            handleDeleteLecture(lecture.id)
+          }
+          danger
+          iconOnly
+        >
+          <Trash />
+        </Button>
+      </MinimalDelete>
+
       <h1 className="lecture-title">{lecture.title}</h1>
 
       {notes
@@ -22,12 +45,26 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
       <NoteEditor
         currentNoteToEdit={{ ...currentNoteToEdit, lectureId: lecture.id }}
         addNoteLinkToLecture={addNoteLinkToLecture}
+        handleDelete={handleDeleteLecture}
+        linkedNotes={[]}
       />
     </StyledLecture>
   );
 };
 
+const MinimalDelete = styled.div`
+  position: absolute;
+  left: 15px;
+  top: 42px;
+
+  & > *:first-child {
+    margin-bottom: 5px;
+  }
+`;
+
 const StyledLecture = styled.div`
+  position: relative;
+
   h1 {
     font-size: 1.5em;
     margin-top: 0.83em;
@@ -67,7 +104,7 @@ const StyledLecture = styled.div`
     font-size: 2em;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 20px 60px;
+    padding: 40px 60px 20px 60px;
   }
 `;
 

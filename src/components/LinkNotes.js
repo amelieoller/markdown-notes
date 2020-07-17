@@ -33,6 +33,7 @@ const LinkNotes = ({ addNoteIdLink, linkIds, previousLinkedNotes }) => {
         border
         placeholderText="Link Notes"
         clearSearch={clearSearch}
+        small
       />
       {foundNotes &&
         foundNotes.map((note) => (

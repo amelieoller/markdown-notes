@@ -36,14 +36,6 @@ const StyledSidebarsMainTemplate = styled.main`
 const SidebarWrapper = styled.div`
   flex: 0 0 auto;
   position: relative;
-
-  & > * {
-    & > *:last-child {
-      height: 100%;
-      overflow-y: scroll;
-      padding-bottom: 120px;
-    }
-  }
 `;
 
 const MainView = styled.div`

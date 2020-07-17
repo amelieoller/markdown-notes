@@ -14,10 +14,9 @@ import { ReactComponent as Git } from '../../assets/icons/git.svg';
 import { ReactComponent as Sass } from '../../assets/icons/sass.svg';
 import { ReactComponent as Yarn } from '../../assets/icons/yarn.svg';
 import { ReactComponent as Terminal } from '../../assets/icons/terminal.svg';
+import Button from '../Button';
 
-import IconButton from '../../atoms/IconButton/IconButton';
-
-const SidebarItem = ({ item, handleItemClick, isActive, handleDeleteItem, dark }) => {
+const SidebarItem = ({ item, handleItemClick, isActive, dark, deleteIcon, handleDeleteItem }) => {
   const getIcon = (language) => {
     switch (language) {
       case 'javascript':
@@ -48,73 +47,59 @@ const SidebarItem = ({ item, handleItemClick, isActive, handleDeleteItem, dark }
   return (
     <StyledSidebarItem
       onClick={(e) => e.target.id !== 'delete' && handleItemClick(item)}
+      onKeyDown={(e) => e.key === 'Enter' && handleItemClick(item)}
       isActive={isActive}
       dark={dark}
+      role="button"
+      tabIndex={0}
     >
-      <span className="language-icon">{getIcon(item.language)}</span>
-      <span className="item-title">{item.title}</span>
+      <Title>{item.title}</Title>
 
-      <IconButton
-        onClick={() => {
-          const result = window.confirm(`Are you sure you want to delete '${item.title}...'?`);
-          result && handleDeleteItem(item.id);
-        }}
-        id="delete"
-        color={dark ? 'onSurface' : 'onSurfaceTwo'}
-        hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
-      >
-        <Minus />
-      </IconButton>
+      {deleteIcon && (
+        <Button
+          onClick={() => {
+            const result = window.confirm(`Are you sure you want to delete '${item.title}...'?`);
+            result && handleDeleteItem(item.id);
+          }}
+          id="delete"
+          color={dark ? 'onSurface' : 'onSurfaceTwo'}
+          hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
+          iconOnly
+        >
+          <Minus />
+        </Button>
+      )}
     </StyledSidebarItem>
   );
 };
 
 const StyledSidebarItem = styled.div`
   cursor: pointer;
-  padding: 6px ${({ theme }) => theme.spacingLarge};
+  padding: 7px ${({ theme }) => theme.spacingLarge};
   padding-left: ${({ isActive, theme }) => (isActive ? '17px' : theme.spacingLarge)};
   background: ${({ isActive, dark, theme }) =>
     isActive && dark ? theme.onSurfaceLight : isActive && theme.onSurfaceTwoLight};
   border-left: ${({ isActive, theme }) => isActive && `3px solid ${theme.onSurfacePrimary}`};
   color: ${({ isActive, dark, theme }) =>
     isActive && dark ? theme.onSurfacePrimary : isActive && theme.onSurfaceTwoPrimary};
-  display: grid;
-  grid-template-columns: 27px auto 27px;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-
-  .language-icon {
-    svg {
-      height: 15px;
-      width: 15px;
-      fill: ${({ dark, theme }) => (dark ? theme.onSurface : theme.onSurfaceTwo)};
-      fill: ${({ isActive, dark, theme }) =>
-        isActive && dark ? theme.onSurfacePrimary : isActive && theme.onSurfaceTwoPrimary};
-      margin-right: 10px;
-      flex-shrink: 0;
-    }
-
-    svg.color {
-      color: ${({ dark, theme }) => (dark ? theme.onSurface : theme.onSurfaceTwo)};
-      color: ${({ isActive, dark, theme }) =>
-        isActive && dark ? theme.onSurfacePrimary : isActive && theme.onSurfaceTwoPrimary};
-      fill: none;
-    }
-  }
-
-  .item-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 
   svg {
     height: 10px;
     width: 14px;
   }
 
-  &:hover {
+  button {
+    padding: 0;
+  }
+
+  &:hover,
+  &:focus {
     background: ${({ dark, theme }) => (dark ? theme.onSurfaceLight : theme.onSurfaceTwoLight)};
     color: ${({ dark, theme }) => (dark ? theme.onSurfacePrimary : theme.onSurfaceTwoPrimary)};
+    outline: none;
 
     .title-with-icon svg {
       fill: ${({ dark, theme }) => (dark ? theme.onSurfacePrimary : theme.onSurfaceTwoPrimary)};
@@ -127,10 +112,15 @@ const StyledSidebarItem = styled.div`
   }
 `;
 
+const Title = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
 SidebarItem.propTypes = {
   item: PropTypes.shape({ title: PropTypes.string }),
   handleItemClick: PropTypes.func,
-  handleDeleteItem: PropTypes.func,
   isActive: PropTypes.bool,
   id: PropTypes.string,
   language: PropTypes.string,

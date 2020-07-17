@@ -46,6 +46,10 @@ const propsCSS = {
 
   iconOnly: css`
     padding: 0.2em;
+
+    svg {
+      margin-right: 0;
+    }
   `,
 };
 

@@ -11,20 +11,21 @@ import IconButton from '../../atoms/IconButton/IconButton';
 import Search from '../../components/Search';
 
 const SortableItem = SortableElement(
-  ({ item, handleClick, handleDeleteButtonClick, dark, activeItem }) => (
+  ({ item, handleClick, handleDeleteItem, dark, activeItem, deleteIcon }) => (
     <SidebarItem
       key={item}
       item={item}
       handleItemClick={handleClick}
-      handleDeleteItem={handleDeleteButtonClick}
+      handleDeleteItem={handleDeleteItem}
       isActive={activeItem && activeItem.id === item.id}
       dark={dark}
+      deleteIcon={deleteIcon}
     />
   ),
 );
 
 const SortableList = SortableContainer(
-  ({ items, handleClick, handleDeleteButtonClick, dark, activeItem }) => {
+  ({ items, handleClick, handleDeleteItem, dark, activeItem, deleteIcon }) => {
     return (
       <div>
         {items.map((item, index) => (
@@ -33,9 +34,10 @@ const SortableList = SortableContainer(
             item={item}
             index={index}
             handleClick={handleClick}
-            handleDeleteButtonClick={handleDeleteButtonClick}
+            handleDeleteItem={handleDeleteItem}
             dark={dark}
             activeItem={activeItem}
+            deleteIcon={deleteIcon}
           />
         ))}
       </div>
@@ -46,11 +48,12 @@ const SortableList = SortableContainer(
 const LectureSidebarDraggable = ({
   items,
   handleItemClick,
-  handleDeleteItem,
   dark,
   children,
   handleNoteReorder,
   isOpen,
+  deleteIcon,
+  handleDeleteItem,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
   const [activeItem, setActiveItem] = useState(null);
@@ -68,11 +71,6 @@ const LectureSidebarDraggable = ({
     // setActiveItem(item);
   };
 
-  const handleDeleteButtonClick = (itemId) => {
-    handleDeleteItem(itemId);
-    setActiveItem(null);
-  };
-
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const newOrderedNotes = arrayMove(sortedItems, oldIndex, newIndex);
 
@@ -82,33 +80,31 @@ const LectureSidebarDraggable = ({
 
   return (
     <StyledLectureSidebarDraggable dark={dark} isSidebarOpen={isSidebarOpen}>
-      <SidebarHeader>
-        <CollapseButton>
-          <IconButton
-            onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
-            color={dark ? 'onSurface' : 'onSurfaceTwo'}
-            hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
-            background={dark ? 'onSurfaceLight' : 'onSurfaceTwoLight'}
-          >
-            {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
-          </IconButton>
-        </CollapseButton>
-
-        <TitleArea>{children.length ? children[0] : children}</TitleArea>
-        {children.length && <SearchArea>{children[1]}</SearchArea>}
-      </SidebarHeader>
+      <SidebarHeader>{children}</SidebarHeader>
 
       <ScrollArea>
         <SortableList
           onSortEnd={onSortEnd}
           items={sortedItems}
           handleClick={handleClick}
-          handleDeleteButtonClick={handleDeleteButtonClick}
           dark={dark}
           activeItem={activeItem}
           pressDelay={100}
+          deleteIcon={deleteIcon}
+          handleDeleteItem={handleDeleteItem}
         />
       </ScrollArea>
+
+      <CollapseButton>
+        <IconButton
+          onClick={() => setIsSidebarOpen((prevOpen) => !prevOpen)}
+          color={dark ? 'onSurfacePrimary' : 'onSurfacePrimary'}
+          hoverColor="primaryDark"
+          background={dark ? 'onSurfaceTwoPrimary' : 'primary'}
+        >
+          {isSidebarOpen ? <ChevronsLeft /> : <ChevronsRight />}
+        </IconButton>
+      </CollapseButton>
     </StyledLectureSidebarDraggable>
   );
 };
@@ -122,33 +118,56 @@ const StyledLectureSidebarDraggable = styled.div`
   padding: ${({ theme }) => theme.spacingLarge} 0;
 `;
 
-const SidebarHeader = styled.div``;
+const SidebarHeader = styled.div`
+  & > *:first-child {
+    font-size: 19px;
+    font-weight: bold;
+    margin: 0 ${({ theme }) => theme.spacingLarge};
+    margin-bottom: ${({ theme }) => theme.spacingLarge};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-const ScrollArea = styled.div``;
+    & > button {
+      padding: 0;
+    }
 
-const TitleArea = styled.h4`
-  font-size: 19px;
-  font-weight: bold;
-  margin: 0 ${({ theme }) => theme.spacingLarge};
-  margin-bottom: ${({ theme }) => theme.spacingLarge};
-  display: grid;
-  grid-template-columns: 27px auto 30px;
-  align-items: center;
+    svg {
+      height: 15px;
+      width: 15px;
+    }
 
-  & > span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    & > *:first-child {
+      display: flex;
+      align-items: center;
+
+      & > h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0;
+      }
+
+      & > :first-child {
+        margin-right: ${({ isSidebarOpen }) => (isSidebarOpen ? '10px' : '20px')};
+        transition: all 0.6s ease;
+      }
+    }
+
+    & > :last-child {
+      margin-left: 10px;
+    }
   }
 
-  & > *:first-child svg {
-    margin-right: 15px;
+  & > *:last-child {
+    margin-bottom: ${({ theme }) => theme.spacing};
   }
+`;
 
-  svg {
-    height: 15px;
-    width: 15px;
-  }
+const ScrollArea = styled.div`
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 120px;
 `;
 
 const SearchArea = styled.div``;
