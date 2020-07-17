@@ -39,9 +39,13 @@ const propsCSS = {
   `,
 
   disabled: css`
-    border-color: ${({ theme }) => theme.onBackgroundLight};
-    color: ${({ theme }) => theme.onBackgroundLight};
+    border-color: ${({ theme }) => theme.borderColor};
+    color: ${({ theme }) => theme.borderColor};
     pointer-events: none;
+  `,
+
+  iconOnly: css`
+    padding: 0.2em;
   `,
 };
 
@@ -54,12 +58,13 @@ const StyledButton = styled.button`
   font-size: 1.1rem;
   border: 2px solid ${({ theme }) => theme.primary};
   align-items: center;
-  display: grid;
-  grid-auto-flow: column;
-  grid-gap: 8px;
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
 
   svg {
     height: 18px;
+    margin-right: 5px;
   }
 
   &:hover {
@@ -73,6 +78,7 @@ const StyledButton = styled.button`
   ${(props) => props.faded && propsCSS.faded};
   ${(props) => props.isActive && propsCSS.isActive};
   ${(props) => props.disabled && propsCSS.disabled};
+  ${(props) => props.iconOnly && propsCSS.iconOnly};
 `;
 
 const Button = ({ children, ...buttonProps }) => (
@@ -89,6 +95,7 @@ Button.propTypes = {
   isActive: PropTypes.bool,
   faded: PropTypes.bool,
   disabled: PropTypes.bool,
+  iconOnly: PropTypes.bool,
 };
 
 Button.defaultProps = {
