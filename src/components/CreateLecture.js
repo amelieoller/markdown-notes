@@ -52,7 +52,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
   return (
     <StyledCreateLecture>
-      <h1>{lecture.id ? 'Update Lecture' : 'Create Lecture'}</h1>
+      <h1>{lecture.id ? 'Update Lecture' : 'New Lecture'}</h1>
 
       <FormSection>
         <Input
@@ -81,8 +81,6 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
           </NoteSearchResults>
         )}
 
-        <Languages handleChange={handleLectureChange} language={lecture.language} />
-
         <Button onClick={handleSaveLectureClick}>
           {lecture.id ? 'Update Lecture' : 'Create Lecture'}
         </Button>
@@ -92,7 +90,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 };
 
 const StyledCreateLecture = styled.div`
-  padding: 20px 60px;
+  padding: 60px;
 `;
 
 const FormSection = styled.div`

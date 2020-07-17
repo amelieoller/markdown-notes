@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { mockResults } from './mockSearchResults';
 import Input from '../atoms/Input/Input';
 
-const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border }) => {
+const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, small }) => {
   const [searched, setSearched] = useState(false);
 
   const handleSearch = (value) => {
@@ -40,6 +40,7 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border }) 
       clearInput={clearInput}
       showX={searched}
       border={border}
+      small={small}
     />
   );
 };
@@ -51,6 +52,7 @@ Search.propTypes = {
 
 Search.defaultProps = {
   placeholderText: 'Search',
+  small: false,
 };
 
 export default Search;

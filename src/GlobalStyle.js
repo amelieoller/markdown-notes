@@ -119,7 +119,7 @@ export default styled.createGlobalStyle`
   }
 
   & *:first-child {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 
   code[class*='language-'],
@@ -150,7 +150,7 @@ export default styled.createGlobalStyle`
     margin-top: 2em;
     margin-bottom: 2em;
     height: 1px;
-    background: ${({ theme }) => theme.onBackgroundLight};
+    background: ${({ theme }) => theme.borderColor};
     border: none;
 
     + h2 {
@@ -284,7 +284,7 @@ export default styled.createGlobalStyle`
 
   table {
     margin-bottom: 2em;
-    font-size: 1.6em;
+    font-size: 1.1em;
     border-collapse: collapse;
     width: 100%;
     overflow-y: auto;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 import { ReactComponent as X } from '../../assets/icons/x.svg';
 
@@ -16,14 +16,13 @@ const Input = ({
   clearInput,
   showX,
   border,
+  small,
 }) => {
   const [inputValue, setInputValue] = useState(defaultValue);
 
   useEffect(() => {
     setInputValue(defaultValue);
   }, [defaultValue]);
-
-  const renderRequiredLabel = () => <span className="input-required">*</span>;
 
   const handleInputChange = (e) => setInputValue(e.target.value);
 
@@ -74,6 +73,7 @@ const Input = ({
           required={required}
           value={inputValue}
           border={border}
+          small={small}
         />
         {(showX || inputValue !== '') && (
           <ClearButton onClick={onClear} border={border}>
@@ -87,6 +87,21 @@ const Input = ({
   };
 
   return <>{label ? renderInputNode() : null}</>;
+};
+
+const propsCSS = {
+  small: css`
+    padding: ${({ theme, border }) => (border ? '0.15em 0.5em' : `6px ${theme.spacingLarge}`)};
+    font-size: 0.9rem;
+  `,
+
+  border: css`
+    padding: 0.15em 0.5em;
+    font-size: 0.9rem;
+    border: ${({ theme }) => `2px solid ${theme.primaryFaded}`};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    font-size: 1.1rem;
+  `,
 };
 
 const ClearButton = styled.button`
@@ -111,22 +126,24 @@ const ClearButton = styled.button`
 const InputWrapper = styled.div`
   position: relative;
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing};
 `;
 
 const StyledInput = styled.input`
   width: 100%;
-  font-size: ${({ border }) => (border ? '.9rem' : '1rem')};
-  padding: ${({ theme, border }) => (border ? '0.15em 0.5em' : `6px ${theme.spacingLarge}`)};
+  font-size: 1rem;
+  padding: ${({ theme }) => `6px ${theme.spacingLarge}`};
   margin-top: 2px;
   font-weight: 300;
-  border: ${({ border, theme }) => (border ? `2px solid ${theme.primaryFaded}` : 'none')};
-  border-radius: ${({ border, theme }) => (border ? theme.borderRadius : 0)};
+  border: none;
+  border-radius: 0;
   -webkit-appearance: none;
 
   &::placeholder {
     color: ${({ theme }) => theme.onBackgroundLight};
   }
+
+  ${(props) => props.border && propsCSS.border};
+  ${(props) => props.small && propsCSS.small};
 `;
 
 const HelpText = styled.div`
@@ -144,6 +161,7 @@ Input.propTypes = {
   defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   helpText: PropTypes.string,
   border: PropTypes.bool,
+  small: PropTypes.bool,
 };
 
 Input.defaultProps = {
@@ -152,8 +170,8 @@ Input.defaultProps = {
   type: 'text',
   handleOnBlur: () => {},
   clearInput: () => {},
-
   border: false,
+  small: false,
 };
 
 export default Input;

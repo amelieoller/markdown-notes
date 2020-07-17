@@ -18,6 +18,7 @@ export const theme = {
   danger: '#FF6B6C',
   onDanger: '#F7F8FC',
   codeBackground: ' rgba(9, 30, 66, 0.08)',
+  borderColor: '#e0e1e5',
   borderRadius: '3px',
   spacing: '10px',
   spacingLarge: '20px',
