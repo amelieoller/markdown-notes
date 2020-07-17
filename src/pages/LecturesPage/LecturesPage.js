@@ -56,7 +56,7 @@ const LecturesPage = () => {
 
   const handleAddLectureClick = () => {
     setShowAddLecture(true);
-    // resetLecture();
+    resetLecture();
   };
 
   const handleEditLectureClick = () => {
