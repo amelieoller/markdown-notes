@@ -1,10 +1,38 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { deleteTag } from '../../actions/tagActions';
+import Button from '../../atoms/Button';
+import { ReactComponent as X } from '../../assets/icons/x.svg';
 
 const InfoPage = (props) => {
+  const dispatch = useDispatch();
+
+  const tags = useSelector((state) => state.firestore.ordered.tags);
+
+  const onDeleteTag = (tagId) => dispatch(deleteTag(tagId));
+
   return (
     <StyledInfoPage>
+      <h1>Tags</h1>
+      {tags &&
+        tags.map((tag) => (
+          <Tag key={tag.id}>
+            {tag.name}
+            <Button
+              onClick={() => {
+                const result = window.confirm(`Are you sure you want to delete '${tag.name}...'?`);
+                result && onDeleteTag(tag.id);
+              }}
+              small
+            >
+              <X />
+            </Button>
+          </Tag>
+        ))}
+
       <h1>Keyboard Shortcuts</h1>
       <table>
         <thead>
@@ -128,8 +156,23 @@ const InfoPage = (props) => {
   );
 };
 
+const Tag = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-bottom: 5px;
+  }
+
+  button {
+    margin-left: 5px;
+  }
+`;
+
 const StyledInfoPage = styled.div`
   padding: 60px;
+  max-width: 1000px;
+  margin: 0 auto;
 
   .right {
     text-align: right;
