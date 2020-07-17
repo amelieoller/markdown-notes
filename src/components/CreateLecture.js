@@ -7,7 +7,6 @@ import Search from './Search';
 import { addOrRemoveFromArr } from './utils';
 import { createLecture, updateLecture } from '../actions/lectureActions';
 import Input from '../atoms/Input/Input';
-import Languages from '../molecules/Languages';
 import Button from '../atoms/Button';
 
 const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {

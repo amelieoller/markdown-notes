@@ -19,7 +19,6 @@ import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
 import { LinkExtension } from 'remirror/extension/link';
 
 import LinkNotes from '../../components/LinkNotes';
-import Languages from '../../molecules/Languages';
 
 import javascript from 'refractor/lang/javascript';
 import jsx from 'refractor/lang/jsx';
