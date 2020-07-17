@@ -13,7 +13,7 @@ import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
-import chevronDown from '../../assets/icons/chevron-down.svg';
+import Filter from '../../organisms/Filter/Filter';
 
 const filterBy = (notes, filterArr) =>
   filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
@@ -104,13 +104,23 @@ const NotesPage = () => {
     setFilteredNotes(newFiltered);
   };
 
-  const clearNoteSearch = () => {
+  const resetNotes = () => {
     setFilteredNotes(notes);
   };
 
   const handleDeleteNote = (noteId) => {
     dispatch(deleteNote(noteId));
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+  };
+
+  const filterTags = (tagId) => {
+    if (tagId === 'filter') {
+      resetNotes();
+    } else {
+      const newFiltered = notes.filter((n) => n.tagIds.includes(tagId));
+
+      setFilteredNotes(newFiltered);
+    }
   };
 
   return (
@@ -136,13 +146,9 @@ const NotesPage = () => {
         <Search
           setSearchResultNotes={getNotesIds}
           placeholderText="Search"
-          clearSearch={clearNoteSearch}
+          clearSearch={resetNotes}
         />
-        <TagFilter name="" id="" defaultValue="filter">
-          <option value="filter">Filter</option>
-          <option value="">Value 1</option>
-          <option value="">Value 2</option>
-        </TagFilter>
+        <Filter filterTags={filterTags} />
       </LectureSidebar>
 
       <LectureSidebar
@@ -178,26 +184,6 @@ const NotesPage = () => {
     </SidebarsMainTemplate>
   );
 };
-
-const TagFilter = styled.select`
-  width: 100%;
-  height: 30px;
-  padding: 0 ${({ theme }) => theme.spacingLarge};
-  color: ${({ theme }) => theme.background};
-  font-size: 1rem;
-  border: none;
-  background: #5f616b;
-  border-radius: 0;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-image: linear-gradient(45deg, transparent 50%, #363740 50%),
-    linear-gradient(135deg, #363740 50%, transparent 50%);
-  background-position: calc(100% - 28px) calc(1em + -3px), calc(100% - 23px) calc(1em + -3px);
-  background-size: 5px 5px, 5px 5px, 1px 1.5em;
-  background-repeat: no-repeat;
-`;
 
 NotesPage.propTypes = {};
 
