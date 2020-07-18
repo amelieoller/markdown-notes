@@ -3,13 +3,17 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
 import { ReactComponent as Info } from '../../assets/icons/info.svg';
+import { ReactComponent as Logout } from '../../assets/icons/log-out.svg';
+import { deleteUser } from '../../actions/userActions';
 
 const Navigation = ({ history }) => {
   const page = history.location.pathname;
+  const dispatch = useDispatch();
 
   return (
     <StyledNavigation>
@@ -22,6 +26,9 @@ const Navigation = ({ history }) => {
       <Link to="/info">
         <Info className={page === '/info' ? 'active' : ''} />
       </Link>
+      <button onClick={() => dispatch(deleteUser())}>
+        <Logout />
+      </button>
     </StyledNavigation>
   );
 };
@@ -32,8 +39,12 @@ const StyledNavigation = styled.nav`
   z-index: 1;
   padding: ${({ theme }) => theme.spacing};
 
-  a {
+  a,
+  button {
     margin-left: ${({ theme }) => theme.spacing};
+    background: transparent;
+    border: none;
+    cursor: pointer;
 
     svg {
       color: ${({ theme }) => theme.onBackgroundLight};

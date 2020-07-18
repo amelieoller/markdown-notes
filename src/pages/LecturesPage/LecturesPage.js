@@ -17,7 +17,14 @@ import { ReactComponent as Edit } from '../../assets/icons/edit.svg';
 import LectureSidebarDraggable from '../../organisms/LectureSidebarDragable/LectureSidebarDraggable';
 
 const LecturesPage = () => {
-  useFirestoreConnect(['lectures']);
+  const { user } = useSelector((state) => state);
+
+  useFirestoreConnect([
+    {
+      collection: 'lectures',
+      where: [['userId', '==', user.id]],
+    },
+  ]);
 
   const dispatch = useDispatch();
 

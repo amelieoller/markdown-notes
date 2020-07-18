@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Search from './Search';
 import { addOrRemoveFromArr } from './utils';
@@ -12,6 +12,7 @@ import Button from '../atoms/Button';
 const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
   const [lecture, setLecture] = useState({ title: '', noteIds: [], language: 'code' });
+  const { user } = useSelector((state) => state);
 
   useEffect(() => {
     if (selectedLecture) {
@@ -41,7 +42,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
         dispatch(updateLecture(lecture));
         updateCurrentLecture(lecture);
       } else {
-        dispatch(createLecture(lecture));
+        dispatch(createLecture({ ...lecture, userId: user.id }));
       }
 
       setNotesFound([]);

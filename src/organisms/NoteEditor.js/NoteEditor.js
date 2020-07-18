@@ -23,6 +23,7 @@ import LinkNotes from '../../components/LinkNotes';
 import javascript from 'refractor/lang/javascript';
 import jsx from 'refractor/lang/jsx';
 import ruby from 'refractor/lang/ruby';
+import json from 'refractor/lang/json';
 
 import { getTitle, addOrRemoveFromArr } from '../../components/utils';
 import Button from '../../atoms/Button';
@@ -42,6 +43,8 @@ const NoteEditor = ({
   const prevValueRef = useRef();
   const prevHasBeenEditedRef = useRef();
 
+  const { user } = useSelector((state) => state);
+
   const NoteWrapper = () => {
     const tags = useSelector((state) => state.firestore.ordered.tags);
     const dispatch = useDispatch();
@@ -59,7 +62,7 @@ const NoteEditor = ({
       new ItalicExtension(),
       new UnderlineExtension(),
       new CodeBlockExtension({
-        supportedLanguages: [javascript, jsx, ruby],
+        supportedLanguages: [javascript, jsx, ruby, json],
       }),
     ]);
 
@@ -118,12 +121,20 @@ const NoteEditor = ({
         if (noteHadBeenEdited) {
           // If the note does not have an id, save it as a new note
           const title = getTitle(contentArr.content[0].content[0].text);
-          finishedNote = { ...note, content: contentArr, updated: today, title };
+          finishedNote = {
+            ...note,
+            content: contentArr,
+            updated: today,
+            created: today,
+            title,
+            userId: user.id,
+          };
 
           if (!noSwitch) {
             dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
           }
-          dispatch(createNote({ ...finishedNote, created: today })).then((noteId) => {
+
+          dispatch(createNote(finishedNote)).then((noteId) => {
             if (currentNoteToEdit.lectureId) {
               addNoteLinkToLecture(noteId);
             }
@@ -230,6 +241,7 @@ const NoteEditor = ({
         {showEdit && (
           <FooterWrapper>
             <Footer>
+              <SectionTitle>Tags</SectionTitle>
               <Tags>
                 {tags &&
                   tags.map((tag) => (
@@ -248,12 +260,12 @@ const NoteEditor = ({
                 <CreateTag />
               </Tags>
 
+              <SectionTitle>Linked Notes</SectionTitle>
               <LinkNotes
                 addNoteIdLink={addNoteIdLink}
                 linkIds={note.noteLinkIds}
                 previousLinkedNotes={linkedNotes}
               />
-
               <Buttons>
                 <>
                   <Button onClick={() => handleNoteSubmit(note, value)} disabled={!hasBeenEdited}>
@@ -310,6 +322,13 @@ const StyledWrapper = styled.div`
   & > *:first-child {
     padding: ${({ showEdit, theme }) => (showEdit ? '60px' : `${theme.spacingLarge} 60px`)};
   }
+`;
+
+const SectionTitle = styled.div`
+  color: ${({ theme }) => theme.borderColor};
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
 `;
 
 const MinimalSave = styled.div`

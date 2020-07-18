@@ -29,7 +29,21 @@ const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
 };
 
 const NotesPage = () => {
-  useFirestoreConnect(['notes']);
+  const { user } = useSelector((state) => state);
+
+  useFirestoreConnect([
+    {
+      collection: 'tags',
+      where: [['userId', '==', user.id]],
+    },
+  ]);
+
+  useFirestoreConnect([
+    {
+      collection: 'notes',
+      where: [['userId', '==', user.id]],
+    },
+  ]);
 
   const dispatch = useDispatch();
 
