@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
-import { createNote, updateNote } from '../../actions/noteActions';
+
+// Remirror extension imports
 import { ListPreset } from 'remirror/preset/list';
 import { RemirrorProvider, useManager } from 'remirror/react';
 import { BoldExtension } from 'remirror/extension/bold';
@@ -18,19 +19,20 @@ import { ImageExtension } from 'remirror/extension/image';
 import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
 import { LinkExtension } from 'remirror/extension/link';
 
-import LinkNotes from '../../components/LinkNotes';
-
+// Remirror language imports
 import javascript from 'refractor/lang/javascript';
 import jsx from 'refractor/lang/jsx';
 import ruby from 'refractor/lang/ruby';
 import json from 'refractor/lang/json';
 
+// Internal imports
+import LinkNotes from '../../components/LinkNotes';
+import { createNote, updateNote } from '../../actions/noteActions';
 import { getTitle, addOrRemoveFromArr } from '../../components/utils';
 import Button from '../../atoms/Button';
+import CreateTag from '../CreateTag';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
-import { ReactComponent as X } from '../../assets/icons/x.svg';
-import CreateTag from '../CreateTag';
 
 const NoteEditor = ({
   currentNoteToEdit,
@@ -38,17 +40,16 @@ const NoteEditor = ({
   showEdit,
   addNoteLinkToLecture,
   handleDelete,
+  noSwitch,
 }) => {
-  const prevNoteRef = useRef();
-  const prevValueRef = useRef();
-  const prevHasBeenEditedRef = useRef();
-
-  const { user } = useSelector((state) => state);
+  const currentUser = useSelector((state) => state.firebase.auth);
 
   const NoteWrapper = () => {
     const tags = useSelector((state) => state.firestore.ordered.tags);
     const dispatch = useDispatch();
     const firestore = useFirestore();
+
+    const [hasBeenEdited, setHasBeenEdited] = useState(false);
 
     const manager = useManager([
       new ListPreset(),
@@ -67,34 +68,18 @@ const NoteEditor = ({
     ]);
 
     const [note, setNote] = useState(currentNoteToEdit);
-    const [hasBeenEdited, setHasBeenEdited] = useState(0);
 
     const initialValue = manager.createState({});
 
     const [value, setValue] = useState(initialValue);
 
     useEffect(() => {
-      prevNoteRef.current = note;
-    });
-    const prevNote = prevNoteRef.current;
-
-    useEffect(() => {
-      prevValueRef.current = value;
-    });
-    const prevValue = prevValueRef.current;
-
-    useEffect(() => {
-      prevHasBeenEditedRef.current = hasBeenEdited;
-    });
-    const prevHasBeenEdited = prevHasBeenEditedRef.current;
-
-    useEffect(() => {
-      if (note && prevNote && note.id !== prevNote.id && prevHasBeenEdited) {
-        handleNoteSubmit(prevNote, prevValue, true);
+      if (value.doc.textContent && !hasBeenEdited) {
+        setHasBeenEdited(true);
       }
-    }, [currentNoteToEdit]);
+    }, [value.doc.textContent]);
 
-    const handleNoteSubmit = (note, value, noSwitch) => {
+    const handleNoteSubmit = () => {
       const contentArr = value.doc.toJSON();
       // If the note does not have content, return
 
@@ -127,7 +112,7 @@ const NoteEditor = ({
             updated: today,
             created: today,
             title,
-            userId: user.id,
+            userId: currentUser.uid,
           };
 
           if (!noSwitch) {
@@ -141,40 +126,20 @@ const NoteEditor = ({
           });
         }
       }
-
-      setHasBeenEdited(false);
-    };
-
-    const resetValueState = () => {
-      const newValue = manager.createState({});
-
-      setNote(currentNoteToEdit);
-      setValue(newValue);
-      setHasBeenEdited(false);
-    };
-
-    const handleNoteDiscard = () => {
-      resetValueState();
-      dispatch({ type: 'SET_CURRENT_NOTE', note: currentNoteToEdit });
     };
 
     const addTag = (id) => {
       const newTagIds = addOrRemoveFromArr(note.tagIds, id);
 
-      setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
       setHasBeenEdited(true);
+      setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
     };
 
     const addNoteIdLink = (noteId) => {
       const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
 
+      setHasBeenEdited(true);
       setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
-      setHasBeenEdited(true);
-    };
-
-    const handleLanguageChange = (languageObj) => {
-      setNote((prevNote) => ({ ...prevNote, ...languageObj }));
-      setHasBeenEdited(true);
     };
 
     const initialContent = {
@@ -197,7 +162,7 @@ const NoteEditor = ({
 
     return (
       <StyledWrapper showEdit={showEdit}>
-        <MainContent>
+        <MainContent onBlur={() => handleNoteSubmit()}>
           <RemirrorProvider
             manager={manager}
             initialContent={note.content || initialContent}
@@ -205,7 +170,6 @@ const NoteEditor = ({
               const { state, tr } = parameter;
 
               if (tr?.docChanged) {
-                setHasBeenEdited(true);
                 setValue(state);
               }
             }}
@@ -215,24 +179,8 @@ const NoteEditor = ({
 
           {!showEdit && (
             <MinimalSave>
-              <Button
-                onClick={() => handleNoteSubmit(note, value)}
-                disabled={!hasBeenEdited}
-                iconOnly
-              >
+              <Button onClick={() => handleNoteSubmit()} disabled={!hasBeenEdited} iconOnly>
                 <Save />
-              </Button>
-
-              <Button
-                onClick={() =>
-                  window.confirm(`Are you sure you want to discard the changes you have made?`) &&
-                  handleNoteDiscard()
-                }
-                disabled={!hasBeenEdited}
-                danger
-                iconOnly
-              >
-                <X />
               </Button>
             </MinimalSave>
           )}
@@ -267,35 +215,21 @@ const NoteEditor = ({
                 previousLinkedNotes={linkedNotes}
               />
               <Buttons>
-                <>
-                  <Button onClick={() => handleNoteSubmit(note, value)} disabled={!hasBeenEdited}>
-                    <Save /> Save Note
-                  </Button>
+                <Button onClick={() => handleNoteSubmit()} disabled={!hasBeenEdited}>
+                  <Save /> {hasBeenEdited ? 'Save Note' : 'Note Saved'}
+                </Button>
 
+                {currentNoteToEdit.id && (
                   <Button
                     onClick={() =>
-                      window.confirm(
-                        `Are you sure you want to discard the changes you have made?`,
-                      ) && handleNoteDiscard()
+                      window.confirm(`Are you sure you want to delete this note?`) &&
+                      handleDelete(currentNoteToEdit.id)
                     }
-                    disabled={!hasBeenEdited}
                     danger
                   >
-                    <X /> Discard Changes
+                    <Trash /> Delete Note
                   </Button>
-                  {currentNoteToEdit.id && (
-                    <Button
-                      onClick={() =>
-                        window.confirm(`Are you sure you want to delete this note?`) &&
-                        handleDelete(currentNoteToEdit.id)
-                      }
-                      danger
-                      iconOnly
-                    >
-                      <Trash />
-                    </Button>
-                  )}
-                </>
+                )}
               </Buttons>
             </Footer>
           </FooterWrapper>
@@ -355,6 +289,7 @@ const Buttons = styled.div`
   display: flex;
   margin: 0.5rem 0;
   flex-wrap: wrap;
+  justify-content: space-between;
 
   & > * {
     margin-bottom: 10px;
