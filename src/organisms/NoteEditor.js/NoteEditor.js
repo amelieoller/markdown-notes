@@ -3,14 +3,14 @@ import styled from 'styled-components/macro';
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
+import { useRemirror } from '@remirror/react';
+import { RemirrorProvider, useManager } from 'remirror/react';
 
 // Remirror extension imports
 import { ListPreset } from 'remirror/preset/list';
-import { RemirrorProvider, useManager } from 'remirror/react';
 import { BoldExtension } from 'remirror/extension/bold';
 import { ItalicExtension } from 'remirror/extension/italic';
 import { CodeBlockExtension } from 'remirror/extension/code-block';
-import { useRemirror } from '@remirror/react';
 import { CodeExtension } from 'remirror/extension/code';
 import { HeadingExtension } from 'remirror/extension/heading';
 import { BlockquoteExtension } from 'remirror/extension/blockquote';
@@ -18,6 +18,7 @@ import { UnderlineExtension } from 'remirror/extension/underline';
 import { ImageExtension } from 'remirror/extension/image';
 import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
 import { LinkExtension } from 'remirror/extension/link';
+import { AutoLinkExtension } from 'remirror/extension/auto-link';
 
 // Remirror language imports
 import javascript from 'refractor/lang/javascript';
@@ -59,6 +60,7 @@ const NoteEditor = ({
       new ImageExtension(),
       new HorizontalRuleExtension(),
       new LinkExtension(),
+      new AutoLinkExtension(),
       new BoldExtension(),
       new ItalicExtension(),
       new UnderlineExtension(),
@@ -254,7 +256,13 @@ const StyledWrapper = styled.div`
   height: 100%;
 
   & > *:first-child {
-    padding: ${({ showEdit, theme }) => (showEdit ? '60px' : `${theme.spacingLarge} 60px`)};
+    padding: ${({ showEdit, theme }) =>
+      showEdit ? '60px' : `${theme.spacingLarge} ${theme.spacingExtraLarge}`};
+
+    @media ${({ theme }) => theme.tablet} {
+      padding: ${({ showEdit, theme }) =>
+        showEdit ? `40px ${theme.spacingLarge}` : theme.spacingLarge};
+    }
   }
 `;
 
@@ -272,6 +280,11 @@ const MinimalSave = styled.div`
 
   & > *:first-child {
     margin-bottom: 5px;
+  }
+
+  @media ${({ theme }) => theme.tablet} {
+    left: 20px;
+    top: -12px;
   }
 `;
 
@@ -299,7 +312,11 @@ const Buttons = styled.div`
 
 const FooterWrapper = styled.div`
   background: ${({ theme }) => theme.onSurfaceThree};
-  padding: 40px 60px ${({ theme }) => theme.spacingLarge} 60px;
+  padding: ${({ theme }) => theme.spacingLarge} ${({ theme }) => theme.spacingExtraLarge};
+
+  @media ${({ theme }) => theme.tablet} {
+    padding: ${({ theme }) => theme.spacingLarge};
+  }
 `;
 
 const Footer = styled.div`
