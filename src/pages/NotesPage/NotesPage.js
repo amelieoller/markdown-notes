@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components/macro';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 
@@ -29,19 +27,19 @@ const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
 };
 
 const NotesPage = () => {
-  const { user } = useSelector((state) => state);
+  const currentUser = useSelector((state) => state.firebase.auth);
 
   useFirestoreConnect([
     {
       collection: 'tags',
-      where: [['userId', '==', user.id]],
+      where: [['userId', '==', currentUser.uid]],
     },
   ]);
 
   useFirestoreConnect([
     {
       collection: 'notes',
-      where: [['userId', '==', user.id]],
+      where: [['userId', '==', currentUser.uid]],
     },
   ]);
 
@@ -62,11 +60,6 @@ const NotesPage = () => {
       setFilteredNotes(notes);
     }
   }, [notes]);
-
-  const resetLecture = () => {
-    setLinkedNotes([]);
-    setSelectedNote(null);
-  };
 
   useEffect(() => {
     if (currentNoteToEdit.title) {

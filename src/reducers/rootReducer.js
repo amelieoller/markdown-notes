@@ -7,7 +7,6 @@ import tagsReducer from './tagsReducer';
 import currentNote from './currentNote';
 import currentLecture from './currentLecture';
 import lectureReducer from './lectureReducer';
-import userReducer from './userReducer';
 
 const rootReducer = combineReducers({
   notes: notesReducer,
@@ -15,7 +14,6 @@ const rootReducer = combineReducers({
   currentNoteToEdit: currentNote,
   currentLecture: currentLecture,
   lectures: lectureReducer,
-  user: userReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer,
 });

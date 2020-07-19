@@ -12,7 +12,7 @@ import Button from '../atoms/Button';
 const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
   const [lecture, setLecture] = useState({ title: '', noteIds: [], language: 'code' });
-  const { user } = useSelector((state) => state);
+  const currentUser = useSelector((state) => state.firebase.auth);
 
   useEffect(() => {
     if (selectedLecture) {
@@ -42,7 +42,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
         dispatch(updateLecture(lecture));
         updateCurrentLecture(lecture);
       } else {
-        dispatch(createLecture({ ...lecture, userId: user.id }));
+        dispatch(createLecture({ ...lecture, userId: currentUser.uid }));
       }
 
       setNotesFound([]);
@@ -57,8 +57,8 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
       <FormSection>
         <Input
           label="Lecture Title"
-          handleOnBlur={(value) => handleLectureChange({ title: value })}
-          defaultValue={lecture.title}
+          onChange={(e) => handleLectureChange({ title: e.target.value })}
+          value={lecture.title}
           border
         />
         <Search
@@ -114,6 +114,9 @@ const NoteSearchResult = styled.div`
   padding: 5px;
 `;
 
-CreateLecture.propTypes = {};
+CreateLecture.propTypes = {
+  selectedLecture: PropTypes.shape({}),
+  updateCurrentLecture: PropTypes.func,
+};
 
 export default CreateLecture;

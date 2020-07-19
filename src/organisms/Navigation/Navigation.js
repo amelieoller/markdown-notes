@@ -9,11 +9,17 @@ import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
 import { ReactComponent as Info } from '../../assets/icons/info.svg';
 import { ReactComponent as Logout } from '../../assets/icons/log-out.svg';
-import { deleteUser } from '../../actions/userActions';
+import * as firebase from 'firebase';
 
 const Navigation = ({ history }) => {
   const page = history.location.pathname;
   const dispatch = useDispatch();
+
+  const logoutUser = () => {
+    firebase.logout();
+    // clear notes
+    dispatch({ type: 'CLEAR_DATA' });
+  };
 
   return (
     <StyledNavigation>
@@ -26,7 +32,7 @@ const Navigation = ({ history }) => {
       <Link to="/info">
         <Info className={page === '/info' ? 'active' : ''} />
       </Link>
-      <button onClick={() => dispatch(deleteUser())}>
+      <button onClick={logoutUser}>
         <Logout />
       </button>
     </StyledNavigation>

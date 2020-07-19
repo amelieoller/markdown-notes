@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components/macro';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 
 import CreateLecture from '../../components/CreateLecture';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import Lecture from '../../organisms/Lecture';
-import { deleteLecture, updateLecture } from '../../actions/lectureActions';
+import { updateLecture } from '../../actions/lectureActions';
 import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
@@ -17,12 +15,12 @@ import { ReactComponent as Edit } from '../../assets/icons/edit.svg';
 import LectureSidebarDraggable from '../../organisms/LectureSidebarDragable/LectureSidebarDraggable';
 
 const LecturesPage = () => {
-  const { user } = useSelector((state) => state);
+  const currentUser = useSelector((state) => state.firebase.auth);
 
   useFirestoreConnect([
     {
       collection: 'lectures',
-      where: [['userId', '==', user.id]],
+      where: [['userId', '==', currentUser.uid]],
     },
   ]);
 
@@ -36,7 +34,6 @@ const LecturesPage = () => {
   const [selectedLecture, setSelectedLecture] = useState(initialLecture);
   const [lectureNotes, setLectureNotes] = useState([]);
   const [showAddLecture, setShowAddLecture] = useState(true);
-  const [showAddLectureNote, setShowAddLectureNote] = useState(true);
 
   const resetLecture = () => {
     setLectureNotes([]);
