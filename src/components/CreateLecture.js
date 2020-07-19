@@ -91,6 +91,10 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
 const StyledCreateLecture = styled.div`
   padding: 60px;
+
+  @media ${({ theme }) => theme.tablet} {
+    padding: ${({ theme }) => `40px ${theme.spacingLarge}`};
+  }
 `;
 
 const FormSection = styled.div`

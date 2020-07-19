@@ -22,4 +22,8 @@ export const theme = {
   borderRadius: '3px',
   spacing: '10px',
   spacingLarge: '20px',
+  spacingExtraLarge: '60px',
+  phone: `(max-width: 425px)`,
+  tablet: `(max-width: 768px)`,
+  desktop: `(max-width: 2560px)`,
 };

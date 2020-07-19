@@ -64,6 +64,11 @@ const MinimalDelete = styled.div`
   left: 15px;
   top: 42px;
 
+  @media ${({ theme }) => theme.tablet} {
+    left: 20px;
+    top: 10px;
+  }
+
   & > *:first-child {
     margin-bottom: 5px;
   }
@@ -112,6 +117,10 @@ const StyledLecture = styled.div`
     margin-top: 0;
     margin-bottom: 0;
     padding: 40px 60px 20px 60px;
+
+    @media ${({ theme }) => theme.tablet} {
+      padding: 40px 20px 20px 20px;
+    }
   }
 `;
 

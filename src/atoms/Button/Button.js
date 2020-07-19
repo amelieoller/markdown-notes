@@ -65,6 +65,7 @@ const StyledButton = styled.button`
   display: flex;
   white-space: nowrap;
   align-items: center;
+  justify-content: center;
 
   svg {
     height: 18px;

@@ -135,6 +135,7 @@ const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 const PasswordReset = styled.div`
@@ -146,9 +147,10 @@ const PasswordReset = styled.div`
     border: none;
     cursor: pointer;
     text-decoration: underline;
+    color: ${({ theme }) => theme.primary};
 
     &:hover {
-      color: blue;
+      color: ${({ theme }) => theme.primaryFaded};
     }
   }
 `;

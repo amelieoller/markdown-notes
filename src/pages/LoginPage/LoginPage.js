@@ -13,6 +13,10 @@ const LoginPage = () => {
 
 const StyledLoginPage = styled.div`
   padding: 60px;
+
+  @media ${({ theme }) => theme.phone} {
+    padding: 40px 20px;
+  }
 `;
 
 export default LoginPage;

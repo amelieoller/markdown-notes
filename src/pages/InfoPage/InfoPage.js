@@ -208,6 +208,10 @@ const StyledInfoPage = styled.div`
   button {
     margin-left: auto;
   }
+
+  @media ${({ theme }) => theme.tablet} {
+    padding: 40px 20px;
+  }
 `;
 
 export default InfoPage;

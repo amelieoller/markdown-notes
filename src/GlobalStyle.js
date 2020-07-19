@@ -144,6 +144,11 @@ export default styled.createGlobalStyle`
     background-position: 0 93%;
     background-repeat: repeat-x;
     background-size: 100% 0.15em;
+    cursor: pointer;
+
+    &:hover {
+      color: ${({ theme }) => theme.primaryFaded};
+    }
   }
 
   hr {
