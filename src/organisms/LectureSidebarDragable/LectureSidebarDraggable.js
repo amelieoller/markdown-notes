@@ -65,9 +65,7 @@ const LectureSidebarDraggable = ({
   }, [items]);
 
   const handleClick = (item) => {
-    console.log('clicked');
-    // handleItemClick(item);
-    // setActiveItem(item);
+    document.getElementById(item.id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const onSortEnd = ({ oldIndex, newIndex }) => {

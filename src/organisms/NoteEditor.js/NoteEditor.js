@@ -163,7 +163,7 @@ const NoteEditor = ({
     };
 
     return (
-      <StyledWrapper showEdit={showEdit}>
+      <StyledWrapper showEdit={showEdit} id={note.id}>
         <MainContent onBlur={() => handleNoteSubmit()}>
           <RemirrorProvider
             manager={manager}
