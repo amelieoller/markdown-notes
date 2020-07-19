@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
@@ -13,12 +12,9 @@ import * as firebase from 'firebase';
 
 const Navigation = ({ history }) => {
   const page = history.location.pathname;
-  const dispatch = useDispatch();
 
   const logoutUser = () => {
     firebase.logout();
-    // clear notes
-    dispatch({ type: 'CLEAR_DATA' });
   };
 
   return (
