@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Login from '../../organisms/Login';
 
-const LoginPage = (props) => {
+const LoginPage = () => {
   return (
     <StyledLoginPage>
       <Login />
@@ -15,7 +14,5 @@ const LoginPage = (props) => {
 const StyledLoginPage = styled.div`
   padding: 60px;
 `;
-
-LoginPage.propTypes = {};
 
 export default LoginPage;

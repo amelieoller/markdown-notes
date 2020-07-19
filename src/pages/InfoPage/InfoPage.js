@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';
 import { ReactComponent as X } from '../../assets/icons/x.svg';
 
-const InfoPage = (props) => {
+const InfoPage = () => {
   const dispatch = useDispatch();
 
   const tags = useSelector((state) => state.firestore.ordered.tags);
@@ -178,7 +177,5 @@ const StyledInfoPage = styled.div`
     text-align: right;
   }
 `;
-
-InfoPage.propTypes = {};
 
 export default InfoPage;

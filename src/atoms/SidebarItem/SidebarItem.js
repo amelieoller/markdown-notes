@@ -3,47 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 
 import { ReactComponent as Minus } from '../../assets/icons/minus.svg';
-import { ReactComponent as JavaScript } from '../../assets/icons/javascript.svg';
-import { ReactComponent as Ruby } from '../../assets/icons/ruby.svg';
-import { ReactComponent as ReactIcon } from '../../assets/icons/react.svg';
-import { ReactComponent as Css } from '../../assets/icons/css3.svg';
-import { ReactComponent as Html } from '../../assets/icons/html5.svg';
-import { ReactComponent as Python } from '../../assets/icons/python.svg';
-import { ReactComponent as Code } from '../../assets/icons/code.svg';
-import { ReactComponent as Git } from '../../assets/icons/git.svg';
-import { ReactComponent as Sass } from '../../assets/icons/sass.svg';
-import { ReactComponent as Yarn } from '../../assets/icons/yarn.svg';
-import { ReactComponent as Terminal } from '../../assets/icons/terminal.svg';
 import Button from '../Button';
 
 const SidebarItem = ({ item, handleItemClick, isActive, dark, deleteIcon, handleDeleteItem }) => {
-  const getIcon = (language) => {
-    switch (language) {
-      case 'javascript':
-        return <JavaScript />;
-      case 'css':
-        return <Css />;
-      case 'html':
-        return <Html />;
-      case 'react':
-        return <ReactIcon />;
-      case 'python':
-        return <Python />;
-      case 'git':
-        return <Git />;
-      case 'sass':
-        return <Sass />;
-      case 'yarn':
-        return <Yarn />;
-      case 'ruby':
-        return <Ruby />;
-      case 'terminal':
-        return <Terminal />;
-      default:
-        return <Code />;
-    }
-  };
-
   return (
     <StyledSidebarItem
       onClick={(e) => e.target.id !== 'delete' && handleItemClick(item)}

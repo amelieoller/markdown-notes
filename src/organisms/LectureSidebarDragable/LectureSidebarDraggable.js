@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import SidebarItem from '../../atoms/SidebarItem/SidebarItem';
@@ -8,7 +8,6 @@ import arrayMove from 'array-move';
 import { ReactComponent as ChevronsLeft } from '../../assets/icons/chevrons-left.svg';
 import { ReactComponent as ChevronsRight } from '../../assets/icons/chevrons-right.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
-import Search from '../../components/Search';
 
 const SortableItem = SortableElement(
   ({ item, handleClick, handleDeleteItem, dark, activeItem, deleteIcon }) => (
@@ -169,8 +168,6 @@ const ScrollArea = styled.div`
   overflow-y: scroll;
   padding-bottom: 120px;
 `;
-
-const SearchArea = styled.div``;
 
 const CollapseButton = styled.span`
   position: absolute;

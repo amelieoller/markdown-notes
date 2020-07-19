@@ -52,6 +52,8 @@ const MainView = styled.div`
   }
 `;
 
-SidebarsMainTemplate.propTypes = {};
+SidebarsMainTemplate.propTypes = {
+  children: PropTypes.node,
+};
 
 export default SidebarsMainTemplate;

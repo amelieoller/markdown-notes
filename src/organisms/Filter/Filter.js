@@ -44,6 +44,6 @@ const TagFilter = styled.select`
   background-repeat: no-repeat;
 `;
 
-Filter.propTypes = {};
+Filter.propTypes = { filterTags: PropTypes.func };
 
 export default Filter;

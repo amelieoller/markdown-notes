@@ -72,8 +72,10 @@ const StyledLinkNotes = styled.div`
   }
 `;
 
-const Results = styled.div``;
-
-LinkNotes.propTypes = {};
+LinkNotes.propTypes = {
+  addNoteIdLink: PropTypes.func,
+  linkIds: PropTypes.arrayOf(PropTypes.string),
+  previousLinkedNotes: PropTypes.arrayOf(PropTypes.string),
+};
 
 export default LinkNotes;

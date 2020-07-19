@@ -131,8 +131,6 @@ const ScrollArea = styled.div`
   padding-bottom: 150px;
 `;
 
-const SearchArea = styled.div``;
-
 const CollapseButton = styled.span`
   position: absolute;
   left: 12.5px;
