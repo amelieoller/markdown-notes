@@ -43,10 +43,17 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
 
       <hr />
       <NoteEditor
-        currentNoteToEdit={{ ...currentNoteToEdit, lectureId: lecture.id }}
+        currentNoteToEdit={{
+          title: '',
+          content: '',
+          tagIds: [],
+          noteLinkIds: [],
+          lectureId: lecture.id,
+        }}
         addNoteLinkToLecture={addNoteLinkToLecture}
         handleDelete={handleDeleteLecture}
         linkedNotes={[]}
+        showEdit={false}
       />
     </StyledLecture>
   );
