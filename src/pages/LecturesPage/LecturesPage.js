@@ -19,7 +19,21 @@ const LecturesPage = () => {
 
   useFirestoreConnect([
     {
+      collection: 'tags',
+      where: [['userId', '==', currentUser.uid]],
+    },
+  ]);
+
+  useFirestoreConnect([
+    {
       collection: 'lectures',
+      where: [['userId', '==', currentUser.uid]],
+    },
+  ]);
+
+  useFirestoreConnect([
+    {
+      collection: 'notes',
       where: [['userId', '==', currentUser.uid]],
     },
   ]);
