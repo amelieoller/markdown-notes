@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
 
 import Button from '../../atoms/Button';
@@ -10,6 +10,7 @@ import { createTag } from '../../actions/tagActions';
 
 const CreateTag = () => {
   const firestore = useFirestore();
+  const currentUser = useSelector((state) => state.firebase.auth);
 
   const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
   const [tagText, setTagText] = useState('');
@@ -24,6 +25,7 @@ const CreateTag = () => {
     const tag = {
       name: tagText,
       created: firestore.Timestamp.now(),
+      userId: currentUser.uid,
     };
 
     dispatch(createTag(tag));
@@ -38,6 +40,7 @@ const CreateTag = () => {
         value={tagText}
         border
         small
+        autoFocus
       />
     </InputWrapper>
   ) : (
