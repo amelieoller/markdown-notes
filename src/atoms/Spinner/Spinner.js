@@ -1,70 +1,111 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components';
 
-const climbingBox = keyframes`
-  0% {transform:translate(0, -1em) rotate(-45deg)}
-  5% {transform:translate(0, -1em) rotate(-50deg)}
-  20% {transform:translate(1em, -2em) rotate(47deg)}
-  25% {transform:translate(1em, -2em) rotate(45deg)}
-  30% {transform:translate(1em, -2em) rotate(40deg)}
-  45% {transform:translate(2em, -3em) rotate(137deg)}
-  50% {transform:translate(2em, -3em) rotate(135deg)}
-  55% {transform:translate(2em, -3em) rotate(130deg)}
-  70% {transform:translate(3em, -4em) rotate(217deg)}
-  75% {transform:translate(3em, -4em) rotate(220deg)}
-  100% {transform:translate(0, -1em) rotate(-225deg)}
+const ldsSpinner = keyframes`
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
 `;
 
 const Spinner = () => {
   return (
     <Container>
-      <Wrapper>
-        <Style />
-        <Hill />
-      </Wrapper>
+      <div className="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </Container>
   );
 };
 
-const Hill = styled.div`
-  position: absolute;
-  width: 7.1em;
-  height: 7.1em;
-  top: 1.7em;
-  left: 1.7em;
-  border-left: 0.25em solid ${({ theme }) => theme.colors.primary};
-  transform: rotate(45deg);
-`;
-
-const Style = styled.div`
-  position: absolute;
-  left: 0;
-  bottom: -0.1em;
-  height: 1em;
-  width: 1em;
-  background-color: transparent;
-  border-radius: 15%;
-  border: 0.25em solid ${({ theme }) => theme.colors.primary};
-  transform: translate(0, -1em) rotate(-45deg);
-  animation-fill-mode: both;
-  animation: ${climbingBox} 2.5s infinite cubic-bezier(0.79, 0, 0.47, 0.97);
-`;
-
-const Wrapper = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: -2.7em;
-  margin-left: -2.7em;
-  width: 5.4em;
-  height: 5.4em;
-  font-size: 25px;
-`;
-
 const Container = styled.div`
-  /* position: relative; */
-  width: 7.1em;
-  height: 7.1em;
+  display: flex;
+  justify-content: center;
+  padding-top: 25vh;
+
+  .lds-spinner {
+    color: red;
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-spinner div {
+    transform-origin: 40px 40px;
+    animation: ${ldsSpinner} 1.2s linear infinite;
+  }
+  .lds-spinner div:after {
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: 3px;
+    left: 37px;
+    width: 6px;
+    height: 18px;
+    border-radius: 20%;
+    background: ${({ theme }) => theme.primary};
+  }
+  .lds-spinner div:nth-child(1) {
+    transform: rotate(0deg);
+    animation-delay: -1.1s;
+  }
+  .lds-spinner div:nth-child(2) {
+    transform: rotate(30deg);
+    animation-delay: -1s;
+  }
+  .lds-spinner div:nth-child(3) {
+    transform: rotate(60deg);
+    animation-delay: -0.9s;
+  }
+  .lds-spinner div:nth-child(4) {
+    transform: rotate(90deg);
+    animation-delay: -0.8s;
+  }
+  .lds-spinner div:nth-child(5) {
+    transform: rotate(120deg);
+    animation-delay: -0.7s;
+  }
+  .lds-spinner div:nth-child(6) {
+    transform: rotate(150deg);
+    animation-delay: -0.6s;
+  }
+  .lds-spinner div:nth-child(7) {
+    transform: rotate(180deg);
+    animation-delay: -0.5s;
+  }
+  .lds-spinner div:nth-child(8) {
+    transform: rotate(210deg);
+    animation-delay: -0.4s;
+  }
+  .lds-spinner div:nth-child(9) {
+    transform: rotate(240deg);
+    animation-delay: -0.3s;
+  }
+  .lds-spinner div:nth-child(10) {
+    transform: rotate(270deg);
+    animation-delay: -0.2s;
+  }
+  .lds-spinner div:nth-child(11) {
+    transform: rotate(300deg);
+    animation-delay: -0.1s;
+  }
+  .lds-spinner div:nth-child(12) {
+    transform: rotate(330deg);
+    animation-delay: 0s;
+  }
 `;
 
 export default Spinner;

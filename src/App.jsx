@@ -10,6 +10,7 @@ import NotesPage from './pages/NotesPage';
 import { theme } from './theme';
 import GlobalStyle from './GlobalStyle';
 import LoginPage from './pages/LoginPage';
+import Spinner from './atoms/Spinner';
 
 const App = () => {
   const { auth } = useSelector((state) => state.firebase);
@@ -36,7 +37,7 @@ const App = () => {
           )}
         </>
       ) : (
-        <div>loading....</div>
+        <Spinner />
       )}
     </ThemeProvider>
   );
