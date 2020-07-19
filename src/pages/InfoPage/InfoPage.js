@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFirestoreConnect } from 'react-redux-firebase';
 
 import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';
@@ -10,27 +11,49 @@ const InfoPage = () => {
   const dispatch = useDispatch();
 
   const tags = useSelector((state) => state.firestore.ordered.tags);
+  const currentUser = useSelector((state) => state.firebase.auth);
+
+  useFirestoreConnect([
+    {
+      collection: 'tags',
+      where: [['userId', '==', currentUser.uid]],
+    },
+  ]);
 
   const onDeleteTag = (tagId) => dispatch(deleteTag(tagId));
 
   return (
     <StyledInfoPage>
-      <h1>Tags</h1>
-      {tags &&
-        tags.map((tag) => (
-          <Tag key={tag.id}>
-            {tag.name}
-            <Button
-              onClick={() => {
-                const result = window.confirm(`Are you sure you want to delete '${tag.name}...'?`);
-                result && onDeleteTag(tag.id);
-              }}
-              small
-            >
-              <X />
-            </Button>
-          </Tag>
-        ))}
+      <h1>Edit</h1>
+      <table>
+        <thead>
+          <tr>
+            <th colSpan="2">Tags</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tags &&
+            tags.map((tag) => (
+              <tr key={tag.id}>
+                <td>{tag.name}</td>
+                <td className="right">
+                  <Button
+                    onClick={() => {
+                      const result = window.confirm(
+                        `Are you sure you want to delete '${tag.name}...'?`,
+                      );
+                      result && onDeleteTag(tag.id);
+                    }}
+                    small
+                    iconOnly
+                  >
+                    <X />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
 
       <h1>Keyboard Shortcuts</h1>
       <table>
@@ -175,6 +198,15 @@ const StyledInfoPage = styled.div`
 
   .right {
     text-align: right;
+  }
+
+  tr:hover,
+  tr:focus {
+    background: ${({ theme }) => theme.onSurfaceThree};
+  }
+
+  button {
+    margin-left: auto;
   }
 `;
 
