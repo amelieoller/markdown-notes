@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { useFirestore } from 'react-redux-firebase';
@@ -13,16 +12,17 @@ const CreateTag = () => {
   const firestore = useFirestore();
 
   const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
+  const [tagText, setTagText] = useState('');
 
   const dispatch = useDispatch();
 
-  const createNewTag = (tagContent) => {
+  const createNewTag = () => {
     setIsTagEditorOpen(false);
 
-    if (tagContent === '') return;
+    if (tagText === '') return;
 
     const tag = {
-      name: tagContent,
+      name: tagText,
       created: firestore.Timestamp.now(),
     };
 
@@ -31,7 +31,14 @@ const CreateTag = () => {
 
   return isTagEditorOpen ? (
     <InputWrapper>
-      <Input label="New Tag" onKeyDown={createNewTag} border small />
+      <Input
+        label="New Tag"
+        onChange={(e) => setTagText(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && createNewTag()}
+        value={tagText}
+        border
+        small
+      />
     </InputWrapper>
   ) : (
     <Button onClick={() => setIsTagEditorOpen(true)} type="button" small faded iconOnly>
@@ -43,7 +50,5 @@ const CreateTag = () => {
 const InputWrapper = styled.div`
   max-width: 200px;
 `;
-
-CreateTag.propTypes = {};
 
 export default CreateTag;

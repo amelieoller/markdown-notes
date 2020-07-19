@@ -6,10 +6,10 @@ import { mockResults } from './mockSearchResults';
 import Input from '../atoms/Input/Input';
 
 const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, small }) => {
-  const [searched, setSearched] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
-  const handleSearch = (value) => {
-    if (value === '') return;
+  const handleSearch = () => {
+    if (searchText === '') return;
 
     // setSearchResultNotes(mockResults);
     // setSearched(true);
@@ -20,27 +20,27 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
     );
     const index = client.initIndex('notes');
 
-    index.search(value).then(({ hits }) => {
+    index.search(searchText).then(({ hits }) => {
       const hitsWithIds = hits.map((hit) => ({ ...hit, id: hit.objectID }));
 
       setSearchResultNotes(hitsWithIds);
-      setSearched(true);
     });
   };
 
-  const clearInput = (e) => {
+  const clearInput = () => {
     clearSearch();
-    setSearched(false);
   };
 
   return (
     <Input
       label={placeholderText}
-      onKeyDown={handleSearch}
+      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
       clearInput={clearInput}
-      showX={searched}
+      onChange={(e) => setSearchText(e.target.value)}
+      value={searchText}
       border={border}
       small={small}
+      showClearButton
     />
   );
 };
@@ -48,10 +48,14 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
 Search.propTypes = {
   setSearchResultNotes: PropTypes.func.isRequired,
   placeholderText: PropTypes.string,
+  clearSearch: PropTypes.func,
+  border: PropTypes.bool,
+  small: PropTypes.bool,
 };
 
 Search.defaultProps = {
   placeholderText: 'Search',
+  border: false,
   small: false,
 };
 

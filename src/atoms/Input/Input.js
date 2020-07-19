@@ -1,60 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { css } from 'styled-components/macro';
 
 import { ReactComponent as X } from '../../assets/icons/x.svg';
 
-const Input = ({
-  label,
-  placeholder = label,
-  required,
-  type,
-  handleOnBlur,
-  onKeyDown,
-  defaultValue,
-  helpText,
-  clearInput,
-  showX,
-  border,
-  small,
-}) => {
-  const [inputValue, setInputValue] = useState(defaultValue);
-
-  useEffect(() => {
-    setInputValue(defaultValue);
-  }, [defaultValue]);
-
-  const handleInputChange = (e) => setInputValue(e.target.value);
-
-  const handleBlur = (e) => {
-    let { value } = e.target;
-
-    if (type === 'number' && value === '') {
-      handleOnBlur(0);
-    } else if (!value) {
-      handleOnBlur(defaultValue);
-    } else if (value !== defaultValue) {
-      handleOnBlur(value);
-    }
-  };
-
-  const handleKeydown = (e) => {
-    let { value } = e.target;
-
-    if (type === 'number' && value === '') {
-      onKeyDown(0);
-    } else if (!value) {
-      onKeyDown(defaultValue);
-    } else if (value !== defaultValue) {
-      onKeyDown(value);
-    }
-  };
-
-  const onClear = () => {
-    clearInput();
-    setInputValue('');
-  };
-
+const Input = ({ clearInput, showClearButton, border, value, label, ...inputProps }) => {
   const renderInputNode = () => {
     const inputID = label.toLowerCase();
 
@@ -62,31 +12,22 @@ const Input = ({
       <InputWrapper>
         <StyledInput
           id={inputID}
-          type={type}
           name={inputID}
-          placeholder={placeholder}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') handleKeydown(e);
-          }}
-          required={required}
-          value={inputValue}
+          value={value}
           border={border}
-          small={small}
+          placeholder={inputProps.placeholder || label}
+          {...inputProps}
         />
-        {(showX || inputValue !== '') && (
-          <ClearButton onClick={onClear} border={border}>
+        {showClearButton && value !== '' && (
+          <ClearButton onClick={clearInput} border={border}>
             <X />
           </ClearButton>
         )}
-
-        {helpText && <HelpText>{helpText}</HelpText>}
       </InputWrapper>
     );
   };
 
-  return <>{label ? renderInputNode() : null}</>;
+  return label && renderInputNode();
 };
 
 const propsCSS = {
@@ -106,8 +47,8 @@ const propsCSS = {
 
 const ClearButton = styled.button`
   position: absolute;
-  right: ${({ border }) => (border ? '8px' : '24px')};
-  top: ${({ border }) => (border ? '4px' : '8px')};
+  right: ${({ border }) => (border ? '8px' : '19px')};
+  top: ${({ border }) => (border ? '4px' : '7px')};
   background: transparent;
   border: none;
   color: ${({ theme }) => theme.onBackgroundLight};
@@ -146,32 +87,25 @@ const StyledInput = styled.input`
   ${(props) => props.small && propsCSS.small};
 `;
 
-const HelpText = styled.div`
-  font-style: italic;
-  font-size: 1em;
-  margin-top: 2px;
-`;
-
 Input.propTypes = {
-  handleOnBlur: PropTypes.func,
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
   type: PropTypes.oneOf(['email', 'money', 'number', 'password', 'phone', 'text', 'zip', 'date']),
-  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   helpText: PropTypes.string,
   border: PropTypes.bool,
   small: PropTypes.bool,
+  showClearButton: PropTypes.bool,
+  clearInput: PropTypes.func,
 };
 
 Input.defaultProps = {
-  defaultValue: '',
-  required: false,
   type: 'text',
-  handleOnBlur: () => {},
   clearInput: () => {},
   border: false,
   small: false,
+  showClearButton: false,
 };
 
 export default Input;
