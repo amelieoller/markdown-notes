@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
+import * as firebase from 'firebase';
 
 import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';
@@ -21,6 +22,22 @@ const InfoPage = () => {
   ]);
 
   const onDeleteTag = (tagId) => dispatch(deleteTag(tagId));
+
+  const handleDeleteAccount = () => {
+    const user = firebase.auth().currentUser;
+
+    user
+      .delete()
+      .then(() => {
+        // User deleted.
+      })
+      .catch((error) => {
+        console.log('Error', error);
+        // An error happened.
+      });
+
+    // TODO: delete all notes associated with that user (functions)
+  };
 
   return (
     <StyledInfoPage>
@@ -174,22 +191,21 @@ const InfoPage = () => {
           </tr>
         </tbody>
       </table>
+
+      <Button
+        onClick={() => {
+          const result = window.confirm(
+            'Are you sure you want to delete your account? All notes will be lost.',
+          );
+          result && handleDeleteAccount();
+        }}
+        danger
+      >
+        Delete Account
+      </Button>
     </StyledInfoPage>
   );
 };
-
-const Tag = styled.div`
-  display: flex;
-  align-items: center;
-
-  & > * {
-    margin-bottom: 5px;
-  }
-
-  button {
-    margin-left: 5px;
-  }
-`;
 
 const StyledInfoPage = styled.div`
   padding: 60px;
