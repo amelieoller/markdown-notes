@@ -94,6 +94,7 @@ export default styled.createGlobalStyle`
 
     position: relative;
     border-left: 4px solid ${({ theme }) => theme.primaryFaded};
+    margin-bottom: 1em;
   }
 
   blockquote p {

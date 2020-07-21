@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { deleteLecture } from '../../actions/lectureActions';
 import NoteEditor from '../NoteEditor.js';
@@ -9,8 +9,6 @@ import Button from '../../atoms/Button';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 
 const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
-  const { currentNoteToEdit } = useSelector((state) => state);
-
   const dispatch = useDispatch();
 
   const handleDeleteLecture = (lectureId) => {

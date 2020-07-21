@@ -29,6 +29,7 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
 
   const clearInput = () => {
     clearSearch();
+    setSearchText('');
   };
 
   return (

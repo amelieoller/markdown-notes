@@ -18,7 +18,6 @@ import { UnderlineExtension } from 'remirror/extension/underline';
 import { ImageExtension } from 'remirror/extension/image';
 import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
 import { LinkExtension } from 'remirror/extension/link';
-import { AutoLinkExtension } from 'remirror/extension/auto-link';
 
 // Remirror language imports
 import javascript from 'refractor/lang/javascript';
@@ -60,7 +59,6 @@ const NoteEditor = ({
       new ImageExtension(),
       new HorizontalRuleExtension(),
       new LinkExtension(),
-      new AutoLinkExtension(),
       new BoldExtension(),
       new ItalicExtension(),
       new UnderlineExtension(),
