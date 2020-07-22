@@ -9,6 +9,7 @@ import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-c
 import { ReactComponent as Info } from '../../assets/icons/info.svg';
 import { ReactComponent as Logout } from '../../assets/icons/log-out.svg';
 import * as firebase from 'firebase';
+import Button from '../../atoms/Button';
 
 const Navigation = ({ history }) => {
   const page = history.location.pathname;
@@ -28,9 +29,9 @@ const Navigation = ({ history }) => {
       <Link to="/info">
         <Info className={page === '/info' ? 'active' : ''} />
       </Link>
-      <button onClick={logoutUser}>
+      <Button onClick={logoutUser} label="Logout" iconOnly>
         <Logout />
-      </button>
+      </Button>
     </StyledNavigation>
   );
 };
@@ -40,6 +41,8 @@ const StyledNavigation = styled.nav`
   right: 0;
   z-index: 1;
   padding: ${({ theme }) => theme.spacing};
+  display: flex;
+  align-items: center;
 
   a,
   button {
@@ -47,6 +50,7 @@ const StyledNavigation = styled.nav`
     background: transparent;
     border: none;
     cursor: pointer;
+    display: flex;
 
     svg {
       color: ${({ theme }) => theme.onBackgroundLight};

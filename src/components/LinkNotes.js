@@ -41,6 +41,7 @@ const LinkNotes = ({ addNoteIdLink, linkIds, previousLinkedNotes }) => {
             key={note.id}
             onClick={() => addLink(note.id)}
             isActive={linkIds && linkIds.includes(note.id)}
+            label={note.title}
             small
             faded
           >

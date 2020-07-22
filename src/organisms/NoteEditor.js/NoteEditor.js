@@ -179,7 +179,12 @@ const NoteEditor = ({
 
           {!showEdit && (
             <MinimalSave>
-              <Button onClick={() => handleNoteSubmit()} disabled={!hasBeenEdited} iconOnly>
+              <Button
+                onClick={() => handleNoteSubmit()}
+                disabled={!hasBeenEdited}
+                label="Save note"
+                iconOnly
+              >
                 <Save />
               </Button>
             </MinimalSave>
@@ -196,8 +201,8 @@ const NoteEditor = ({
                     <Button
                       key={tag.id}
                       onClick={() => addTag(tag.id)}
-                      type="button"
                       isActive={note.tagIds && note.tagIds.includes(tag.id)}
+                      label={tag.name}
                       small
                       faded
                     >
@@ -215,7 +220,11 @@ const NoteEditor = ({
                 previousLinkedNotes={linkedNotes}
               />
               <Buttons>
-                <Button onClick={() => handleNoteSubmit()} disabled={!hasBeenEdited}>
+                <Button
+                  onClick={() => handleNoteSubmit()}
+                  disabled={!hasBeenEdited}
+                  label="Save note"
+                >
                   <Save /> {hasBeenEdited ? 'Save Note' : 'Note Saved'}
                 </Button>
 
@@ -225,6 +234,7 @@ const NoteEditor = ({
                       window.confirm(`Are you sure you want to delete this note?`) &&
                       handleDelete(currentNoteToEdit.id)
                     }
+                    label="Delete note"
                     danger
                   >
                     <Trash /> Delete Note

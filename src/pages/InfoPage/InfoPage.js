@@ -61,6 +61,7 @@ const InfoPage = () => {
                       );
                       result && onDeleteTag(tag.id);
                     }}
+                    label={`Delete tag "${tag.name}"`}
                     small
                     iconOnly
                   >
@@ -199,6 +200,7 @@ const InfoPage = () => {
           );
           result && handleDeleteAccount();
         }}
+        label="Delete Account"
         danger
       >
         Delete Account

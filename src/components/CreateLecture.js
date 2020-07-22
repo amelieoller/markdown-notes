@@ -81,7 +81,10 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
           </NoteSearchResults>
         )}
 
-        <Button onClick={handleSaveLectureClick}>
+        <Button
+          onClick={handleSaveLectureClick}
+          label={lecture.id ? 'Update Lecture' : 'Create Lecture'}
+        >
           {lecture.id ? 'Update Lecture' : 'Create Lecture'}
         </Button>
       </FormSection>

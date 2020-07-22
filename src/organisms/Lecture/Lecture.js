@@ -24,6 +24,7 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
             window.confirm(`Are you sure you want to discard the changes you have made?`) &&
             handleDeleteLecture(lecture.id)
           }
+          label={`Delete lecture "${lecture.title}"`}
           danger
           iconOnly
         >
@@ -125,6 +126,7 @@ const StyledLecture = styled.div`
 Lecture.propTypes = {
   lecture: PropTypes.shape({
     title: PropTypes.string,
+    id: PropTypes.string,
   }),
   notes: PropTypes.arrayOf(
     PropTypes.shape({

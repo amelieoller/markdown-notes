@@ -33,11 +33,6 @@ const propsCSS = {
     }
   `,
 
-  isActive: css`
-    background: ${({ theme }) => theme.primary};
-    color: white;
-  `,
-
   disabled: css`
     border-color: ${({ theme }) => theme.borderColor};
     color: ${({ theme }) => theme.borderColor};
@@ -45,11 +40,22 @@ const propsCSS = {
   `,
 
   iconOnly: css`
-    padding: 0.2em;
+    padding: 0;
+    color: ${({ theme }) => theme.onBackground};
 
     svg {
       margin-right: 0;
     }
+
+    &:hover {
+      background: transparent;
+      color: ${({ theme }) => theme.primary};
+    }
+  `,
+
+  isActive: css`
+    background: ${({ theme }) => theme.primary};
+    color: white;
   `,
 };
 
@@ -87,7 +93,7 @@ const StyledButton = styled.button`
 `;
 
 const Button = ({ children, ...buttonProps }) => (
-  <StyledButton type="button" {...buttonProps}>
+  <StyledButton {...buttonProps} aria-label={buttonProps.label}>
     {children}
   </StyledButton>
 );
@@ -101,10 +107,11 @@ Button.propTypes = {
   faded: PropTypes.bool,
   disabled: PropTypes.bool,
   iconOnly: PropTypes.bool,
+  type: PropTypes.string,
 };
 
 Button.defaultProps = {
-  type: 'info',
+  type: 'button',
 };
 
 export default Button;

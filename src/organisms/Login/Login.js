@@ -46,12 +46,22 @@ const Login = () => {
   return (
     <LoginSignupWrapper>
       <Header>
-        <button className={isLogin ? 'isActive' : ''} onClick={() => setIsLogin(true)}>
+        <Button
+          className={isLogin ? 'isActive' : ''}
+          isActive={isLogin}
+          onClick={() => setIsLogin(true)}
+          iconOnly
+        >
           Login
-        </button>
-        <button className={!isLogin ? 'isActive' : ''} onClick={() => setIsLogin(false)}>
+        </Button>
+        <Button
+          className={!isLogin ? 'isActive' : ''}
+          isActive={!isLogin}
+          onClick={() => setIsLogin(false)}
+          iconOnly
+        >
           Signup
-        </button>
+        </Button>
       </Header>
 
       <Error>{error}</Error>
@@ -78,10 +88,12 @@ const Login = () => {
         </PasswordReset>
 
         <ButtonWrapper>
-          <Button onClick={(e) => handleFormSubmit(e)}>{isLogin ? 'Login' : 'Signup'}</Button>
+          <Button onClick={(e) => handleFormSubmit(e)} label={isLogin ? 'Login' : 'Signup'}>
+            {isLogin ? 'Login' : 'Signup'}
+          </Button>
           or
           <GoogleButton>
-            <Button onClick={() => signInWithGoogle()} className="googleBtn" type="button">
+            <Button onClick={() => signInWithGoogle()} label="Login with Google">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
                 alt="logo"
@@ -101,7 +113,9 @@ const LoginSignupWrapper = styled.div`
 `;
 
 const Header = styled.div`
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   button {
     background: transparent;
@@ -112,6 +126,7 @@ const Header = styled.div`
   }
 
   .isActive {
+    color: ${({ theme }) => theme.primary};
     font-weight: bold;
   }
 `;

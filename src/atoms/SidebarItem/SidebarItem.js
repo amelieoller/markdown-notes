@@ -26,6 +26,7 @@ const SidebarItem = ({ item, handleItemClick, isActive, dark, deleteIcon, handle
           id="delete"
           color={dark ? 'onSurface' : 'onSurfaceTwo'}
           hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
+          label={`Delete ${item.title}`}
           iconOnly
         >
           <Minus />

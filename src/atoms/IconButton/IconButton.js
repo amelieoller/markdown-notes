@@ -33,7 +33,13 @@ const IconButton = (props) => {
   const { children, onClick, onKeyDown } = props;
 
   return (
-    <StyledIconButton role="button" tabIndex={0} onClick={onClick} onKeyDown={onKeyDown} {...props}>
+    <StyledIconButton
+      role="button"
+      aria-label="Add a new note"
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      {...props}
+    >
       {children}
     </StyledIconButton>
   );

@@ -44,7 +44,7 @@ const CreateTag = () => {
       />
     </InputWrapper>
   ) : (
-    <Button onClick={() => setIsTagEditorOpen(true)} type="button" small faded iconOnly>
+    <Button onClick={() => setIsTagEditorOpen(true)} label="Add Tag" small faded iconOnly>
       <Plus />
     </Button>
   );
