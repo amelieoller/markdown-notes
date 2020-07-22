@@ -92,11 +92,21 @@ const StyledButton = styled.button`
   ${(props) => props.iconOnly && propsCSS.iconOnly};
 `;
 
-const Button = ({ children, ...buttonProps }) => (
-  <StyledButton {...buttonProps} aria-label={buttonProps.label}>
-    {children}
-  </StyledButton>
-);
+const Button = ({ children, ...buttonProps }) => {
+  const inputID = buttonProps.label.toLowerCase();
+
+  return (
+    <StyledButton
+      {...buttonProps}
+      aria-label={buttonProps.label}
+      id={inputID}
+      name={inputID}
+      placeholder={buttonProps.placeholder || buttonProps.label}
+    >
+      {children}
+    </StyledButton>
+  );
+};
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,

@@ -121,7 +121,7 @@ const LecturesPage = () => {
         <div>
           <span>
             <GraduationCap />
-            <h4>Lectures</h4>
+            <h1>Lectures</h1>
           </span>
 
           <IconButton
@@ -148,7 +148,7 @@ const LecturesPage = () => {
         <div>
           <span>
             <Link />
-            <h4>Linked Notes</h4>
+            <h1>Linked Notes</h1>
           </span>
 
           <IconButton

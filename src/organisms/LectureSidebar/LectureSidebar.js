@@ -102,11 +102,12 @@ const SidebarHeader = styled.div`
       display: flex;
       align-items: center;
 
-      & > h4 {
+      & > h1 {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         margin: 0;
+        font-size: 19px;
       }
 
       & > :first-child {

@@ -173,6 +173,7 @@ const NoteEditor = ({
                 setValue(state);
               }
             }}
+            label="Note editor"
           >
             <Editor />
           </RemirrorProvider>

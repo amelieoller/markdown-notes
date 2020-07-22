@@ -144,7 +144,7 @@ const NotesPage = () => {
         <div>
           <span>
             <Book />
-            <h4>Notes</h4>
+            <h1>Notes</h1>
           </span>
           <IconButton onClick={handleAddNoteClick} color="onSurface" hoverColor="onSurfacePrimary">
             <Plus />
@@ -170,7 +170,7 @@ const NotesPage = () => {
         <div>
           <span>
             <Link />
-            <h4>Linked Notes</h4>
+            <h1>Linked Notes</h1>
           </span>
 
           <IconButton

@@ -12,7 +12,12 @@ const Filter = ({ filterTags }) => {
   };
 
   return (
-    <TagFilter name="" id="" defaultValue="filter" onChange={handleFilterChange}>
+    <TagFilter
+      aria-label="Tag filter"
+      label="Tag filter"
+      defaultValue="filter"
+      onChange={handleFilterChange}
+    >
       <option value="filter">Filter</option>
       {tags &&
         tags.map((tag) => (

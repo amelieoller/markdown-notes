@@ -16,6 +16,7 @@ const Input = ({ clearInput, showClearButton, border, value, label, ...inputProp
           value={value}
           border={border}
           placeholder={inputProps.placeholder || label}
+          aria-label={label}
           {...inputProps}
         />
         {showClearButton && value !== '' && (
