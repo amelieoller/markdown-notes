@@ -172,14 +172,6 @@ const NotesPage = () => {
             <Link />
             <h1>Linked Notes</h1>
           </span>
-
-          <IconButton
-            onClick={handleEditLectureClick}
-            color="onSurfaceTwo"
-            hoverColor="onSurfaceTwoPrimary"
-          >
-            <Plus />
-          </IconButton>
         </div>
       </LectureSidebar>
 

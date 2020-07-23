@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import PropTypes from 'prop-types';
 
-import { mockResults } from './mockSearchResults';
 import Input from '../atoms/Input/Input';
 
 const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, small }) => {
@@ -10,9 +9,6 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
 
   const handleSearch = () => {
     if (searchText === '') return;
-
-    // setSearchResultNotes(mockResults);
-    // setSearched(true);
 
     const client = algoliasearch(
       process.env.REACT_APP_ALGOLIA_ID,

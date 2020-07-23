@@ -18,6 +18,7 @@ import { UnderlineExtension } from 'remirror/extension/underline';
 import { ImageExtension } from 'remirror/extension/image';
 import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
 import { LinkExtension } from 'remirror/extension/link';
+import { EmojiExtension } from 'remirror/extension/emoji';
 
 // Remirror language imports
 import javascript from 'refractor/lang/javascript';
@@ -62,6 +63,7 @@ const NoteEditor = ({
       new BoldExtension(),
       new ItalicExtension(),
       new UnderlineExtension(),
+      new EmojiExtension(),
       new CodeBlockExtension({
         supportedLanguages: [javascript, jsx, ruby, json],
       }),
@@ -350,9 +352,14 @@ const Tags = styled.div`
 NoteEditor.propTypes = {
   currentNoteToEdit: PropTypes.shape({
     content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    lectureId: PropTypes.string,
+    id: PropTypes.string,
   }),
   linkedNotes: PropTypes.arrayOf(PropTypes.shape({})),
   showEdit: PropTypes.bool,
+  addNoteLinkToLecture: PropTypes.func,
+  handleDelete: PropTypes.func,
+  noSwitch: PropTypes.bool,
 };
 
 NoteEditor.defaultProps = {
