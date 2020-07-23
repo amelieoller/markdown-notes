@@ -2,7 +2,7 @@ export const theme = {
   background: '#FFFFFF',
   onBackground: '#363740',
   onBackgroundLight: '#A4A6B3',
-  primary: '#7059ffe3',
+  primary: '#7059ff',
   primaryFaded: '#8f74ff8a',
   primaryDark: '#30208fe3',
   surface: '#363740',

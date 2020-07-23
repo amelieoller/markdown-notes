@@ -41,7 +41,7 @@ const InfoPage = () => {
 
   return (
     <StyledInfoPage>
-      <h1>Edit</h1>
+      <h1>Delete Tags</h1>
       <table>
         <thead>
           <tr>
@@ -193,6 +193,7 @@ const InfoPage = () => {
         </tbody>
       </table>
 
+      <h1>Danger Zone</h1>
       <Button
         onClick={() => {
           const result = window.confirm(
@@ -216,15 +217,15 @@ const StyledInfoPage = styled.div`
 
   .right {
     text-align: right;
+
+    button {
+      margin-left: auto;
+    }
   }
 
   tr:hover,
   tr:focus {
     background: ${({ theme }) => theme.onSurfaceThree};
-  }
-
-  button {
-    margin-left: auto;
   }
 
   @media ${({ theme }) => theme.tablet} {

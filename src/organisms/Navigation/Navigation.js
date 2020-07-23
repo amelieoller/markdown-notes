@@ -51,6 +51,7 @@ const StyledNavigation = styled.nav`
     border: none;
     cursor: pointer;
     display: flex;
+    padding: 0;
 
     svg {
       color: ${({ theme }) => theme.onBackgroundLight};

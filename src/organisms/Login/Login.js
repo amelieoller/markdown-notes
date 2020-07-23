@@ -50,6 +50,7 @@ const Login = () => {
           className={isLogin ? 'isActive' : ''}
           isActive={isLogin}
           onClick={() => setIsLogin(true)}
+          label="Login"
           iconOnly
         >
           Login
@@ -58,6 +59,7 @@ const Login = () => {
           className={!isLogin ? 'isActive' : ''}
           isActive={!isLogin}
           onClick={() => setIsLogin(false)}
+          label="Signup"
           iconOnly
         >
           Signup

@@ -82,11 +82,14 @@ const Title = styled.span`
 `;
 
 SidebarItem.propTypes = {
-  item: PropTypes.shape({ title: PropTypes.string }),
+  item: PropTypes.shape({ title: PropTypes.string, id: PropTypes.string }),
   handleItemClick: PropTypes.func,
   isActive: PropTypes.bool,
   id: PropTypes.string,
   language: PropTypes.string,
+  dark: PropTypes.bool,
+  deleteIcon: PropTypes.bool,
+  handleDeleteItem: PropTypes.func,
 };
 
 export default SidebarItem;

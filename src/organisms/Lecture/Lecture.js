@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { useDispatch } from 'react-redux';
@@ -75,6 +75,7 @@ const MinimalDelete = styled.div`
 
 const StyledLecture = styled.div`
   position: relative;
+  margin-bottom: 5rem;
 
   h1 {
     font-size: 1.5em;
@@ -134,6 +135,7 @@ Lecture.propTypes = {
       content: PropTypes.shape({}),
     }),
   ),
+  addNoteLinkToLecture: PropTypes.func,
 };
 
 export default Lecture;

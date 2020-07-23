@@ -115,10 +115,6 @@ const SidebarHeader = styled.div`
         transition: all 0.6s ease;
       }
     }
-
-    & > :last-child {
-      margin-left: 10px;
-    }
   }
 
   & > *:last-child {
@@ -141,6 +137,12 @@ const CollapseButton = styled.span`
 LectureSidebar.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})),
   handleItemClick: PropTypes.func,
+  handleDeleteItem: PropTypes.func,
+  dark: PropTypes.bool,
+  children: PropTypes.node,
+  currentActiveItem: PropTypes.shape({}),
+  isOpen: PropTypes.bool,
+  deleteIcon: PropTypes.bool,
 };
 
 LectureSidebar.defaultProps = {

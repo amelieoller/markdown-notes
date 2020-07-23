@@ -46,7 +46,6 @@ const SortableList = SortableContainer(
 
 const LectureSidebarDraggable = ({
   items,
-  handleItemClick,
   dark,
   children,
   handleNoteReorder,
@@ -151,10 +150,6 @@ const SidebarHeader = styled.div`
         transition: all 0.6s ease;
       }
     }
-
-    & > :last-child {
-      margin-left: 10px;
-    }
   }
 
   & > *:last-child {
@@ -178,6 +173,12 @@ LectureSidebarDraggable.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})),
   handleAddClick: PropTypes.func,
   handleItemClick: PropTypes.func,
+  dark: PropTypes.bool,
+  children: PropTypes.node,
+  handleNoteReorder: PropTypes.func,
+  isOpen: PropTypes.bool,
+  deleteIcon: PropTypes.bool,
+  handleDeleteItem: PropTypes.func,
 };
 
 LectureSidebarDraggable.defaultProps = {

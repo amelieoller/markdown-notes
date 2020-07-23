@@ -94,6 +94,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
 const StyledCreateLecture = styled.div`
   padding: 60px;
+  max-width: 1000px;
 
   @media ${({ theme }) => theme.tablet} {
     padding: ${({ theme }) => `40px ${theme.spacingLarge}`};
@@ -122,7 +123,7 @@ const NoteSearchResult = styled.div`
 `;
 
 CreateLecture.propTypes = {
-  selectedLecture: PropTypes.shape({}),
+  selectedLecture: PropTypes.shape({ id: PropTypes.string }),
   updateCurrentLecture: PropTypes.func,
 };
 

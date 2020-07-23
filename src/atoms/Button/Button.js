@@ -40,8 +40,7 @@ const propsCSS = {
   `,
 
   iconOnly: css`
-    padding: 0;
-    color: ${({ theme }) => theme.onBackground};
+    padding: 0.2rem;
 
     svg {
       margin-right: 0;
@@ -111,6 +110,7 @@ const Button = ({ children, ...buttonProps }) => {
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
   danger: PropTypes.bool,
   small: PropTypes.bool,
   isActive: PropTypes.bool,
