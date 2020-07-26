@@ -11,12 +11,14 @@ import Button from '../atoms/Button';
 
 const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [notesFound, setNotesFound] = useState([]);
-  const [lecture, setLecture] = useState({ title: '', noteIds: [], language: 'code' });
+  const [title, setTitle] = useState('');
+  const [noteIds, setNoteIds] = useState([]);
   const currentUser = useSelector((state) => state.firebase.auth);
 
   useEffect(() => {
     if (selectedLecture) {
-      setLecture(selectedLecture);
+      setTitle(selectedLecture.title);
+      setNoteIds(selectedLecture.noteIds);
     }
   }, [selectedLecture]);
 
@@ -27,43 +29,47 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   };
 
   const handleNoteClick = (noteId) => {
-    const newIds = addOrRemoveFromArr(lecture.noteIds, noteId);
+    const newIds = addOrRemoveFromArr(noteIds, noteId);
 
-    setLecture((prevLecture) => ({ ...prevLecture, noteIds: newIds }));
-  };
-
-  const handleLectureChange = (attributeObj) => {
-    setLecture((prevLecture) => ({ ...prevLecture, ...attributeObj }));
+    setNoteIds(newIds);
   };
 
   const handleSaveLectureClick = () => {
-    if (lecture.title) {
+    if (title) {
       if (selectedLecture && selectedLecture.id) {
-        dispatch(updateLecture(lecture));
-        updateCurrentLecture(lecture);
+        const updatedLecture = { id: selectedLecture.id, title, noteIds };
+
+        dispatch(updateLecture(updatedLecture));
+        updateCurrentLecture(updatedLecture);
       } else {
-        dispatch(createLecture({ ...lecture, userId: currentUser.uid }));
+        dispatch(createLecture({ ...{ title, noteIds }, userId: currentUser.uid }));
       }
 
       setNotesFound([]);
-      setLecture({ title: '', noteIds: [], language: '' });
+      setTitle('');
+      setNoteIds([]);
     }
+  };
+
+  const clearSearch = () => {
+    setNotesFound([]);
   };
 
   return (
     <StyledCreateLecture>
-      <h1>{lecture.id ? 'Update Lecture' : 'New Lecture'}</h1>
+      <h1>{selectedLecture.id ? 'Update Lecture' : 'New Lecture'}</h1>
 
       <FormSection>
         <Input
           label="Lecture Title"
-          onChange={(e) => handleLectureChange({ title: e.target.value })}
-          value={lecture.title}
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
           border
         />
         <Search
           setSearchResultNotes={setSearchResultNotes}
           placeholderText="Find Notes To Link"
+          clearSearch={clearSearch}
           border
         />
 
@@ -73,7 +79,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
               <NoteSearchResult
                 key={note.id}
                 onClick={() => handleNoteClick(note.id)}
-                isActive={lecture.noteIds.includes(note.id)}
+                isActive={noteIds.includes(note.id)}
               >
                 {note.title}
               </NoteSearchResult>
@@ -83,9 +89,9 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
         <Button
           onClick={handleSaveLectureClick}
-          label={lecture.id ? 'Update Lecture' : 'Create Lecture'}
+          label={selectedLecture.id ? 'Update Lecture' : 'Create Lecture'}
         >
-          {lecture.id ? 'Update Lecture' : 'Create Lecture'}
+          {selectedLecture.id ? 'Update Lecture' : 'Create Lecture'}
         </Button>
       </FormSection>
     </StyledCreateLecture>
@@ -103,7 +109,7 @@ const StyledCreateLecture = styled.div`
 
 const FormSection = styled.div`
   & > * {
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -117,13 +123,16 @@ const NoteSearchResult = styled.div`
   cursor: pointer;
   background: ${({ isActive, theme }) => isActive && theme.onSurfaceTwoPrimary};
   color: ${({ isActive, theme }) => (isActive ? 'white' : theme.onBackgroundLight)};
-  border-radius: ${({ theme }) => theme.borderRadius};
-  border: 2px solid ${({ theme }) => theme.onSurfaceTwoPrimary};
+  border: 1px solid ${({ theme }) => theme.onSurfaceTwoPrimary};
   padding: 5px;
 `;
 
 CreateLecture.propTypes = {
-  selectedLecture: PropTypes.shape({ id: PropTypes.string }),
+  selectedLecture: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    noteIds: PropTypes.arrayOf(PropTypes.string),
+  }),
   updateCurrentLecture: PropTypes.func,
 };
 
