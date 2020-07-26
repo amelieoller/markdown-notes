@@ -33,16 +33,15 @@ const Input = ({ clearInput, showClearButton, border, value, label, ...inputProp
 
 const propsCSS = {
   small: css`
-    padding: ${({ theme, border }) => (border ? '0.15em 0.5em' : `6px ${theme.spacingLarge}`)};
-    font-size: 0.9rem;
+    padding: ${({ theme, border }) => (border ? '0.2em 0.5em' : `6px ${theme.spacingLarge}`)};
+    font-size: 0.85rem;
   `,
 
   border: css`
-    padding: 0.15em 0.5em;
-    font-size: 0.9rem;
-    border: ${({ theme }) => `2px solid ${theme.primaryFaded}`};
-    border-radius: ${({ theme }) => theme.borderRadius};
-    font-size: 1.1rem;
+    padding: 0.2em 0.5em;
+    font-size: 0.85rem;
+    border: ${({ theme }) => `1px solid ${theme.primaryFaded}`};
+    font-size: 1rem;
   `,
 };
 
@@ -79,6 +78,7 @@ const StyledInput = styled.input`
   border: none;
   border-radius: 0;
   -webkit-appearance: none;
+  font-family: 'Montserrat';
 
   &::placeholder {
     color: ${({ theme }) => theme.onBackgroundLight};

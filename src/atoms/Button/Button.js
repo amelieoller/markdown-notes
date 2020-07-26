@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components/macro';
 
 const propsCSS = {
   small: css`
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     padding: 0.15em 0.5em;
     grid-gap: 5px;
 
@@ -59,13 +59,12 @@ const propsCSS = {
 };
 
 const StyledButton = styled.button`
-  border-radius: ${({ theme }) => theme.borderRadius};
-  padding: 0.2em 0.65em;
+  padding: 0.3em 0.65em;
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.primary};
   cursor: pointer;
-  font-size: 1.1rem;
-  border: 2px solid ${({ theme }) => theme.primary};
+  font-size: 1rem;
+  border: 1px solid ${({ theme }) => theme.primary};
   align-items: center;
   display: flex;
   white-space: nowrap;
