@@ -8,7 +8,7 @@ I had always wanted to create my own markdown editor to keep track of my notes. 
 
 ## Screenshots
 
-Coming soon
+![Walkthrough](./public/walkthrough.gif)
 
 ## Tech/Framework Used
 
