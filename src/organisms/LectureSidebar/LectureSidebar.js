@@ -16,6 +16,7 @@ const LectureSidebar = ({
   currentActiveItem,
   isOpen,
   deleteIcon,
+  nestedArray,
 }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(isOpen);
   const [activeItem, setActiveItem] = useState(null);
@@ -34,58 +35,36 @@ const LectureSidebar = ({
     setActiveItem(null);
   };
 
+  const renderSidebarItems = (arr) => {
+    return arr
+      .filter((i) => !!i)
+      .map((item) => (
+        <SidebarItem
+          key={item.id}
+          item={item}
+          handleItemClick={handleClick}
+          handleDeleteItem={handleDeleteButtonClick}
+          isActive={activeItem && activeItem.id === item.id}
+          dark={dark}
+          deleteIcon={deleteIcon}
+        />
+      ));
+  };
+
   return (
     <StyledLectureSidebar dark={dark} isSidebarOpen={isSidebarOpen}>
       <SidebarHeader isSidebarOpen={isSidebarOpen}>{children}</SidebarHeader>
 
       <ScrollArea>
         {items &&
-          (items.length ? (
+          (nestedArray ? (
             <>
-              {items[0]
-                .filter((i) => !!i)
-                .map((item) => (
-                  <SidebarItem
-                    key={item.id}
-                    item={item}
-                    handleItemClick={handleClick}
-                    handleDeleteItem={handleDeleteButtonClick}
-                    isActive={activeItem && activeItem.id === item.id}
-                    dark={dark}
-                    deleteIcon={deleteIcon}
-                  />
-                ))}
-
+              {renderSidebarItems(items[0])}
               <Divider>Lecture Specific Notes</Divider>
-
-              {items[1]
-                .filter((i) => !!i)
-                .map((item) => (
-                  <SidebarItem
-                    key={item.id}
-                    item={item}
-                    handleItemClick={handleClick}
-                    handleDeleteItem={handleDeleteButtonClick}
-                    isActive={activeItem && activeItem.id === item.id}
-                    dark={dark}
-                    deleteIcon={deleteIcon}
-                  />
-                ))}
+              {renderSidebarItems(items[1])}
             </>
           ) : (
-            items
-              .filter((i) => !!i)
-              .map((item) => (
-                <SidebarItem
-                  key={item.id}
-                  item={item}
-                  handleItemClick={handleClick}
-                  handleDeleteItem={handleDeleteButtonClick}
-                  isActive={activeItem && activeItem.id === item.id}
-                  dark={dark}
-                  deleteIcon={deleteIcon}
-                />
-              ))
+            renderSidebarItems(items)
           ))}
       </ScrollArea>
 
@@ -187,6 +166,7 @@ LectureSidebar.propTypes = {
   currentActiveItem: PropTypes.shape({}),
   isOpen: PropTypes.bool,
   deleteIcon: PropTypes.bool,
+  nestedArray: PropTypes.bool,
 };
 
 LectureSidebar.defaultProps = {

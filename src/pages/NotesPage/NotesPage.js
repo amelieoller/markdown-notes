@@ -149,7 +149,8 @@ const NotesPage = () => {
         currentActiveItem={currentNoteToEdit}
         buttonText="Add Lecture"
         dark
-        isOpen={true}
+        isOpen
+        nestedArray
       >
         <div>
           <span>
