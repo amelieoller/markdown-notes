@@ -40,19 +40,53 @@ const LectureSidebar = ({
 
       <ScrollArea>
         {items &&
-          items
-            .filter((i) => !!i)
-            .map((item) => (
-              <SidebarItem
-                key={item.id}
-                item={item}
-                handleItemClick={handleClick}
-                handleDeleteItem={handleDeleteButtonClick}
-                isActive={activeItem && activeItem.id === item.id}
-                dark={dark}
-                deleteIcon={deleteIcon}
-              />
-            ))}
+          (items.length ? (
+            <>
+              {items[0]
+                .filter((i) => !!i)
+                .map((item) => (
+                  <SidebarItem
+                    key={item.id}
+                    item={item}
+                    handleItemClick={handleClick}
+                    handleDeleteItem={handleDeleteButtonClick}
+                    isActive={activeItem && activeItem.id === item.id}
+                    dark={dark}
+                    deleteIcon={deleteIcon}
+                  />
+                ))}
+
+              <Divider>Lecture Specific Notes</Divider>
+
+              {items[1]
+                .filter((i) => !!i)
+                .map((item) => (
+                  <SidebarItem
+                    key={item.id}
+                    item={item}
+                    handleItemClick={handleClick}
+                    handleDeleteItem={handleDeleteButtonClick}
+                    isActive={activeItem && activeItem.id === item.id}
+                    dark={dark}
+                    deleteIcon={deleteIcon}
+                  />
+                ))}
+            </>
+          ) : (
+            items
+              .filter((i) => !!i)
+              .map((item) => (
+                <SidebarItem
+                  key={item.id}
+                  item={item}
+                  handleItemClick={handleClick}
+                  handleDeleteItem={handleDeleteButtonClick}
+                  isActive={activeItem && activeItem.id === item.id}
+                  dark={dark}
+                  deleteIcon={deleteIcon}
+                />
+              ))
+          ))}
       </ScrollArea>
 
       <CollapseButton>
@@ -132,6 +166,16 @@ const CollapseButton = styled.span`
   position: absolute;
   left: 12.5px;
   bottom: 12.5px;
+`;
+
+const Divider = styled.div`
+  text-transform: uppercase;
+  border-bottom: 1px solid;
+  font-size: 13px;
+  padding: ${({ theme }) => theme.spacingLarge};
+  padding-bottom: 5px;
+  color: white;
+  white-space: nowrap;
 `;
 
 LectureSidebar.propTypes = {

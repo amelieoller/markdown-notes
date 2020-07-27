@@ -17,13 +17,23 @@ const filterBy = (notes, filterArr) =>
   filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
 
 const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
-  return filterBy(notes, filteredNoteIds)
+  const sortedNotes = filterBy(notes, filteredNoteIds)
     .filter((note) => filteredTagIds.every((tagId) => note.tagIds.includes(tagId)))
     .sort(
       (a, b) =>
         (b.updated ? b.updated.toDate() : new Date()) -
         (a.updated ? a.updated.toDate() : new Date()),
     );
+
+  const [isWithLecture, isWithoutLecture] = sortedNotes.reduce(
+    (result, el) => {
+      result[el.lectureId ? 0 : 1].push(el);
+      return result;
+    },
+    [[], []],
+  );
+
+  return [isWithoutLecture, isWithLecture];
 };
 
 const NotesPage = () => {
