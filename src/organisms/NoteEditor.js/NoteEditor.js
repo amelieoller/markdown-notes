@@ -83,18 +83,21 @@ const NoteEditor = ({
 
     const handleNoteSubmit = () => {
       const contentArr = value.doc.toJSON();
+      const textContent = value.doc.textContent;
       // If the note does not have content, return
 
       const today = firestore.Timestamp.now();
       const noteHadBeenEdited = !!contentArr.content[0].content;
       let finishedNote;
 
+      if (!textContent) return;
+
       if (note.id) {
         // If the the note in state has an ID (that means it's being edited), check if the content has changed
         if (noteHadBeenEdited) {
           const title = getTitle(contentArr.content[0].content[0].text);
 
-          finishedNote = { ...note, content: contentArr, updated: today, title };
+          finishedNote = { ...note, content: contentArr, textContent, updated: today, title };
         } else {
           finishedNote = { ...note, updated: today };
         }
@@ -111,6 +114,7 @@ const NoteEditor = ({
           finishedNote = {
             ...note,
             content: contentArr,
+            textContent,
             updated: today,
             created: today,
             title,

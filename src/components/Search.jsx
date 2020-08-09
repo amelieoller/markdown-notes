@@ -1,26 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import algoliasearch from 'algoliasearch/lite';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Input from '../atoms/Input/Input';
 
 const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, small }) => {
   const [searchText, setSearchText] = useState('');
+  const [hasBeenSearched, setHasBeenSearched] = useState(false);
 
-  const handleSearch = () => {
-    if (searchText === '') return;
+  const notes = useSelector((state) => state.firestore.ordered.notes);
 
-    const client = algoliasearch(
-      process.env.REACT_APP_ALGOLIA_ID,
-      process.env.REACT_APP_ALGOLIA_SEARCH_KEY,
-    );
-    const index = client.initIndex('notes');
+  useEffect(() => {
+    if (!searchText && hasBeenSearched) {
+      setHasBeenSearched(false);
+      clearSearch();
+    }
+  }, [searchText]);
 
-    index.search(searchText).then(({ hits }) => {
-      const hitsWithIds = hits.map((hit) => ({ ...hit, id: hit.objectID }));
+  const handleSearch = (text) => {
+    setSearchText(text);
 
-      setSearchResultNotes(hitsWithIds);
+    if (text === '') return;
+    const lowerCaseText = text.toLowerCase();
+
+    setHasBeenSearched(true);
+
+    // In-App search (only for edittitles)
+    const filteredNotes = notes.filter((n) => {
+      if (n.textContent) {
+        return lowerCaseText.split(' ').every((word) => n.textContent.toLowerCase().includes(word));
+      } else {
+        return lowerCaseText.split(' ').every((word) => n.title.toLowerCase().includes(word));
+      }
     });
+
+    setSearchResultNotes(filteredNotes);
   };
 
   const clearInput = () => {
@@ -33,7 +48,7 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
       label={placeholderText}
       onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
       clearInput={clearInput}
-      onChange={(e) => setSearchText(e.target.value)}
+      onChange={(e) => handleSearch(e.target.value)}
       value={searchText}
       border={border}
       small={small}
