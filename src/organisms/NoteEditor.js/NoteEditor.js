@@ -64,14 +64,15 @@ const NoteEditor = ({
   };
 
   const handleOnBlur = ({ getRemirrorJSON, getText }) => {
-    const remirrorJSON = getRemirrorJSON();
+    const content = getRemirrorJSON();
     const textContent = getText();
 
-    handleNoteSubmit(remirrorJSON, textContent);
+    setNote((prevNote) => ({ ...prevNote, content, textContent }));
+    handleNoteSubmit(content, textContent);
   };
 
   const handleNoteSubmit = (content = note.content, textContent = note.textContent) => {
-    // If the note does not have content, return
+    // If the note has not been edited or does not have content, return
     if (!hasBeenEdited || !textContent) return;
 
     const today = firestore.Timestamp.now();
