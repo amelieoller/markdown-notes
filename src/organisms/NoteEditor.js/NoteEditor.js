@@ -222,7 +222,7 @@ const MainContent = styled.div`
   position: relative;
 
   & > *:first-child {
-    max-width: 1000px;
+    max-width: 880px;
     width: 100%;
   }
 `;
@@ -249,7 +249,7 @@ const FooterWrapper = styled.div`
 `;
 
 const Footer = styled.div`
-  max-width: 1000px;
+  max-width: 880px;
   position: relative;
 `;
 
@@ -266,6 +266,14 @@ const Tags = styled.div`
     margin-bottom: 5px;
   }
 `;
+
+Editor.propTypes = {
+  note: PropTypes.shape({
+    content: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    lectureId: PropTypes.string,
+    id: PropTypes.string,
+  }),
+};
 
 NoteEditor.propTypes = {
   currentNoteToEdit: PropTypes.shape({

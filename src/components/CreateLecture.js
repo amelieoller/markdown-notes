@@ -111,7 +111,7 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
 
 const StyledCreateLecture = styled.div`
   padding: 60px;
-  max-width: 1000px;
+  max-width: 880px;
 
   @media ${({ theme }) => theme.tablet} {
     padding: ${({ theme }) => `40px ${theme.spacingLarge}`};
