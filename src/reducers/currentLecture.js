@@ -1,11 +1,11 @@
-const initState = { title: '', content: '', noteIds: [], language: 'code' };
+const initialLecture = { title: 'New Lecture', noteIds: [] };
 
-const currentLecture = (state = initState, action) => {
+const currentLecture = (state = initialLecture, action) => {
   switch (action.type) {
     case 'SET_CURRENT_LECTURE':
       return action.lecture;
     case 'CLEAR_CURRENT_LECTURE':
-      return { title: '', content: '', tagIds: [], language: 'code' };
+      return initialLecture;
     default:
       return state;
   }

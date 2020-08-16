@@ -12,7 +12,7 @@ const rootReducer = combineReducers({
   notes: notesReducer,
   tags: tagsReducer,
   currentNoteToEdit: currentNote,
-  currentLecture: currentLecture,
+  currentLectureToEdit: currentLecture,
   lectures: lectureReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer,

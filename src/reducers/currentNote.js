@@ -1,11 +1,11 @@
-const initState = { title: '', content: '', tagIds: [], noteLinkIds: [], language: 'code' };
+import { initialNote } from '../initialNote';
 
-const currentNote = (state = initState, action) => {
+const currentNote = (state = initialNote, action) => {
   switch (action.type) {
     case 'SET_CURRENT_NOTE':
       return action.note;
     case 'CLEAR_CURRENT_NOTE':
-      return { title: '', content: '', tagIds: [], noteLinkIds: [], language: 'code' };
+      return initialNote;
     default:
       return state;
   }

@@ -4,8 +4,15 @@ export const createLecture = (lecture) => (dispatch, getState, getFirebase) => {
   firestore
     .collection('lectures')
     .add(lecture)
-    .then(() => {
+    .then((docRef) => {
       dispatch({ type: 'CREATE_LECTURE', lecture });
+      // Only set a new current lecture if there is no lectureId coming in or
+      // If there is a lecture with an id currently in state
+      if (!getState().currentLectureToEdit.id && !lecture.id) {
+        dispatch({ type: 'SET_CURRENT_LECTURE', lecture: { ...lecture, id: docRef.id } });
+      }
+
+      return docRef.id;
     })
     .catch((err) => {
       dispatch({ type: 'CREATE_LECTURE_ERROR', err });
@@ -14,8 +21,6 @@ export const createLecture = (lecture) => (dispatch, getState, getFirebase) => {
 
 export const updateLecture = (lecture) => (dispatch, getState, getFirebase) => {
   const firestore = getFirebase().firestore();
-
-  dispatch({ type: 'CLEAR_CURRENT_LECTURE' });
 
   firestore
     .collection('lectures')

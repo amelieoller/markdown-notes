@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { useDispatch } from 'react-redux';
@@ -7,13 +7,42 @@ import { deleteLecture } from '../../actions/lectureActions';
 import NoteEditor from '../NoteEditor.js';
 import Button from '../../atoms/Button';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
+import { initialNote } from '../../initialNote';
+import LinkNotes from '../../components/LinkNotes';
+import { addOrRemoveFromArr } from '../../components/utils';
 
-const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
+const Lecture = ({ currentLectureToEdit, notes, addNoteLinkToLecture, updateCurrentLecture }) => {
   const dispatch = useDispatch();
+
+  const [newLectureNote, setNewLectureNote] = useState({
+    ...initialNote,
+  });
+  const [lectureTitle, setLectureTitle] = useState(currentLectureToEdit);
+
+  useEffect(() => {
+    setLectureTitle(currentLectureToEdit.title);
+  }, [currentLectureToEdit.title]);
+
+  useEffect(() => {
+    if (currentLectureToEdit.id) {
+      setNewLectureNote({ ...initialNote, lectureId: currentLectureToEdit.id });
+    }
+  }, [currentLectureToEdit.id]);
 
   const handleDeleteLecture = (lectureId) => {
     dispatch(deleteLecture(lectureId));
     dispatch({ type: 'CLEAR_CURRENT_LECTURE' });
+  };
+
+  const addNote = (id) => {
+    addNoteLinkToLecture(id);
+    setNewLectureNote({ ...initialNote, lectureId: currentLectureToEdit.id });
+  };
+
+  const addLectureNoteIdLink = (noteId) => {
+    const newNoteLinkIds = addOrRemoveFromArr(currentLectureToEdit.noteIds, noteId);
+
+    updateCurrentLecture({ noteIds: newNoteLinkIds });
   };
 
   return (
@@ -22,9 +51,9 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
         <Button
           onClick={() =>
             window.confirm(`Are you sure you want to discard the changes you have made?`) &&
-            handleDeleteLecture(lecture.id)
+            handleDeleteLecture(currentLectureToEdit.id)
           }
-          label={`Delete lecture "${lecture.title}"`}
+          label={`Delete lecture "${lectureTitle}"`}
           danger
           iconOnly
         >
@@ -32,7 +61,14 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
         </Button>
       </MinimalDelete>
 
-      <h1 className="lecture-title">{lecture.title}</h1>
+      <h1 className="lecture-title">
+        <input
+          type="text"
+          value={lectureTitle}
+          onChange={(e) => setLectureTitle(e.target.value)}
+          onBlur={() => updateCurrentLecture({ title: lectureTitle })}
+        />
+      </h1>
 
       {notes
         .filter((n) => n)
@@ -41,19 +77,29 @@ const Lecture = ({ lecture, notes, addNoteLinkToLecture }) => {
         ))}
 
       <hr />
-      <NoteEditor
-        currentNoteToEdit={{
-          title: '',
-          content: '',
-          tagIds: [],
-          noteLinkIds: [],
-          lectureId: lecture.id,
-        }}
-        addNoteLinkToLecture={addNoteLinkToLecture}
-        handleDelete={handleDeleteLecture}
-        linkedNotes={[]}
-        showEdit={false}
-      />
+
+      <div className="link-notes">
+        <h1>Link Notes</h1>
+        <LinkNotes
+          addNoteIdLink={addLectureNoteIdLink}
+          linkIds={currentLectureToEdit.noteIds}
+          previousLinkedNotes={notes}
+        />
+      </div>
+
+      {currentLectureToEdit.id && (
+        <>
+          <hr />
+          <NoteEditor
+            currentNoteToEdit={newLectureNote}
+            addNoteLinkToLecture={addNote}
+            handleDelete={handleDeleteLecture}
+            linkedNotes={[]}
+            showEdit={false}
+            resetNote
+          />
+        </>
+      )}
     </StyledLecture>
   );
 };
@@ -112,11 +158,29 @@ const StyledLecture = styled.div`
     margin-bottom: 2.33em;
   }
 
+  .link-notes {
+    padding: ${({ theme }) => `${theme.spacingLarge} ${theme.spacingExtraLarge}`};
+  }
+
   .lecture-title {
     font-size: 2em;
     margin-top: 0;
     margin-bottom: 0;
-    padding: 40px 60px 20px 60px;
+    padding: 33px 60px 20px 60px;
+
+    input {
+      border: none;
+      background: transparent;
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+      font-family: inherit;
+      width: 100%;
+
+      &:focus {
+        outline: none;
+      }
+    }
 
     @media ${({ theme }) => theme.tablet} {
       padding: 40px 20px 20px 20px;

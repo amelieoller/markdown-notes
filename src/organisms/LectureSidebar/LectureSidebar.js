@@ -158,7 +158,7 @@ const Divider = styled.div`
 `;
 
 LectureSidebar.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({})),
+  items: PropTypes.array,
   handleItemClick: PropTypes.func,
   handleDeleteItem: PropTypes.func,
   dark: PropTypes.bool,

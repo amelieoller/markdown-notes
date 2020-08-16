@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/macro';
 import { useDispatch, useSelector } from 'react-redux';
+import { useFirestore } from 'react-redux-firebase';
 
 import Search from './Search';
 import { addOrRemoveFromArr } from './utils';
@@ -14,6 +15,9 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const [title, setTitle] = useState('');
   const [noteIds, setNoteIds] = useState([]);
   const currentUser = useSelector((state) => state.firebase.auth);
+
+  const firestore = useFirestore();
+  const today = firestore.Timestamp.now();
 
   useEffect(() => {
     if (selectedLecture) {
@@ -37,12 +41,19 @@ const CreateLecture = ({ selectedLecture, updateCurrentLecture }) => {
   const handleSaveLectureClick = () => {
     if (title) {
       if (selectedLecture && selectedLecture.id) {
-        const updatedLecture = { id: selectedLecture.id, title, noteIds };
+        const updatedLecture = { id: selectedLecture.id, title, noteIds, updated: today };
 
         dispatch(updateLecture(updatedLecture));
         updateCurrentLecture(updatedLecture);
       } else {
-        dispatch(createLecture({ ...{ title, noteIds }, userId: currentUser.uid }));
+        dispatch(
+          createLecture({
+            ...{ title, noteIds },
+            userId: currentUser.uid,
+            created: today,
+            updated: today,
+          }),
+        );
       }
 
       setNotesFound([]);

@@ -6,34 +6,25 @@ import { useFirestore } from 'react-redux-firebase';
 import { useRemirror } from '@remirror/react';
 import { RemirrorProvider, useManager } from 'remirror/react';
 
-// Remirror extension imports
-import { ListPreset } from 'remirror/preset/list';
-import { BoldExtension } from 'remirror/extension/bold';
-import { ItalicExtension } from 'remirror/extension/italic';
-import { CodeBlockExtension } from 'remirror/extension/code-block';
-import { CodeExtension } from 'remirror/extension/code';
-import { HeadingExtension } from 'remirror/extension/heading';
-import { BlockquoteExtension } from 'remirror/extension/blockquote';
-import { UnderlineExtension } from 'remirror/extension/underline';
-import { ImageExtension } from 'remirror/extension/image';
-import { HorizontalRuleExtension } from 'remirror/extension/horizontal-rule';
-import { LinkExtension } from 'remirror/extension/link';
-import { EmojiExtension } from 'remirror/extension/emoji';
-
-// Remirror language imports
-import javascript from 'refractor/lang/javascript';
-import jsx from 'refractor/lang/jsx';
-import ruby from 'refractor/lang/ruby';
-import json from 'refractor/lang/json';
-
 // Internal imports
+import { EXTENSIONS } from './extensions';
 import LinkNotes from '../../components/LinkNotes';
 import { createNote, updateNote } from '../../actions/noteActions';
-import { getTitle, addOrRemoveFromArr } from '../../components/utils';
+import { addOrRemoveFromArr, sortByString } from '../../components/utils';
 import Button from '../../atoms/Button';
 import CreateTag from '../CreateTag';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
+
+const Editor = ({ note }) => {
+  const { getRootProps, setContent } = useRemirror();
+
+  useEffect(() => {
+    setContent(note.content);
+  }, [note]);
+
+  return <div {...getRootProps()} />;
+};
 
 const NoteEditor = ({
   currentNoteToEdit,
@@ -41,227 +32,149 @@ const NoteEditor = ({
   showEdit,
   addNoteLinkToLecture,
   handleDelete,
-  noSwitch,
 }) => {
+  const manager = useManager(EXTENSIONS);
+  const firestore = useFirestore();
+  const dispatch = useDispatch();
+
   const currentUser = useSelector((state) => state.firebase.auth);
+  const tags = useSelector((state) => state.firestore.ordered.tags);
 
-  const NoteWrapper = () => {
-    const tags = useSelector((state) => state.firestore.ordered.tags);
-    const dispatch = useDispatch();
-    const firestore = useFirestore();
+  const [hasBeenEdited, setHasBeenEdited] = useState(false);
+  const [note, setNote] = useState(currentNoteToEdit);
 
-    const [hasBeenEdited, setHasBeenEdited] = useState(false);
+  useEffect(() => {
+    if (hasBeenEdited) handleNoteSubmit();
 
-    const manager = useManager([
-      new ListPreset(),
-      new HeadingExtension(),
-      new BlockquoteExtension(),
-      new CodeExtension(),
-      new ImageExtension(),
-      new HorizontalRuleExtension(),
-      new LinkExtension(),
-      new BoldExtension(),
-      new ItalicExtension(),
-      new UnderlineExtension(),
-      new EmojiExtension(),
-      new CodeBlockExtension({
-        supportedLanguages: [javascript, jsx, ruby, json],
-      }),
-    ]);
+    setNote(currentNoteToEdit);
+  }, [currentNoteToEdit]);
 
-    const [note, setNote] = useState(currentNoteToEdit);
+  const addTag = (id) => {
+    const newTagIds = addOrRemoveFromArr(note.tagIds, id);
 
-    const initialValue = manager.createState({});
+    setHasBeenEdited(true);
+    setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
+  };
 
-    const [value, setValue] = useState(initialValue);
+  const addNoteIdLink = (noteId) => {
+    const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
 
-    useEffect(() => {
-      if (value.doc.textContent && !hasBeenEdited) {
-        setHasBeenEdited(true);
-      }
-    }, [value.doc.textContent]);
+    setHasBeenEdited(true);
+    setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
+  };
 
-    const handleNoteSubmit = () => {
-      const contentArr = value.doc.toJSON();
-      const textContent = value.doc.textContent;
-      // If the note does not have content, return
+  const handleOnBlur = ({ getRemirrorJSON, getText }) => {
+    const remirrorJSON = getRemirrorJSON();
+    const textContent = getText();
 
-      const today = firestore.Timestamp.now();
-      const noteHadBeenEdited = !!contentArr.content[0].content;
-      let finishedNote;
+    handleNoteSubmit(remirrorJSON, textContent);
+  };
 
-      if (!textContent) return;
+  const handleNoteSubmit = (content = note.content, textContent = note.textContent) => {
+    // If the note does not have content, return
+    if (!hasBeenEdited || !textContent) return;
 
-      if (note.id) {
-        // If the the note in state has an ID (that means it's being edited), check if the content has changed
-        if (noteHadBeenEdited) {
-          const title = getTitle(contentArr.content[0].content[0].text);
+    const today = firestore.Timestamp.now();
 
-          finishedNote = { ...note, content: contentArr, textContent, updated: today, title };
-        } else {
-          finishedNote = { ...note, updated: today };
+    let finishedNote = {
+      ...note,
+      content,
+      textContent,
+      updated: today,
+      title: textContent.split('\n')[0],
+    };
+
+    if (note.id) {
+      // If the the note in state has an ID (that means it's being edited), check if the content has changed
+      dispatch(updateNote({ ...note, ...finishedNote }));
+    } else {
+      // If the note does not have an id, save it as a new note
+      const userId = currentUser.uid;
+      dispatch(createNote({ ...finishedNote, created: today, userId })).then((noteId) => {
+        if (note.lectureId) {
+          addNoteLinkToLecture(noteId);
         }
+      });
+    }
 
-        if (!noSwitch) {
-          dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
-        }
+    setHasBeenEdited(false);
+  };
 
-        dispatch(updateNote(finishedNote));
-      } else {
-        if (noteHadBeenEdited) {
-          // If the note does not have an id, save it as a new note
-          const title = getTitle(contentArr.content[0].content[0].text);
-          finishedNote = {
-            ...note,
-            content: contentArr,
-            textContent,
-            updated: today,
-            created: today,
-            title,
-            userId: currentUser.uid,
-          };
+  const handleOnChange = ({ tr }) => {
+    if (tr?.docChanged) setHasBeenEdited(true);
+  };
 
-          if (!noSwitch) {
-            dispatch({ type: 'SET_CURRENT_NOTE', note: finishedNote });
-          }
+  return (
+    <StyledWrapper showEdit={showEdit} id={note.id}>
+      <MainContent>
+        <RemirrorProvider manager={manager} onBlur={handleOnBlur} onChange={handleOnChange}>
+          <Editor note={note} />
+        </RemirrorProvider>
 
-          dispatch(createNote(finishedNote)).then((noteId) => {
-            if (currentNoteToEdit.lectureId) {
-              addNoteLinkToLecture(noteId);
-            }
-          });
-        }
-      }
-    };
+        {!showEdit && (
+          <MinimalSave>
+            <Button onClick={handleNoteSubmit} disabled={!hasBeenEdited} label="Save note" iconOnly>
+              <Save />
+            </Button>
+          </MinimalSave>
+        )}
+      </MainContent>
 
-    const addTag = (id) => {
-      const newTagIds = addOrRemoveFromArr(note.tagIds, id);
+      {showEdit && (
+        <FooterWrapper>
+          <Footer>
+            <SectionTitle>Tags</SectionTitle>
+            <Tags>
+              {tags &&
+                sortByString(tags, 'name').map((tag) => (
+                  <Button
+                    key={tag.id}
+                    onClick={() => addTag(tag.id)}
+                    isActive={note.tagIds.includes(tag.id)}
+                    label={tag.name}
+                    small
+                    faded
+                  >
+                    {tag.name}
+                  </Button>
+                ))}
 
-      setHasBeenEdited(true);
-      setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
-    };
+              <CreateTag />
+            </Tags>
 
-    const addNoteIdLink = (noteId) => {
-      const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
-
-      setHasBeenEdited(true);
-      setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
-    };
-
-    const initialContent = {
-      type: 'doc',
-      content: [
-        {
-          type: 'heading',
-          attrs: {
-            level: 1,
-          },
-          content: [
-            {
-              type: 'text',
-              text: 'Create a new note...',
-            },
-          ],
-        },
-      ],
-    };
-
-    return (
-      <StyledWrapper showEdit={showEdit} id={note.id}>
-        <MainContent onBlur={() => handleNoteSubmit()}>
-          <RemirrorProvider
-            manager={manager}
-            initialContent={note.content || initialContent}
-            onChange={(parameter) => {
-              const { state, tr } = parameter;
-
-              if (tr?.docChanged) {
-                setValue(state);
-              }
-            }}
-            label="Note editor"
-          >
-            <Editor />
-          </RemirrorProvider>
-
-          {!showEdit && (
-            <MinimalSave>
+            <SectionTitle>Linked Notes</SectionTitle>
+            <LinkNotes
+              addNoteIdLink={addNoteIdLink}
+              linkIds={note.noteLinkIds}
+              previousLinkedNotes={linkedNotes}
+            />
+            <Buttons>
               <Button
                 onClick={() => handleNoteSubmit()}
                 disabled={!hasBeenEdited}
                 label="Save note"
-                iconOnly
               >
-                <Save />
+                <Save /> {hasBeenEdited ? 'Save Note' : 'Note Saved'}
               </Button>
-            </MinimalSave>
-          )}
-        </MainContent>
 
-        {showEdit && (
-          <FooterWrapper>
-            <Footer>
-              <SectionTitle>Tags</SectionTitle>
-              <Tags>
-                {tags &&
-                  tags.map((tag) => (
-                    <Button
-                      key={tag.id}
-                      onClick={() => addTag(tag.id)}
-                      isActive={note.tagIds && note.tagIds.includes(tag.id)}
-                      label={tag.name}
-                      small
-                      faded
-                    >
-                      {tag.name}
-                    </Button>
-                  ))}
-
-                <CreateTag />
-              </Tags>
-
-              <SectionTitle>Linked Notes</SectionTitle>
-              <LinkNotes
-                addNoteIdLink={addNoteIdLink}
-                linkIds={note.noteLinkIds}
-                previousLinkedNotes={linkedNotes}
-              />
-              <Buttons>
+              {note.id && (
                 <Button
-                  onClick={() => handleNoteSubmit()}
-                  disabled={!hasBeenEdited}
-                  label="Save note"
+                  onClick={() =>
+                    window.confirm(`Are you sure you want to delete this note?`) &&
+                    handleDelete(note.id)
+                  }
+                  label="Delete note"
+                  danger
                 >
-                  <Save /> {hasBeenEdited ? 'Save Note' : 'Note Saved'}
+                  <Trash /> Delete Note
                 </Button>
-
-                {currentNoteToEdit.id && (
-                  <Button
-                    onClick={() =>
-                      window.confirm(`Are you sure you want to delete this note?`) &&
-                      handleDelete(currentNoteToEdit.id)
-                    }
-                    label="Delete note"
-                    danger
-                  >
-                    <Trash /> Delete Note
-                  </Button>
-                )}
-              </Buttons>
-            </Footer>
-          </FooterWrapper>
-        )}
-      </StyledWrapper>
-    );
-  };
-
-  return <NoteWrapper />;
-};
-
-const Editor = () => {
-  const { getRootProps } = useRemirror();
-
-  return <div {...getRootProps()} />;
+              )}
+            </Buttons>
+          </Footer>
+        </FooterWrapper>
+      )}
+    </StyledWrapper>
+  );
 };
 
 const StyledWrapper = styled.div`
@@ -363,7 +276,6 @@ NoteEditor.propTypes = {
   showEdit: PropTypes.bool,
   addNoteLinkToLecture: PropTypes.func,
   handleDelete: PropTypes.func,
-  noSwitch: PropTypes.bool,
 };
 
 NoteEditor.defaultProps = {

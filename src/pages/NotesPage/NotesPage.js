@@ -13,29 +13,6 @@ import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Filter from '../../organisms/Filter/Filter';
 
-const filterBy = (notes, filterArr) =>
-  filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
-
-const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
-  const sortedNotes = filterBy(notes, filteredNoteIds)
-    .filter((note) => filteredTagIds.every((tagId) => note.tagIds.includes(tagId)))
-    .sort(
-      (a, b) =>
-        (b.updated ? b.updated.toDate() : new Date()) -
-        (a.updated ? a.updated.toDate() : new Date()),
-    );
-
-  const [isWithLecture, isWithoutLecture] = sortedNotes.reduce(
-    (result, el) => {
-      result[el.lectureId ? 0 : 1].push(el);
-      return result;
-    },
-    [[], []],
-  );
-
-  return [isWithoutLecture, isWithLecture];
-};
-
 const NotesPage = () => {
   const currentUser = useSelector((state) => state.firebase.auth);
 
@@ -93,12 +70,31 @@ const NotesPage = () => {
     }
   }, [currentNoteToEdit, selectedNote]);
 
-  const handleAddNoteClick = () => {
-    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
+  const filterBy = (notes, filterArr) =>
+    filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
+
+  const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
+    const sortedNotes = filterBy(notes, filteredNoteIds)
+      .filter((note) => filteredTagIds.every((tagId) => note.tagIds.includes(tagId)))
+      .sort(
+        (a, b) =>
+          (b.updated ? b.updated.toDate() : new Date()) -
+          (a.updated ? a.updated.toDate() : new Date()),
+      );
+
+    const [isWithLecture, isWithoutLecture] = sortedNotes.reduce(
+      (result, el) => {
+        result[el.lectureId ? 0 : 1].push(el);
+        return result;
+      },
+      [[], []],
+    );
+
+    return [isWithoutLecture, isWithLecture];
   };
 
-  const handleEditLectureClick = () => {
-    dispatch({ type: 'SET_CURRENT_NOTE', note: selectedNote });
+  const handleAddNoteClick = () => {
+    dispatch({ type: 'CLEAR_CURRENT_NOTE' });
   };
 
   const handleDeleteNoteLink = (noteId) => {
@@ -186,15 +182,17 @@ const NotesPage = () => {
         </div>
       </LectureSidebar>
 
-      <NoteEditor
-        currentNoteToEdit={currentNoteToEdit}
-        linkedNotes={linkedNotes}
-        handleDelete={handleDeleteNote}
-      />
+      {currentNoteToEdit.content && (
+        <NoteEditor
+          currentNoteToEdit={currentNoteToEdit}
+          linkedNotes={linkedNotes}
+          handleDelete={handleDeleteNote}
+        />
+      )}
     </SidebarsMainTemplate>
   );
 };
 
 NotesPage.propTypes = {};
 
-export default NotesPage;
+export default React.memo(NotesPage);
