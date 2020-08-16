@@ -46,7 +46,7 @@ const Search = ({ setSearchResultNotes, placeholderText, clearSearch, border, sm
   return (
     <Input
       label={placeholderText}
-      onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+      onKeyDown={(e) => e.key === 'Enter' && handleSearch(e.target.value)}
       clearInput={clearInput}
       onChange={(e) => handleSearch(e.target.value)}
       value={searchText}
