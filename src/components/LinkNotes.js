@@ -9,7 +9,7 @@ const LinkNotes = ({ addNoteIdLink, linkIds, previousLinkedNotes }) => {
   const [foundNotes, setFoundNotes] = useState([]);
 
   useEffect(() => {
-    setFoundNotes(previousLinkedNotes);
+    setFoundNotes(previousLinkedNotes.filter((n) => n));
   }, [previousLinkedNotes]);
 
   const getNoteIds = (notes) => {
