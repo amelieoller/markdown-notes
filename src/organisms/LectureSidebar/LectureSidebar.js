@@ -6,6 +6,7 @@ import SidebarItem from '../../atoms/SidebarItem/SidebarItem';
 import { ReactComponent as ChevronsLeft } from '../../assets/icons/chevrons-left.svg';
 import { ReactComponent as ChevronsRight } from '../../assets/icons/chevrons-right.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
+import Spinner from '../../atoms/Spinner';
 
 const LectureSidebar = ({
   items,
@@ -56,8 +57,8 @@ const LectureSidebar = ({
       <SidebarHeader isSidebarOpen={isSidebarOpen}>{children}</SidebarHeader>
 
       <ScrollArea>
-        {items &&
-          (nestedArray ? (
+        {items ? (
+          nestedArray ? (
             <>
               {renderSidebarItems(items[0])}
               <Divider>Lecture Specific Notes</Divider>
@@ -65,7 +66,10 @@ const LectureSidebar = ({
             </>
           ) : (
             renderSidebarItems(items)
-          ))}
+          )
+        ) : (
+          <Spinner paddingTop={10} small />
+        )}
       </ScrollArea>
 
       <CollapseButton>
