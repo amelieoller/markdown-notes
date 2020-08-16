@@ -24,7 +24,6 @@ export default styled.createGlobalStyle`
   }
 
   /* Headers */
-
   h1,
   h2,
   h3,
@@ -70,9 +69,12 @@ export default styled.createGlobalStyle`
     margin-bottom: 2.33em;
   }
 
+  /* General */
   p {
     margin-top: 1em;
     margin-bottom: 1em;
+    font-size: 1em;
+    line-height: 1.2;
   }
 
   svg {
@@ -101,44 +103,6 @@ export default styled.createGlobalStyle`
     display: inline;
   }
 
-  /* Fix this later */
-  .ProseMirror.ProseMirror-focused {
-    outline: none;
-  }
-
-  .ProseMirror {
-    white-space: pre-wrap;
-  }
-
-  pre {
-    display: block;
-    overflow-x: auto;
-    background: ${({ theme }) => theme.surfaceTwo};
-    color: rgb(204, 204, 204);
-    padding: 0.5em;
-    margin-bottom: 1em;
-  }
-
-  & *:first-child {
-    margin-top: 0 !important;
-  }
-
-  code[class*='language-'],
-  pre[class*='language-'] {
-    font-family: 'Source Code Pro', monospace;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    word-break: normal;
-    word-wrap: normal;
-    tab-size: 2;
-    hyphens: none;
-  }
-
-  pre[class*='language-'] {
-    background-color: ${({ theme }) => theme.surfaceTwo};
-  }
-
   a {
     color: ${({ theme }) => theme.primary};
     text-decoration: none;
@@ -163,125 +127,6 @@ export default styled.createGlobalStyle`
       border: none;
       padding-top: 0;
     }
-  }
-
-  p {
-    font-size: 1em;
-    line-height: 1.2;
-  }
-
-  ol {
-    list-style: none;
-    counter-reset: b;
-    margin-bottom: 2rem;
-
-    li {
-      padding-left: 27px;
-      position: relative;
-      margin-bottom: 10px;
-      line-height: 1.1;
-
-      > * {
-        margin-bottom: 10px;
-      }
-
-      ol {
-        margin: 7px 0 0;
-      }
-
-      ul {
-        margin: 7px 0 0;
-      }
-
-      p:last-child {
-        margin: 0;
-      }
-    }
-
-    > li {
-      &:before {
-        content: counters(b, '.') ' ';
-        counter-increment: b;
-        left: -8px;
-        color: ${({ theme }) => theme.onBackgroundLight};
-        position: absolute;
-        text-align: right;
-        width: 29px;
-      }
-
-      ol {
-        margin-left: 4px;
-      }
-    }
-  }
-
-  ul {
-    list-style: none;
-    margin-bottom: 2rem;
-
-    li {
-      padding-left: 27px;
-      position: relative;
-      margin-bottom: 2px;
-      line-height: 1.1;
-
-      > * {
-        margin-bottom: 10px;
-      }
-
-      ol {
-        margin: 7px 0 0;
-      }
-
-      ul {
-        margin: 7px 0 0;
-      }
-
-      p:last-child {
-        margin: 0;
-      }
-    }
-
-    > li:before {
-      content: '';
-      background-color: ${({ theme }) => theme.onBackgroundLight};
-      border-radius: 9999px;
-      width: 6px;
-      height: 6px;
-      left: 12px;
-      top: 5px;
-      position: absolute;
-    }
-  }
-
-  code {
-    font-size: 85%;
-    background: ${({ theme }) => theme.codeBackground};
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-weight: 300;
-    font-size: 85%;
-    font-weight: normal;
-    /* background-color: rgba(9, 30, 66, 0.08); */
-    font-family: SFMono-Medium, 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Mono', Menlo,
-      Consolas, Courier, monospace;
-    white-space: pre-wrap;
-    box-shadow: rgba(9, 30, 66, 0.08) -4px 0px 0px 0px, rgba(9, 30, 66, 0.08) 4px 0px 0px 0px;
-    padding: 2px 0px;
-    border-style: none;
-    margin: 0px 4px;
-  }
-
-  pre code {
-    background: transparent;
-    padding: 0;
-    line-height: 1.15em;
-    box-shadow: none;
-    margin: 0;
-  }
-
-  em {
-    font-style: italic;
   }
 
   img {
@@ -313,9 +158,128 @@ export default styled.createGlobalStyle`
     }
   }
 
-  /* :not(pre) > code[class*='language-'] {
-    padding: 0.1em;
-    border-radius: 0.3em;
-    white-space: normal;
-  } */
+  /* Code and Code Blocks */
+  pre {
+    display: block;
+    overflow-x: auto;
+    background: ${({ theme }) => theme.surfaceTwo};
+    color: rgb(204, 204, 204);
+    padding: 0.5em;
+    margin-bottom: 1em;
+  }
+
+  & *:first-child {
+    margin-top: 0 !important;
+  }
+
+  code[class*='language-'],
+  pre[class*='language-'] {
+    font-family: 'Source Code Pro', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    tab-size: 2;
+    hyphens: none;
+  }
+
+  pre[class*='language-'] {
+    background-color: ${({ theme }) => theme.surfaceTwo};
+  }
+
+  code {
+    font-size: 85%;
+    background: ${({ theme }) => theme.codeBackground};
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-weight: 300;
+    font-size: 85%;
+    font-weight: normal;
+    /* background-color: rgba(9, 30, 66, 0.08); */
+    font-family: SFMono-Medium, 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', 'Ubuntu Mono', Menlo,
+      Consolas, Courier, monospace;
+    white-space: pre-wrap;
+    box-shadow: rgba(9, 30, 66, 0.08) -4px 0px 0px 0px, rgba(9, 30, 66, 0.08) 4px 0px 0px 0px;
+    padding: 2px 0px;
+    border-style: none;
+    margin: 0px 4px;
+  }
+
+  pre code {
+    background: transparent;
+    padding: 0;
+    line-height: 1.15em;
+    box-shadow: none;
+    margin: 0;
+  }
+
+  /* Lists */
+  ol,
+  ul {
+    list-style: none;
+    margin-bottom: 2rem;
+
+    li {
+      padding-left: 27px;
+      position: relative;
+      margin-bottom: 3px;
+      line-height: 1.1;
+
+      > * {
+        margin-bottom: 10px;
+      }
+
+      ol,
+      ul {
+        margin: 7px 0 0;
+      }
+
+      p:last-child {
+        margin: 0;
+      }
+    }
+  }
+
+  ol {
+    counter-reset: b;
+
+    > li {
+      &:before {
+        content: counters(b, '.') ' ';
+        counter-increment: b;
+        position: absolute;
+        left: -8px;
+        width: 29px;
+        color: ${({ theme }) => theme.onBackgroundLight};
+        text-align: right;
+      }
+
+      ol {
+        margin-left: 4px;
+      }
+    }
+  }
+
+  ul {
+    > li:before {
+      content: '';
+      position: absolute;
+      left: 12px;
+      top: 5px;
+      width: 6px;
+      height: 6px;
+      background-color: ${({ theme }) => theme.onBackgroundLight};
+      border-radius: 9999px;
+    }
+  }
+
+  /* ProseMirror Fix this later */
+  .ProseMirror.ProseMirror-focused {
+    outline: none;
+  }
+
+  .ProseMirror {
+    white-space: pre-wrap;
+  }
 `;
