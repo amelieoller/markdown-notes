@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 
-import Search from '../../components/Search';
 import NoteEditor from '../../organisms/NoteEditor.js';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import { deleteNote, updateNote } from '../../actions/noteActions';
@@ -12,6 +11,8 @@ import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Filter from '../../organisms/Filter/Filter';
+import { sortByDate } from '../../components/utils';
+import NoteSearch from '../../components/NoteSearch';
 
 const NotesPage = () => {
   const currentUser = useSelector((state) => state.firebase.auth);
@@ -38,15 +39,8 @@ const NotesPage = () => {
   const [selectedNote, setSelectedNote] = useState(null);
   const [linkedNotes, setLinkedNotes] = useState([]);
 
-  const [filteredTagIds, setFilteredTagIds] = useState([]);
-  const [filteredNoteIds, setFilteredNoteIds] = useState([]);
-  const [filteredNotes, setFilteredNotes] = useState([]);
-
-  useEffect(() => {
-    if (notes) {
-      setFilteredNotes(notes);
-    }
-  }, [notes]);
+  const [searchText, setSearchText] = useState('');
+  const [tagFilterId, setTagFilterId] = useState('filter');
 
   useEffect(() => {
     if (currentNoteToEdit.title) {
@@ -70,29 +64,6 @@ const NotesPage = () => {
     }
   }, [currentNoteToEdit, selectedNote]);
 
-  const filterBy = (notes, filterArr) =>
-    filterArr.length !== 0 ? notes.filter((note) => filterArr.includes(note.id)) : notes;
-
-  const sortAndFilter = (notes, filteredNoteIds, filteredTagIds) => {
-    const sortedNotes = filterBy(notes, filteredNoteIds)
-      .filter((note) => filteredTagIds.every((tagId) => note.tagIds.includes(tagId)))
-      .sort(
-        (a, b) =>
-          (b.updated ? b.updated.toDate() : new Date()) -
-          (a.updated ? a.updated.toDate() : new Date()),
-      );
-
-    const [isWithLecture, isWithoutLecture] = sortedNotes.reduce(
-      (result, el) => {
-        result[el.lectureId ? 0 : 1].push(el);
-        return result;
-      },
-      [[], []],
-    );
-
-    return [isWithoutLecture, isWithLecture];
-  };
-
   const handleAddNoteClick = () => {
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
   };
@@ -104,21 +75,14 @@ const NotesPage = () => {
   };
 
   const handleTopicClick = (note) => {
+    console.log('handleTopicClick');
     dispatch({ type: 'SET_CURRENT_NOTE', note });
   };
 
   const handleNoteClick = (note) => {
+    console.log('handleNoteClick');
+
     dispatch({ type: 'SET_CURRENT_NOTE', note });
-  };
-
-  const getNotesIds = (foundItems) => {
-    const newFiltered = foundItems.map((item) => notes.find((i) => i.id === item.id));
-
-    setFilteredNotes(newFiltered);
-  };
-
-  const resetNotes = () => {
-    setFilteredNotes(notes);
   };
 
   const handleDeleteNote = (noteId) => {
@@ -126,20 +90,40 @@ const NotesPage = () => {
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
   };
 
-  const filterTags = (tagId) => {
-    if (tagId === 'filter') {
-      resetNotes();
-    } else {
-      const newFiltered = notes.filter((n) => n.tagIds.includes(tagId));
+  // Search and Filter
+  const separateByLecture = (notesToSeparate) => {
+    const [isWithLecture, isWithoutLecture] = notesToSeparate.reduce(
+      (result, el) => {
+        result[el.lectureId ? 0 : 1].push(el);
+        return result;
+      },
+      [[], []],
+    );
 
-      setFilteredNotes(newFiltered);
-    }
+    return [isWithoutLecture, isWithLecture];
+  };
+
+  const filterNotesByTag = () =>
+    tagFilterId === 'filter' ? notes : notes.filter((n) => n.tagIds.includes(tagFilterId));
+
+  const filterNotesBySearchText = (notesToFilter) => {
+    return notesToFilter.filter((n) =>
+      searchText.split(' ').every((word) => n.textContent.toLowerCase().includes(word)),
+    );
+  };
+
+  const filterAndSort = () => {
+    const tagFilteredNotes = filterNotesByTag();
+    const searchFilteredNotes = filterNotesBySearchText(tagFilteredNotes);
+    const sortedNotes = sortByDate(searchFilteredNotes, 'updated');
+
+    return sortedNotes;
   };
 
   return (
     <SidebarsMainTemplate>
       <LectureSidebar
-        items={notes && sortAndFilter(filteredNotes, filteredNoteIds, filteredTagIds)}
+        items={notes && separateByLecture(filterAndSort())}
         handleAddClick={handleAddNoteClick}
         handleItemClick={handleNoteClick}
         currentActiveItem={currentNoteToEdit}
@@ -157,12 +141,12 @@ const NotesPage = () => {
             <Plus />
           </IconButton>
         </div>
-        <Search
-          setSearchResultNotes={getNotesIds}
+        <NoteSearch
           placeholderText="Search"
-          clearSearch={resetNotes}
+          searchText={searchText}
+          setSearchText={setSearchText}
         />
-        <Filter filterTags={filterTags} />
+        <Filter setTagFilterId={setTagFilterId} />
       </LectureSidebar>
 
       <LectureSidebar

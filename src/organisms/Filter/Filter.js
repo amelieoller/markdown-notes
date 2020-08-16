@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { sortByString } from '../../components/utils';
 
-const Filter = ({ filterTags }) => {
+const Filter = ({ setTagFilterId }) => {
   const tags = useSelector((state) => state.firestore.ordered.tags);
 
   const handleFilterChange = (e) => {
     const tagId = e.target.value;
-    filterTags(tagId);
+    setTagFilterId(tagId);
   };
 
   return (
@@ -20,7 +21,7 @@ const Filter = ({ filterTags }) => {
     >
       <option value="filter">Filter</option>
       {tags &&
-        tags.map((tag) => (
+        sortByString(tags, 'name').map((tag) => (
           <option key={tag.id} value={tag.id}>
             {tag.name}
           </option>
@@ -49,6 +50,6 @@ const TagFilter = styled.select`
   background-repeat: no-repeat;
 `;
 
-Filter.propTypes = { filterTags: PropTypes.func };
+Filter.propTypes = { setTagFilterId: PropTypes.func };
 
 export default Filter;

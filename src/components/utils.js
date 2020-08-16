@@ -24,3 +24,11 @@ export const sortByString = (arr, attribute) => {
     return 0;
   });
 };
+
+export const sortByDate = (arr, attribute) => {
+  return [...arr].sort(
+    (a, b) =>
+      (b[attribute] ? b[attribute].toDate() : new Date()) -
+      (a[attribute] ? a[attribute].toDate() : new Date()),
+  );
+};
