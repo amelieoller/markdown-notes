@@ -33,7 +33,7 @@ import sass from 'refractor/lang/sass';
 import sql from 'refractor/lang/sql';
 import typescript from 'refractor/lang/typescript';
 
-export const EXTENSIONS = [
+export const EXTENSIONS = () => [
   new AutoLinkExtension(),
   new EventsExtension(),
   new TablePreset(),
