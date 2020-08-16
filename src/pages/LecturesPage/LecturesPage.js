@@ -46,50 +46,50 @@ const LecturesPage = () => {
   const firestore = useFirestore();
   const today = firestore.Timestamp.now();
 
-  const [selectedLecture, setSelectedLecture] = useState(null);
   const [linkedLectureNotes, setLinkedLectureNotes] = useState([]);
 
-  const resetLecture = () => {
-    setLinkedLectureNotes([]);
-  };
-
   useEffect(() => {
-    if (selectedLecture && notes) {
-      const hydrateNotesIds = (noteIds) =>
-        noteIds.map((noteId) => notes.find((note) => note.id === noteId));
+    if (!currentLectureToEdit.id) {
+      setLinkedLectureNotes([]);
 
-      setLinkedLectureNotes(hydrateNotesIds(selectedLecture.noteIds));
-    }
-  }, [selectedLecture]);
-
-  useEffect(() => {
-    if (currentLectureToEdit) {
-      setSelectedLecture(currentLectureToEdit);
+      return;
     }
   }, [currentLectureToEdit]);
 
-  const handleNoteReorder = (newNotesOrder) => {
-    setLinkedLectureNotes(newNotesOrder);
-    // persist new order
+  useEffect(() => {
+    if (notes && currentLectureToEdit) {
+      const connectedNotes = currentLectureToEdit.noteIds
+        .map((noteId) => notes.find((note) => note.id === noteId))
+        .filter((note) => !!note);
+
+      setLinkedLectureNotes(connectedNotes);
+    }
+  }, [notes, currentLectureToEdit]);
+
+  const dispatchUpdateLecture = (updateObject) => {
     dispatch(
       updateLecture({
-        noteIds: newNotesOrder.map((note) => note.id),
-        id: selectedLecture.id,
+        ...currentLectureToEdit,
+        ...updateObject,
         updated: today,
       }),
     );
   };
 
+  const handleNoteReorder = (newNotesOrder) => {
+    setLinkedLectureNotes(newNotesOrder);
+    dispatchUpdateLecture({ noteIds: newNotesOrder.map((note) => note.id) });
+  };
+
   const handleAddLectureClick = () => {
     dispatch({ type: 'CLEAR_CURRENT_LECTURE' });
-
-    resetLecture();
   };
 
   const handleDeleteLectureNote = (noteId) => {
-    const newNoteIds = selectedLecture.noteIds.filter((id) => id !== noteId);
+    const newNoteIds = currentLectureToEdit.noteIds.filter((id) => id !== noteId);
+
     setLinkedLectureNotes(linkedLectureNotes.filter((note) => note.id !== noteId));
-    dispatch(updateLecture({ id: selectedLecture.id, noteIds: newNoteIds, updated: today }));
+    dispatchUpdateLecture({ noteIds: newNoteIds });
   };
 
   const handleTopicClick = () => {
@@ -97,11 +97,11 @@ const LecturesPage = () => {
   };
 
   const updateCurrentLecture = (newLectureObj) => {
-    const newLecture = { ...selectedLecture, ...newLectureObj, updated: today };
+    const newLecture = { ...currentLectureToEdit, ...newLectureObj };
 
     if (newLecture.title) {
       if (newLecture.id) {
-        dispatch(updateLecture(newLecture));
+        dispatchUpdateLecture(newLectureObj);
       } else {
         dispatch(
           createLecture({
@@ -112,8 +112,6 @@ const LecturesPage = () => {
           }),
         );
       }
-
-      setSelectedLecture(newLecture);
     }
   };
 
@@ -123,15 +121,7 @@ const LecturesPage = () => {
       noteId,
     ];
 
-    dispatch(
-      updateLecture({
-        noteIds: newLectureNoteIds,
-        id: selectedLecture.id,
-        updated: today,
-      }),
-    );
-
-    setSelectedLecture({ ...selectedLecture, noteIds: newLectureNoteIds });
+    dispatchUpdateLecture({ noteIds: newLectureNoteIds });
   };
 
   const selectLecture = (lecture) => {
@@ -144,6 +134,7 @@ const LecturesPage = () => {
         items={lectures}
         handleAddClick={handleAddLectureClick}
         handleItemClick={selectLecture}
+        currentActiveItem={currentLectureToEdit}
         buttonText="Add Lecture"
         dark
         isOpen={true}
@@ -169,7 +160,7 @@ const LecturesPage = () => {
         handleItemClick={handleTopicClick}
         handleDeleteItem={handleDeleteLectureNote}
         buttonText="Edit Lecture"
-        showButton={selectedLecture}
+        showButton={currentLectureToEdit}
         handleNoteReorder={handleNoteReorder}
         isOpen={false}
         deleteIcon
@@ -182,10 +173,10 @@ const LecturesPage = () => {
         </div>
       </LectureSidebarDraggable>
 
-      {selectedLecture && (
+      {currentLectureToEdit && (
         <div>
           <Lecture
-            currentLectureToEdit={selectedLecture}
+            currentLectureToEdit={currentLectureToEdit}
             notes={linkedLectureNotes}
             addNoteLinkToLecture={addNoteLinkToLecture}
             updateCurrentLecture={updateCurrentLecture}

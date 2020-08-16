@@ -27,6 +27,7 @@ export const updateLecture = (lecture) => (dispatch, getState, getFirebase) => {
     .doc(lecture.id)
     .update(lecture)
     .then(() => {
+      dispatch({ type: 'SET_CURRENT_LECTURE', lecture });
       dispatch({ type: 'UPDATE_LECTURE', lecture });
     })
     .catch((err) => {

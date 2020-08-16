@@ -17,7 +17,8 @@ const Lecture = ({ currentLectureToEdit, notes, addNoteLinkToLecture, updateCurr
   const [newLectureNote, setNewLectureNote] = useState({
     ...initialNote,
   });
-  const [lectureTitle, setLectureTitle] = useState(currentLectureToEdit);
+
+  const [lectureTitle, setLectureTitle] = useState(currentLectureToEdit.title);
 
   useEffect(() => {
     setLectureTitle(currentLectureToEdit.title);
