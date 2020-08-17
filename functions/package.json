@@ -10,7 +10,6 @@
     "logs": "firebase functions:log"
   },
   "dependencies": {
-    "algoliasearch": "^4.3.0",
     "firebase-admin": "~8.12.1",
     "firebase-functions": "^3.7.0"
   },
