@@ -84,6 +84,10 @@ const StyledInput = styled.input`
     color: ${({ theme }) => theme.onBackgroundLight};
   }
 
+  &:focus {
+    outline: none;
+  }
+
   ${(props) => props.border && propsCSS.border};
   ${(props) => props.small && propsCSS.small};
 `;

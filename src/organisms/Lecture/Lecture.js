@@ -68,6 +68,7 @@ const Lecture = ({ currentLectureToEdit, notes, addNoteLinkToLecture, updateCurr
           value={lectureTitle}
           onChange={(e) => setLectureTitle(e.target.value)}
           onBlur={() => updateCurrentLecture({ title: lectureTitle })}
+          onKeyDown={(e) => e.keyCode === 13 && updateCurrentLecture({ title: lectureTitle })}
         />
       </h1>
 
@@ -77,29 +78,15 @@ const Lecture = ({ currentLectureToEdit, notes, addNoteLinkToLecture, updateCurr
           <NoteEditor key={note.id} currentNoteToEdit={note} showEdit={false} />
         ))}
 
-      <hr />
-
-      <div className="link-notes">
-        <h1>Link Notes</h1>
-        <LinkNotes
-          addNoteIdLink={addLectureNoteIdLink}
-          linkIds={currentLectureToEdit.noteIds}
-          previousLinkedNotes={notes}
-        />
-      </div>
-
       {currentLectureToEdit.id && (
-        <>
-          <hr />
-          <NoteEditor
-            currentNoteToEdit={newLectureNote}
-            addNoteLinkToLecture={addNote}
-            handleDelete={handleDeleteLecture}
-            linkedNotes={[]}
-            showEdit={false}
-            resetNote
-          />
-        </>
+        <NoteEditor
+          currentNoteToEdit={newLectureNote}
+          addNoteLinkToLecture={addNote}
+          handleDelete={handleDeleteLecture}
+          linkedNotes={[]}
+          showEdit={false}
+          resetNote
+        />
       )}
     </StyledLecture>
   );
@@ -117,6 +104,10 @@ const MinimalDelete = styled.div`
 
   & > *:first-child {
     margin-bottom: 5px;
+  }
+
+  svg {
+    height: 18px;
   }
 `;
 

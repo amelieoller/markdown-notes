@@ -135,7 +135,7 @@ const SidebarHeader = styled.div`
   }
 
   & > *:last-child {
-    margin-bottom: ${({ theme }) => theme.spacing};
+    margin-bottom: ${({ theme }) => theme.spacingLarge};
   }
 `;
 

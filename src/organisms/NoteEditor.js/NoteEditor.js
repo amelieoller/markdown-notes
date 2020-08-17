@@ -16,14 +16,25 @@ import CreateTag from '../CreateTag';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 
-const Editor = ({ note }) => {
-  const { getRootProps, setContent } = useRemirror();
+const Editor = ({ note, resetNote }) => {
+  const { getRootProps, setContent, commands } = useRemirror();
 
   useEffect(() => {
     setContent(note.content);
+  }, [note.id]);
+
+  useEffect(() => {
+    if (resetNote) {
+      setContent(note.content);
+    }
   }, [note]);
 
-  return <div {...getRootProps()} />;
+  return (
+    <div>
+      {/* <button onClick={() => commands.updateLink({ href: 'https://google.com' })}>Google!</button> */}
+      <div {...getRootProps()} />
+    </div>
+  );
 };
 
 const NoteEditor = ({
@@ -32,6 +43,7 @@ const NoteEditor = ({
   showEdit,
   addNoteLinkToLecture,
   handleDelete,
+  resetNote,
 }) => {
   const manager = useManager(EXTENSIONS);
   const firestore = useFirestore();
@@ -54,13 +66,6 @@ const NoteEditor = ({
 
     setHasBeenEdited(true);
     setNote((prevNote) => ({ ...prevNote, tagIds: newTagIds }));
-  };
-
-  const addNoteIdLink = (noteId) => {
-    const newNoteLinkIds = addOrRemoveFromArr(note.noteLinkIds, noteId);
-
-    setHasBeenEdited(true);
-    setNote((prevNote) => ({ ...prevNote, noteLinkIds: newNoteLinkIds }));
   };
 
   const handleOnBlur = ({ getRemirrorJSON, getText }) => {
@@ -109,12 +114,18 @@ const NoteEditor = ({
     <StyledWrapper showEdit={showEdit} id={note.id}>
       <MainContent>
         <RemirrorProvider manager={manager} onBlur={handleOnBlur} onChange={handleOnChange}>
-          <Editor note={note} />
+          <Editor note={note} resetNote={resetNote} />
         </RemirrorProvider>
 
         {!showEdit && (
           <MinimalSave>
-            <Button onClick={handleNoteSubmit} disabled={!hasBeenEdited} label="Save note" iconOnly>
+            <Button
+              onClick={handleNoteSubmit}
+              disabled={!hasBeenEdited}
+              label="Save note"
+              iconOnly
+              noFill
+            >
               <Save />
             </Button>
           </MinimalSave>
@@ -143,12 +154,6 @@ const NoteEditor = ({
               <CreateTag />
             </Tags>
 
-            <SectionTitle>Linked Notes</SectionTitle>
-            <LinkNotes
-              addNoteIdLink={addNoteIdLink}
-              linkIds={note.noteLinkIds}
-              previousLinkedNotes={linkedNotes}
-            />
             <Buttons>
               <Button
                 onClick={() => handleNoteSubmit()}
@@ -215,6 +220,10 @@ const MinimalSave = styled.div`
     left: 20px;
     top: -12px;
   }
+
+  svg {
+    height: 18px;
+  }
 `;
 
 const MainContent = styled.div`
@@ -273,6 +282,11 @@ Editor.propTypes = {
     lectureId: PropTypes.string,
     id: PropTypes.string,
   }),
+  resetNote: PropTypes.bool,
+};
+
+Editor.defaultProps = {
+  resetNote: false,
 };
 
 NoteEditor.propTypes = {
@@ -285,10 +299,12 @@ NoteEditor.propTypes = {
   showEdit: PropTypes.bool,
   addNoteLinkToLecture: PropTypes.func,
   handleDelete: PropTypes.func,
+  resetNote: PropTypes.bool,
 };
 
 NoteEditor.defaultProps = {
   showEdit: true,
+  resetNote: false,
 };
 
 export default NoteEditor;

@@ -6,9 +6,19 @@ import { ReactComponent as Minus } from '../../assets/icons/minus.svg';
 import Button from '../Button';
 
 const SidebarItem = ({ item, handleItemClick, isActive, dark, deleteIcon, handleDeleteItem }) => {
+  const itemClick = (e) => {
+    if (
+      !e.target.parentElement.parentElement.id.includes('delete') &&
+      !e.target.parentElement.id.includes('delete') &&
+      !e.target.id.includes('delete')
+    ) {
+      handleItemClick(item);
+    }
+  };
+
   return (
     <StyledSidebarItem
-      onClick={(e) => e.target.id !== 'delete' && handleItemClick(item)}
+      onClick={itemClick}
       onKeyDown={(e) => e.key === 'Enter' && handleItemClick(item)}
       isActive={isActive}
       dark={dark}
@@ -18,23 +28,29 @@ const SidebarItem = ({ item, handleItemClick, isActive, dark, deleteIcon, handle
       <Title>{item.title}</Title>
 
       {deleteIcon && (
-        <Button
-          onClick={() => {
-            const result = window.confirm(`Are you sure you want to delete '${item.title}...'?`);
-            result && handleDeleteItem(item.id);
-          }}
-          id="delete"
-          color={dark ? 'onSurface' : 'onSurfaceTwo'}
-          hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
-          label={`Delete ${item.title}`}
-          iconOnly
-        >
-          <Minus />
-        </Button>
+        <IsOnTop>
+          <Button
+            onClick={() => {
+              const result = window.confirm(`Are you sure you want to delete '${item.title}...'?`);
+              result && handleDeleteItem(item.id);
+            }}
+            id="delete"
+            color={dark ? 'onSurface' : 'onSurfaceTwo'}
+            hoverColor={dark ? 'onSurfacePrimary' : 'onSurfaceTwoPrimary'}
+            label={`Delete ${item.title}`}
+            iconOnly
+          >
+            <Minus />
+          </Button>
+        </IsOnTop>
       )}
     </StyledSidebarItem>
   );
 };
+
+const IsOnTop = styled.span`
+  z-index: 2;
+`;
 
 const StyledSidebarItem = styled.div`
   cursor: pointer;

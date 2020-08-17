@@ -5,12 +5,8 @@ import styled from 'styled-components/macro';
 import Search from './Search';
 import Button from '../atoms/Button';
 
-const LinkNotes = ({ addNoteIdLink, linkIds, previousLinkedNotes }) => {
+const LinkNotes = ({ addNoteIdLink, linkIds }) => {
   const [foundNotes, setFoundNotes] = useState([]);
-
-  useEffect(() => {
-    setFoundNotes(previousLinkedNotes.filter((n) => n));
-  }, [previousLinkedNotes]);
 
   const getNoteIds = (notes) => {
     const newFilteredNotes = notes.filter((note) => !linkIds.includes(note.id));
@@ -23,60 +19,54 @@ const LinkNotes = ({ addNoteIdLink, linkIds, previousLinkedNotes }) => {
   };
 
   const clearSearch = () => {
-    setFoundNotes((prevNotes) => prevNotes.filter((note) => linkIds.includes(note.id)));
+    setFoundNotes([]);
   };
 
   return (
     <StyledLinkNotes>
       <Search
         setSearchResultNotes={getNoteIds}
-        border
         placeholderText="Link Notes"
         clearSearch={clearSearch}
-        small
       />
-      {foundNotes &&
-        foundNotes.map((note) => (
-          <Button
-            key={note.id}
-            onClick={() => addLink(note.id)}
-            isActive={linkIds && linkIds.includes(note.id)}
-            label={note.title}
-            small
-            faded
-          >
-            {note.title}
-          </Button>
-        ))}
+      {!!foundNotes.length && (
+        <FoundNotes>
+          {foundNotes.map((note) => (
+            <Button
+              key={note.id}
+              onClick={() => addLink(note.id)}
+              isActive={linkIds && linkIds.includes(note.id)}
+              label={note.title}
+              small
+              faded
+            >
+              {note.title}
+            </Button>
+          ))}
+        </FoundNotes>
+      )}
     </StyledLinkNotes>
   );
 };
 
-const StyledLinkNotes = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+const StyledLinkNotes = styled.div``;
 
-  & > *:first-child {
-    max-width: 200px;
-  }
+const FoundNotes = styled.div`
+  padding: ${({ theme }) => theme.spacingLarge};
+  padding-bottom: 0;
+  display: grid;
+  grid-gap: 3px;
 
-  & > *:not(:last-child) {
-    margin-right: 5px;
-  }
-
-  & > * {
-    margin-bottom: 5px;
-  }
-
-  input {
-    color: black;
+  button {
+    width: 100%;
+    justify-content: left;
+    overflow: hidden;
   }
 `;
 
 LinkNotes.propTypes = {
   addNoteIdLink: PropTypes.func,
   linkIds: PropTypes.arrayOf(PropTypes.string),
-  previousLinkedNotes: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 export default LinkNotes;

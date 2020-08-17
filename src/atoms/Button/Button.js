@@ -45,16 +45,18 @@ const propsCSS = {
     svg {
       margin-right: 0;
     }
-
-    &:hover {
-      background: transparent;
-      color: ${({ theme }) => theme.primary};
-    }
   `,
 
   isActive: css`
     background: ${({ theme }) => theme.primary};
     color: white;
+  `,
+
+  noFill: css`
+    &:hover {
+      background: ${({ theme }) => theme.primary};
+      color: white;
+    }
   `,
 };
 
@@ -72,22 +74,24 @@ const StyledButton = styled.button`
   justify-content: center;
 
   svg {
-    height: 18px;
     margin-right: 5px;
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     transition: all 0.3s ease;
     background: ${({ theme }) => theme.primary};
     color: white;
+    outline: none;
   }
 
-  ${(props) => props.danger && propsCSS.danger};
   ${(props) => props.small && propsCSS.small};
   ${(props) => props.faded && propsCSS.faded};
   ${(props) => props.isActive && propsCSS.isActive};
   ${(props) => props.disabled && propsCSS.disabled};
   ${(props) => props.iconOnly && propsCSS.iconOnly};
+  ${(props) => props.danger && propsCSS.danger};
+  ${(props) => props.noFill && propsCSS.noFill};
 `;
 
 const Button = ({ children, ...buttonProps }) => {

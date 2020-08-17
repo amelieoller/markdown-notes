@@ -11,6 +11,8 @@ import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
 import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import LectureSidebarDraggable from '../../organisms/LectureSidebarDragable/LectureSidebarDraggable';
+import LinkNotes from '../../components/LinkNotes';
+import { addOrRemoveFromArr } from '../../components/utils';
 
 const LecturesPage = () => {
   const currentUser = useSelector((state) => state.firebase.auth);
@@ -128,6 +130,12 @@ const LecturesPage = () => {
     dispatch({ type: 'SET_CURRENT_LECTURE', lecture });
   };
 
+  const addLectureNoteIdLink = (noteId) => {
+    const newNoteLinkIds = addOrRemoveFromArr(currentLectureToEdit.noteIds, noteId);
+
+    updateCurrentLecture({ noteIds: newNoteLinkIds });
+  };
+
   return (
     <SidebarsMainTemplate>
       <LectureSidebar
@@ -149,6 +157,7 @@ const LecturesPage = () => {
             onClick={handleAddLectureClick}
             color="onSurface"
             hoverColor="onSurfacePrimary"
+            className={!currentLectureToEdit.id ? 'active' : ''}
           >
             <Plus />
           </IconButton>
@@ -162,7 +171,7 @@ const LecturesPage = () => {
         buttonText="Edit Lecture"
         showButton={currentLectureToEdit}
         handleNoteReorder={handleNoteReorder}
-        isOpen={false}
+        isOpen={true}
         deleteIcon
       >
         <div>
@@ -171,6 +180,8 @@ const LecturesPage = () => {
             <h1>Linked Notes</h1>
           </span>
         </div>
+
+        <LinkNotes addNoteIdLink={addLectureNoteIdLink} linkIds={currentLectureToEdit.noteIds} />
       </LectureSidebarDraggable>
 
       {currentLectureToEdit && (

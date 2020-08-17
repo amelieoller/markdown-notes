@@ -24,8 +24,10 @@ const StyledIconButton = styled.button`
   padding: 5px;
 
   &:hover,
-  &:focus {
+  &:focus,
+  &.active {
     color: ${({ theme, hoverColor }) => theme[hoverColor] || hoverColor};
+    outline: none;
   }
 `;
 

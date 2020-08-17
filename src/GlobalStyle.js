@@ -78,8 +78,8 @@ export default styled.createGlobalStyle`
   }
 
   svg {
-    height: 20px;
-    width: 20px;
+    height: 24px;
+    width: 24px;
   }
 
   strong {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFirestoreConnect } from 'react-redux-firebase';
+import { useFirestoreConnect, useFirestore } from 'react-redux-firebase';
 
 import NoteEditor from '../../organisms/NoteEditor.js';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
@@ -11,8 +11,9 @@ import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Filter from '../../organisms/Filter/Filter';
-import { sortByDate } from '../../components/utils';
+import { sortByDate, addOrRemoveFromArr } from '../../components/utils';
 import NoteSearch from '../../components/NoteSearch';
+import LinkNotes from '../../components/LinkNotes.js';
 
 const NotesPage = () => {
   const currentUser = useSelector((state) => state.firebase.auth);
@@ -32,21 +33,16 @@ const NotesPage = () => {
   ]);
 
   const dispatch = useDispatch();
+  const firestore = useFirestore();
+  const today = firestore.Timestamp.now();
 
   const notes = useSelector((state) => state.firestore.ordered.notes);
   const { currentNoteToEdit } = useSelector((state) => state);
 
-  const [selectedNote, setSelectedNote] = useState(null);
   const [linkedNotes, setLinkedNotes] = useState([]);
 
   const [searchText, setSearchText] = useState('');
   const [tagFilterId, setTagFilterId] = useState('filter');
-
-  useEffect(() => {
-    if (currentNoteToEdit.title) {
-      setSelectedNote({ ...currentNoteToEdit });
-    }
-  }, [currentNoteToEdit]);
 
   useEffect(() => {
     if (!currentNoteToEdit.id) {
@@ -55,33 +51,53 @@ const NotesPage = () => {
       return;
     }
 
-    if (selectedNote && notes) {
-      const connectedNotes = selectedNote.noteLinkIds
+    if (notes && currentNoteToEdit) {
+      const connectedNotes = currentNoteToEdit.noteLinkIds
         .map((noteId) => notes.find((note) => note.id === noteId))
         .filter((note) => !!note);
 
       setLinkedNotes(connectedNotes);
     }
-  }, [currentNoteToEdit, selectedNote]);
+  }, [currentNoteToEdit]);
+
+  const dispatchUpdateCurrentNote = (newNoteObj) => {
+    const newNote = { ...currentNoteToEdit, ...newNoteObj };
+
+    if (newNote.title) {
+      if (newNote.id) {
+        dispatch(
+          updateNote({
+            ...currentNoteToEdit,
+            ...newNoteObj,
+            updated: today,
+          }),
+        );
+      }
+      // else {
+      //   dispatch(
+      //     createNote({
+      //       ...newLecture,
+      //       userId: currentUser.uid,
+      //       created: today,
+      //       updated: today,
+      //     }),
+      //   );
+      // }
+    }
+  };
+
+  const updateLectureNoteLinkIds = (noteId) => {
+    const newNoteIds = addOrRemoveFromArr(currentNoteToEdit.noteLinkIds, noteId);
+
+    dispatch({ type: 'SET_CURRENT_NOTE', note: { ...currentNoteToEdit, noteLinkIds: newNoteIds } });
+    dispatchUpdateCurrentNote({ noteLinkIds: newNoteIds });
+  };
 
   const handleAddNoteClick = () => {
     dispatch({ type: 'CLEAR_CURRENT_NOTE' });
   };
 
-  const handleDeleteNoteLink = (noteId) => {
-    const newNoteIds = selectedNote.noteLinkIds.filter((id) => id !== noteId);
-
-    dispatch(updateNote({ id: selectedNote.id, noteLinkIds: newNoteIds }));
-  };
-
-  const handleTopicClick = (note) => {
-    console.log('handleTopicClick');
-    dispatch({ type: 'SET_CURRENT_NOTE', note });
-  };
-
   const handleNoteClick = (note) => {
-    console.log('handleNoteClick');
-
     dispatch({ type: 'SET_CURRENT_NOTE', note });
   };
 
@@ -151,10 +167,10 @@ const NotesPage = () => {
 
       <LectureSidebar
         items={linkedNotes}
-        handleItemClick={handleTopicClick}
-        handleDeleteItem={handleDeleteNoteLink}
+        handleItemClick={handleNoteClick}
+        handleDeleteItem={updateLectureNoteLinkIds}
         buttonText="Edit Lecture"
-        showButton={selectedNote}
+        showButton={currentNoteToEdit}
         isOpen={false}
         deleteIcon
       >
@@ -164,6 +180,11 @@ const NotesPage = () => {
             <h1>Linked Notes</h1>
           </span>
         </div>
+
+        <LinkNotes
+          addNoteIdLink={updateLectureNoteLinkIds}
+          linkIds={currentNoteToEdit.noteLinkIds}
+        />
       </LectureSidebar>
 
       {currentNoteToEdit.content && (
