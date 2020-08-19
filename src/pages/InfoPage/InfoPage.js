@@ -7,6 +7,7 @@ import * as firebase from 'firebase';
 import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';
 import { ReactComponent as X } from '../../assets/icons/x.svg';
+import { sortByString } from '../../components/utils';
 
 const InfoPage = () => {
   const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const InfoPage = () => {
         </thead>
         <tbody>
           {tags &&
-            tags.map((tag) => (
+            sortByString(tags, 'name').map((tag) => (
               <tr key={tag.id}>
                 <td>{tag.name}</td>
                 <td className="right">
