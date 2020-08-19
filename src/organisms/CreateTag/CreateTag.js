@@ -29,6 +29,7 @@ const CreateTag = () => {
     };
 
     dispatch(createTag(tag));
+    setTagText('')
   };
 
   return isTagEditorOpen ? (
