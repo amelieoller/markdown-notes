@@ -11,17 +11,28 @@ import { createTag } from '../../actions/tagActions';
 const CreateTag = () => {
   const firestore = useFirestore();
   const currentUser = useSelector((state) => state.firebase.auth);
+  const tags = useSelector((state) => state.firestore.ordered.tags);
 
   const [isTagEditorOpen, setIsTagEditorOpen] = useState(false);
   const [tagText, setTagText] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const dispatch = useDispatch();
 
   const createNewTag = () => {
-    setIsTagEditorOpen(false);
+    // If tagText is empty
+    if (tagText === '') {
+      setErrorMessage('Tag name cannot be empty');
+      return;
+    }
 
-    if (tagText === '') return;
+    // If tag already exists
+    if (tags.map((t) => t.name.toLowerCase()).includes(tagText.toLowerCase())) {
+      setErrorMessage('Tag name already exists');
+      return;
+    }
 
+    // Otherwise success, create tag, and reset state
     const tag = {
       name: tagText,
       created: firestore.Timestamp.now(),
@@ -29,7 +40,10 @@ const CreateTag = () => {
     };
 
     dispatch(createTag(tag));
-    setTagText('')
+
+    setIsTagEditorOpen(false);
+    setTagText('');
+    setErrorMessage('');
   };
 
   return isTagEditorOpen ? (
@@ -43,6 +57,7 @@ const CreateTag = () => {
         small
         autoFocus
       />
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputWrapper>
   ) : (
     <Button onClick={() => setIsTagEditorOpen(true)} label="Add Tag" small faded iconOnly>
@@ -52,7 +67,18 @@ const CreateTag = () => {
 };
 
 const InputWrapper = styled.div`
-  max-width: 200px;
+  display: flex;
+  align-items: center;
+
+  & *:first-child {
+    width: 200px;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  color: ${({ theme }) => theme.danger};
+  font-size: 14px;
+  margin-left: 5px;
 `;
 
 export default CreateTag;
