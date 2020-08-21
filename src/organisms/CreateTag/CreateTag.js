@@ -7,6 +7,7 @@ import Button from '../../atoms/Button';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Input from '../../atoms/Input/Input';
 import { createTag } from '../../actions/tagActions';
+import { toCamelCase } from '../../components/utils';
 
 const CreateTag = () => {
   const firestore = useFirestore();
@@ -26,15 +27,17 @@ const CreateTag = () => {
       return;
     }
 
+    const name = toCamelCase(tagText);
+
     // If tag already exists
-    if (tags.map((t) => t.name.toLowerCase()).includes(tagText.toLowerCase())) {
+    if (tags.some((t) => t.name === name)) {
       setErrorMessage('Tag name already exists');
       return;
     }
 
     // Otherwise success, create tag, and reset state
     const tag = {
-      name: tagText,
+      name,
       created: firestore.Timestamp.now(),
       userId: currentUser.uid,
     };

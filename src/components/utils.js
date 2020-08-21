@@ -32,3 +32,11 @@ export const sortByDate = (arr, attribute) => {
       (a[attribute] ? a[attribute].toDate() : new Date()),
   );
 };
+
+export const toCamelCase = (string) => {
+  return string
+    .trim()
+    .split(' ')
+    .map((w) => w[0].toUpperCase() + w.slice(1))
+    .join(' ');
+};
