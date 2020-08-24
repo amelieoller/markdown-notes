@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';

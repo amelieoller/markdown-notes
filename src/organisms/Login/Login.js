@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 

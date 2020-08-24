@@ -8,7 +8,7 @@ import { ReactComponent as Book } from '../../assets/icons/book.svg';
 import { ReactComponent as GraduationCap } from '../../assets/icons/graduation-cap.svg';
 import { ReactComponent as Info } from '../../assets/icons/info.svg';
 import { ReactComponent as Logout } from '../../assets/icons/log-out.svg';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import Button from '../../atoms/Button';
 
 const Navigation = ({ history }) => {

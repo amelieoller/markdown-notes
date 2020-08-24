@@ -13,10 +13,7 @@ import { LinkExtension } from 'remirror/extension/link';
 import { EmojiExtension } from 'remirror/extension/emoji';
 import { CorePreset } from 'remirror/preset/core';
 import { EmbedPreset } from 'remirror/preset/embed';
-import { SocialPreset } from 'remirror/preset/social';
 import { TablePreset } from 'remirror/preset/table';
-import { AutoLinkExtension } from 'remirror/extension/auto-link';
-import { EventsExtension } from 'remirror/extension/events';
 
 // Remirror language imports
 import javascript from 'refractor/lang/javascript';
@@ -34,10 +31,7 @@ import sql from 'refractor/lang/sql';
 import typescript from 'refractor/lang/typescript';
 
 export const EXTENSIONS = () => [
-  new AutoLinkExtension(),
-  new EventsExtension(),
   new TablePreset(),
-  new SocialPreset(),
   new CorePreset(),
   new EmbedPreset(),
   new ListPreset(),

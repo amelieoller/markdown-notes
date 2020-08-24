@@ -8,7 +8,6 @@ import { RemirrorProvider, useManager } from 'remirror/react';
 
 // Internal imports
 import { EXTENSIONS } from './extensions';
-import LinkNotes from '../../components/LinkNotes';
 import { createNote, updateNote } from '../../actions/noteActions';
 import { addOrRemoveFromArr, sortByString } from '../../components/utils';
 import Button from '../../atoms/Button';
