@@ -124,7 +124,9 @@ const NotesPage = () => {
 
   const filterNotesBySearchText = (notesToFilter) => {
     return notesToFilter.filter((n) =>
-      searchText.split(' ').every((word) => n.textContent.toLowerCase().includes(word)),
+      searchText
+        .split(' ')
+        .every((word) => n.textContent && n.textContent.toLowerCase().includes(word)),
     );
   };
 
