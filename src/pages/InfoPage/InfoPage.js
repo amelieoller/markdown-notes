@@ -1,17 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useFirestoreConnect } from 'react-redux-firebase';
 import * as firebase from 'firebase/app';
 
-import { deleteTag } from '../../actions/tagActions';
 import Button from '../../atoms/Button';
-import { ReactComponent as X } from '../../assets/icons/x.svg';
 import { sortByString } from '../../components/utils';
+import Tag from './Tag';
 
 const InfoPage = () => {
-  const dispatch = useDispatch();
-
   const tags = useSelector((state) => state.firestore.ordered.tags);
   const currentUser = useSelector((state) => state.firebase.auth);
 
@@ -21,8 +18,6 @@ const InfoPage = () => {
       where: [['userId', '==', currentUser.uid]],
     },
   ]);
-
-  const onDeleteTag = (tagId) => dispatch(deleteTag(tagId));
 
   const handleDeleteAccount = () => {
     const user = firebase.auth().currentUser;
@@ -50,27 +45,7 @@ const InfoPage = () => {
           </tr>
         </thead>
         <tbody>
-          {tags &&
-            sortByString(tags, 'name').map((tag) => (
-              <tr key={tag.id}>
-                <td>{tag.name}</td>
-                <td className="right">
-                  <Button
-                    onClick={() => {
-                      const result = window.confirm(
-                        `Are you sure you want to delete '${tag.name}...'?`,
-                      );
-                      result && onDeleteTag(tag.id);
-                    }}
-                    label={`Delete tag "${tag.name}"`}
-                    small
-                    iconOnly
-                  >
-                    <X />
-                  </Button>
-                </td>
-              </tr>
-            ))}
+          {tags && sortByString(tags, 'name').map((tag) => <Tag tag={tag} key={tag.id} />)}
         </tbody>
       </table>
 
