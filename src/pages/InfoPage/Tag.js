@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
+import styled from 'styled-components/macro';
 
 import Button from '../../atoms/Button';
-import { deleteTag } from '../../actions/tagActions';
+import { deleteTag, updateTag } from '../../actions/tagActions';
 import { ReactComponent as X } from '../../assets/icons/x.svg';
 
 const Tag = ({ tag }) => {
   const dispatch = useDispatch();
 
+  const [tagName, setTagName] = useState(tag.name);
+
   const onDeleteTag = (tagId) => dispatch(deleteTag(tagId));
+
+  const onUpdateTag = () => {
+    if (tagName === tag.name) return;
+
+    if (tagName) {
+      dispatch(updateTag({ ...tag, name: tagName }));
+    } else {
+      setTagName(tag.name);
+    }
+  };
 
   return (
     <tr>
-      <td>{tag.name}</td>
+      <td>
+        <StyledInput
+          type="text"
+          value={tagName}
+          onChange={(e) => setTagName(e.target.value)}
+          onBlur={onUpdateTag}
+        />
+      </td>
       <td className="right">
         <Button
           onClick={() => {
@@ -30,6 +50,14 @@ const Tag = ({ tag }) => {
     </tr>
   );
 };
+
+const StyledInput = styled.input`
+  background: transparent;
+  border: none;
+  font-size: 100%;
+  font-weight: 100;
+  width: 100%;
+`;
 
 Tag.propTypes = {
   tag: PropTypes.shape({
