@@ -29,6 +29,7 @@ import regex from 'refractor/lang/regex';
 import sass from 'refractor/lang/sass';
 import sql from 'refractor/lang/sql';
 import typescript from 'refractor/lang/typescript';
+import handlebars from 'refractor/lang/handlebars';
 
 export const EXTENSIONS = () => [
   new TablePreset(),
@@ -60,6 +61,7 @@ export const EXTENSIONS = () => [
       sass,
       sql,
       typescript,
+      handlebars,
     ],
   }),
 ];
