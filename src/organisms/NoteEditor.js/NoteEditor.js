@@ -14,9 +14,11 @@ import Button from '../../atoms/Button';
 import CreateTag from '../CreateTag';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
+import Input from '../../atoms/Input';
 
-const Editor = ({ note, resetNote }) => {
+const Editor = ({ note, resetNote, showEdit }) => {
   const { getRootProps, setContent, commands } = useRemirror();
+  const [link, setLink] = useState('');
 
   useEffect(() => {
     setContent(note.content);
@@ -28,9 +30,32 @@ const Editor = ({ note, resetNote }) => {
     }
   }, [note]);
 
+  const addLink = () => {
+    if (!link) return;
+    commands.updateLink({ href: link });
+    setLink('');
+  };
+
   return (
     <div>
-      {/* <button onClick={() => commands.updateLink({ href: 'https://google.com' })}>Google!</button> */}
+      {showEdit && (
+        <div style={{ position: 'fixed', right: '10px', zIndex: 1 }}>
+          <Input
+            type="text"
+            label="Link URL"
+            onChange={(e) => setLink(e.target.value)}
+            value={link}
+            border
+          />
+          <Button
+            onClick={addLink}
+            label="Link Button"
+            style={{ float: 'right', marginTop: '5px' }}
+          >
+            Create Link
+          </Button>
+        </div>
+      )}
       <div {...getRootProps()} />
     </div>
   );
@@ -38,7 +63,6 @@ const Editor = ({ note, resetNote }) => {
 
 const NoteEditor = ({
   currentNoteToEdit,
-  linkedNotes,
   showEdit,
   addNoteLinkToLecture,
   handleDelete,
@@ -57,6 +81,7 @@ const NoteEditor = ({
   useEffect(() => {
     if (hasBeenEdited) handleNoteSubmit();
 
+    // setNote(noteWithoutMarks);
     setNote(currentNoteToEdit);
   }, [currentNoteToEdit]);
 
@@ -113,7 +138,7 @@ const NoteEditor = ({
     <StyledWrapper showEdit={showEdit} id={note.id}>
       <MainContent>
         <RemirrorProvider manager={manager} onBlur={handleOnBlur} onChange={handleOnChange}>
-          <Editor note={note} resetNote={resetNote} />
+          <Editor note={note} resetNote={resetNote} showEdit={showEdit} />
         </RemirrorProvider>
 
         {!showEdit && (
@@ -282,6 +307,7 @@ Editor.propTypes = {
     id: PropTypes.string,
   }),
   resetNote: PropTypes.bool,
+  showEdit: PropTypes.bool,
 };
 
 Editor.defaultProps = {
