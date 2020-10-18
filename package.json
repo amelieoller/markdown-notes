@@ -3,8 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@remirror/pm": "^1.0.0-next.22",
-    "algoliasearch": "^4.3.0",
+    "@remirror/pm": "^1.0.0-next.50",
+    "@types/jest": "^26.0.14",
+    "@types/node": "^14.11.10",
+    "@types/react": "^16.9.53",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-redux": "^7.1.9",
+    "@types/styled-components": "^5.1.4",
     "array-move": "^2.2.2",
     "babel-plugin-macros": "^2.8.0",
     "enzyme": "^3.11.0",
@@ -30,10 +35,11 @@
     "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
     "refractor": "^3.0.0",
-    "remirror": "^1.0.0-next.25",
+    "remirror": "^1.0.0-next.50",
     "reset-css": "^5.0.1",
     "styled-components": "^5.1.1",
-    "styled-reset": "^4.1.6"
+    "styled-reset": "^4.1.6",
+    "typescript": "^4.0.3"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

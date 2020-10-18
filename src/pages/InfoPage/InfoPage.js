@@ -5,7 +5,7 @@ import { useFirestoreConnect } from 'react-redux-firebase';
 import * as firebase from 'firebase/app';
 
 import Button from '../../atoms/Button';
-import { sortByString } from '../../components/utils';
+import { sortTagsByAttribute } from '../../components/utils';
 import Tag from './Tag';
 
 const InfoPage = () => {
@@ -45,7 +45,7 @@ const InfoPage = () => {
           </tr>
         </thead>
         <tbody>
-          {tags && sortByString(tags, 'name').map((tag) => <Tag tag={tag} key={tag.id} />)}
+          {tags && sortTagsByAttribute(tags, 'name').map((tag) => <Tag tag={tag} key={tag.id} />)}
         </tbody>
       </table>
 

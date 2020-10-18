@@ -11,7 +11,7 @@ import { ReactComponent as Link } from '../../assets/icons/link.svg';
 import IconButton from '../../atoms/IconButton/IconButton';
 import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Filter from '../../organisms/Filter/Filter';
-import { sortByDate, addOrRemoveFromArr } from '../../components/utils';
+import { sortNotesByDate, addOrRemoveFromArr } from '../../components/utils';
 import NoteSearch from '../../components/NoteSearch';
 import LinkNotes from '../../components/LinkNotes';
 
@@ -133,7 +133,7 @@ const NotesPage = () => {
   const filterAndSort = () => {
     const tagFilteredNotes = filterNotesByTag();
     const searchFilteredNotes = filterNotesBySearchText(tagFilteredNotes);
-    const sortedNotes = sortByDate(searchFilteredNotes, 'updated');
+    const sortedNotes = sortNotesByDate(searchFilteredNotes, 'updated');
 
     return sortedNotes;
   };

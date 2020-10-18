@@ -9,7 +9,7 @@ import { RemirrorProvider, useManager } from 'remirror/react';
 // Internal imports
 import { EXTENSIONS } from './extensions';
 import { createNote, updateNote } from '../../actions/noteActions';
-import { addOrRemoveFromArr, sortByString } from '../../components/utils';
+import { addOrRemoveFromArr, sortTagsByAttribute } from '../../components/utils';
 import Button from '../../atoms/Button';
 import CreateTag from '../CreateTag';
 import { ReactComponent as Save } from '../../assets/icons/save.svg';
@@ -162,7 +162,7 @@ const NoteEditor = ({
             <SectionTitle>Tags</SectionTitle>
             <Tags>
               {tags &&
-                sortByString(tags, 'name').map((tag) => (
+                sortTagsByAttribute(tags, 'name').map((tag) => (
                   <Button
                     key={tag.id}
                     onClick={() => addTag(tag.id)}
