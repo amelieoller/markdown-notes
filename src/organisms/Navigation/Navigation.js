@@ -23,9 +23,9 @@ const Navigation = ({ history }) => {
       <Link to="/notes" label="Link to notes page" aria-label="Link to notes page">
         <Book className={page === '/notes' ? 'active' : ''} />
       </Link>
-      <Link to="/lectures" label="Link to lectures page" aria-label="Link to lectures page">
+      {/* <Link to="/lectures" label="Link to lectures page" aria-label="Link to lectures page">
         <GraduationCap className={page === '/lectures' ? 'active' : ''} />
-      </Link>
+      </Link> */}
       <Link to="/info" label="Link to info page" aria-label="Link to info page">
         <Info className={page === '/info' ? 'active' : ''} />
       </Link>
