@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFirestoreConnect, useFirestore } from 'react-redux-firebase';
 
-import NoteEditor from '../../organisms/NoteEditor.js';
+import NoteEditor from '../../organisms/NoteEditor';
 import LectureSidebar from '../../organisms/LectureSidebar/LectureSidebar';
 import { deleteNote, updateNote } from '../../actions/noteActions';
 import SidebarsMainTemplate from '../../templates/SidebarsMainTemplate';
@@ -13,7 +13,7 @@ import { ReactComponent as Plus } from '../../assets/icons/plus.svg';
 import Filter from '../../organisms/Filter/Filter';
 import { sortByDate, addOrRemoveFromArr } from '../../components/utils';
 import NoteSearch from '../../components/NoteSearch';
-import LinkNotes from '../../components/LinkNotes.js';
+import LinkNotes from '../../components/LinkNotes';
 
 const NotesPage = () => {
   const currentUser = useSelector((state) => state.firebase.auth);

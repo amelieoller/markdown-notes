@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import { useDispatch } from 'react-redux';
 
 import { deleteLecture } from '../../actions/lectureActions';
-import NoteEditor from '../NoteEditor.js';
+import NoteEditor from '../NoteEditor';
 import Button from '../../atoms/Button';
 import { ReactComponent as Trash } from '../../assets/icons/trash-2.svg';
 import { initialNote } from '../../initialNote';
